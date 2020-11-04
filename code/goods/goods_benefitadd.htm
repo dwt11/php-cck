@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $title ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg" style="min-width: 600px">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <?php
+    $bf = new benefitClass($use_clientType_array);
+    ?>
+    <form name="form1" id="form1" action="" method="post" class="form-horizontal" target="_parent">
+        <input type="hidden" value="save" name="dopost" id="dopost">
+        <input type="hidden" value="<?php echo $goodsid; ?>" name="goodsid" id="goodsid">
+        <div class="tabs-container">
+            <ul class="nav nav-tabs">
+                <?php
+                foreach ($display_array as $typekey => $benefitTypeName) {
+                    $name = $benefitTypeName;
+                    $active = "";
+                    $ariaexpanded = "false";
+                    if ($typekey == 0) {
+                        $active = "active";
+                        $ariaexpanded = "true";
+                    }
+                    $tips = "";
+                    if ($benefitTypeName_array[$name] != "") $tips = "<i class='glyphicon glyphicon-question-sign' aria-hidden='true'
+                                                                   data-toggle='tooltip' data-placement='bottom' data-html=\"true\"
+                                                                   title=\"<p align='left'>{$benefitTypeName_array[$name]}</p>\"></i>";
+                    echo "
+                            <li class=\"$active\">
+                                <a data-toggle=\"tab\" href=\"#tab-$typekey\" aria-expanded=\"$ariaexpanded\">
+                                    $name
+                                    $tips
+                                </a>
+                            </li>
+                    ";
+                }
+                ?>
+
+            </ul>
+            <div class="tab-content">
+
+                <?php
+                foreach ($display_array as $typekey => $benefitTypeName) {
+                    $name = $benefitTypeName;
+                    $active = "";
+                    $ariaexpanded = "false";
+                    if ($typekey == 0) {
+                        $active = "active";
+                        $ariaexpanded = "true";
+                    }
+
+
+                    ?>
+
+
+                    <div id="tab-<?php echo $typekey ?>" class="tab-pane <?php echo $active ?>">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table data-toggle="table" data-classes="table table-hover table-condensed"
+                                       data-striped="true" data-sort-order="desc"
+                                       data-mobile-responsive="true">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            有效期
+                                            <i class='glyphicon glyphicon-question-sign' aria-hidden='true'
+                                               data-toggle='tooltip' data-placement='top'
+                                               title='清空为不限制时间'></i>
+                                        </th>
+                                        <?php
+                                        echo $bf->get_th_str();
+                                        ?>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <?php
+                                        echo $bf->getFormToCol($name);
+                                        ?>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <?php
+                }
+                ?>
+
+
+            </div>
+        </div>
+        <div class="table-responsive"><br>
+            <?php
+            $form_list = $bf->get_all_formname_str();
+            echo "<input type=\"hidden\" value=\"$form_list\" name=\"form_list\" id=\"form_list\">";
+            ?>
+
+            <div class="text-center">
+                <button class="btn btn-primary" type="submit">保存当前页内容</button>
+            </div>
+
+
+        </div>
+    </form>
+
+
+</div>
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<script type="text/javascript" charset="utf-8">
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.iframeAuto(index);
+</script>
+
+</body>
+</html>

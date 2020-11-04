@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body>
+<!--标题栏和 添加按钮            开始-->
+<div class="ibox-title">
+    <h5><?php echo $sysFunTitle ?></h5>
+</div>
+<!--标题栏和 添加按钮   结束-->
+<div class="ibox-content">
+    <!--工具框   开始-->
+
+    <div class="btn-group" id="Toolbar">
+        <form name="form2" method="get" action="">
+            <div class="input-group">
+
+
+                <div class="pull-left ">
+                    <input name="keyword" type="text" placeholder="姓名/电话" class="form-control" value="<?php echo $keyword ?>">
+                </div>
+                <div class="pull-left ">
+                    <input type='text' class="form-control  Wdate" value="<?php echo $day_s; ?>" name='day_s' id='day_s' size='14' readonly='readonly'
+                           onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'day_d\')}'})"
+                    />
+                </div>
+                <div class="pull-left ">
+                    到
+                </div>
+                <div class="pull-left ">
+                    <input type='text' class="form-control  Wdate" value="<?php echo $day_d; ?>" name='day_d' id='day_d' size='14' readonly='readonly'
+                           onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'day_s\')}'})"
+                    />
+                </div>
+
+                <div class="pull-left ">
+
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-white">
+                            搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--工具框   结束-->
+
+
+    <!--表格数据区------------开始-->
+    <div class="table-responsive">
+
+
+        <table id="datalist">
+            <thead>
+            <tr>
+                <th data-halign="center" data-align="center">序号</th>
+                <th data-halign="center" data-align="left">姓名</th>
+                <th data-halign="center" data-align="left">电话</th>
+
+                <th data-halign="center" data-align="right" data-sortable="true">一级人数</th>
+
+                <th data-halign="center" data-align="right" data-sortable="true">二级人数</th>
+                <th data-halign="center" data-align="right" data-sortable="true">一二级合计人数</th>
+                <th data-halign="center" data-align="right"  >总人数</th>
+
+            </tr>
+            </thead>
+            {dwt:datalist}
+            <tr>
+                <td>{dwt:field.autoindex /}</td>
+                <td>{dwt:field.realname/}</td>
+                <td>{dwt:field.mobilephone /}</td>
+
+
+
+                <td>
+                    <?php
+                    //$yj = getNumb($fields['clientid'],  $whereSql11,1);
+                    if(!isset($clientTgData_arrty["1"][$fields['clientid']]))$clientTgData_arrty["1"][$fields['clientid']]="";
+
+                    $yj = $clientTgData_arrty[1][$fields['clientid']];
+                    echo $yj;
+                    ?>
+                </td>
+                <td>
+                    <?php
+                     //$ej = getNumb($fields['clientid'],  $whereSql11,2);
+                    if(!isset($clientTgData_arrty[2][$fields['clientid']]))$clientTgData_arrty[2][$fields['clientid']]="";
+                    $ej = $clientTgData_arrty[2][$fields['clientid']];
+                     echo $ej;
+                    ?>
+                </td>
+                <td>
+                    <?php
+
+                    //echo $yj + $ej;
+                    echo $clientTgData_arrty[0][$fields['clientid']];
+                    ?>
+                </td>
+                <td>
+                    <!--点击获取-->
+                    <span id="allnumb_<?php echo $fields['clientid'] ?>">
+                        <a href="#" onclick="getALLNumb('<?php echo $fields['clientid']; ?>','<?php echo $day_s; ?>','<?php echo $day_d; ?>')">查询总人数</a>
+                    </span>
+                    <?php
+
+                    //全部获取
+                    //$ej = getALLNumb($fields['clientid'],  $day_s_int, $day_d_int);
+                    //echo $ej;
+                    ?>
+                </td>
+
+
+            </tr>
+            {/dwt:datalist}
+
+        </table>
+        {dwt:pagelist/}
+
+
+    </div>
+    <!--表格数据区------------结束-->
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-export.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/tableExport.js"></script>
+<script src="../ui/js/bootstrap-table-2.js"></script>
+<!--表格-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<script>
+    function getALLNumb(clientid, day_s_int, day_d_int) {
+        $("#allnumb_" + clientid).html("正在查询");
+        //$("#allnumb_" + clientid).hide();
+        //layer.load(2);
+        $.ajax({
+            type: "get",
+            url: "tgdesc.php",
+            data: {
+                clientid: clientid,
+                day_s: day_s_int,
+                day_d: day_d_int,
+                dopost: "getALLNumb"
+            },
+            dataType: 'html',
+            success: function (result) {
+                $("#allnumb_" + clientid).html(result);
+                $("#allnumb_" + clientid).show();
+            },
+            error: function (e) {
+                $("#allnumb_" + clientid).html("出错,稍后刷新重试");
+                $("#allnumb_" + clientid).show();
+            }
+        });
+    }
+</script>
+</body>
+</html>

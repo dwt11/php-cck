@@ -1,0 +1,54 @@
+{dwt:datalist}
+
+<?php
+$data_str = " <li class=\"list-group-item1 small list-group-item-border\">
+                    {$fields["desc"]}
+                    ";
+$orderid = $fields["orderid"];
+if ($orderid > 0) {
+    $ordertype = GetOrderOneInfo($fields["orderid"], "ordertype");
+    //$ordernum=GetOrderOneInfo($fields["orderid"], "ordernum");
+    //$orderclient=getOneCLientRealName(GetOrderOneInfo($fields["orderid"], "clientid"));
+    //echo " 订单号:$ordertype{$ordernum} 姓名:$orderclient";
+    $data_str .= " {$ordertype}订单";
+}
+
+if ($fields["info"] != "") $data_str .= "<br>备注：" . $fields["info"] . "</b>";
+$data_str .= " 
+                <br>
+                <span class=\"text-muted\">" . GetDateTimeMk($fields["createtime"]) . " </span>
+                <span class=\"pull-right  \">
+                <span class=\"text-danger\">
+               ";
+$jfnum100 = $fields['jfnum'];
+$jfnum = $jfnum100 / 100;
+
+if ($jfnum > 0) {
+    $data_str .= '+' . $jfnum;
+} else {
+    $data_str .= $jfnum;
+}
+if($keyword=='明细'){
+    $yenum100 = $fields['yenum'];
+    $yenum = $yenum100 / 100;
+
+    $data_str .=  " 余额[$yenum]";
+
+}
+$data_str .= "            </span>
+            </span>
+
+</li>";
+
+$data_array[] = $data_str;
+?>
+{/dwt:datalist}
+
+
+<?php
+//dump($data_array);
+if (!empty($data_array)) {
+    $jsondata = json_encode($data_array);
+    echo $jsondata;
+}
+?>

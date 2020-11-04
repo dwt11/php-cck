@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>选择设备</title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg" style="min-width: 800px">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5><?php echo $appttime_str ?> 车辆信息 </h5> &nbsp;
+                        <span class="badge badge-info">可用</span>
+                        <span class="badge badge-danger">不可用</span>
+
+
+                    </div>
+                    <div class="ibox-content">
+                        <div class="btn-group">
+                            <input type="submit" id="closepage" value="确定" class="btn  btn-primary">
+                        </div>
+                        <div class="btn-group" style="margin-left: 5px">
+                            <form name="form2" method="get" action="">
+                                <div class="input-group">
+                                    <div class="pull-left">
+                                        <select name='typeid' class='form-control'>
+                                            <?php echo $optionarr ?>
+                                        </select>
+                                    </div>
+                                    <div class="pull-left ">
+                                        <input name="keyword" type="text" placeholder="编号/车牌号" class="form-control" value="<?php echo $keyword ?>">
+                                        <input name="targetname" type="hidden" value="<?php echo $targetname ?>">
+                                        <input name="appttime" type="hidden" value="<?php echo $appttime ?>">
+                                    </div>
+                                    <div class="pull-left ">
+                                        <div class="input-group-btn">
+                                            <button type="submit" class="btn btn-white">
+                                                搜索
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <ul class="bs-glyphicons-plus-10">
+                            {dwt:datalist}
+                            <?php
+                            $state = getState($fields["id"], $appttime, $fields["state"]);
+
+                            //dump($state);
+                            $class = "  lazur-bg ";
+                            if ($state!="正常") $class = " red-bg ";
+                            //dump($class);
+                            ?>
+                            <li class=" <?php echo $class; ?>">
+                                <?php
+                                echo "<label class=\"checkbox-inline i-checks\"><input name='id' id='id' type='radio' value=\"{$fields["id"]}\" style='color: #FFFfFF'/>";
+
+
+                                echo "<br>";
+                                echo $fields["devicecode"];
+                                echo "<br>" . $fields["devicename"];
+                                if ($state!="正常") echo "<br><b>$state</b>";
+
+                                echo "</label>";
+                                ?>
+                                <div class="clearfix"></div>
+
+                            </li>
+                            {/dwt:datalist}
+                        </ul>
+                        {dwt:pagelist/}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../ui/js/jquery.min.js"></script>
+    <script src="../ui/js/bootstrap.min.js"></script>
+    <script src="../ui/js/content.min.js"></script>
+    <script src="../ui/js/plugins/layer/layer.min.js"></script>
+    <!--表格-->
+    <script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="../ui/js/bootstrap-table.js"></script>
+    <script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+    <SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+    <SCRIPT src="../ui/js/jquery.lazyload.plus.js" type=text/javascript></SCRIPT>
+    <script>
+        $(document).ready(function () {
+            $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green"})
+        });
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        parent.layer.iframeAuto(index);
+    </script>
+    <!--表格-->
+    <script type="text/javascript">
+        var targetname = '<?php echo $targetname?>';
+        if (targetname == "") targetname = "deviceid";
+        $('#closepage').click(function () {
+            var deviceid = $('input:radio[name=id]:checked').val();
+            if (!deviceid) {
+                alert("请选择设备");
+                return false;
+            }
+            parent.$("#" + targetname).val(deviceid);
+            parent.layer.closeAll('iframe');
+        })
+    </script>
+</body>
+</html>

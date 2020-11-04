@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>选择线路</title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg" style="min-width: 800px">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="btn-group" id="Toolbar2">
+                        <input type="submit" id="closepage" value="确定" class="btn  btn-primary">
+                    </div>
+                    <div class="btn-group navbar-static-top" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+                                <div class="pull-left ">
+                                    <input name="keyword" type="text" placeholder="目的地" class="form-control"
+                                           value="<?php echo $keyword ?>">
+                                </div>
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed"
+                               data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th data-halign="center" data-align="center"></th>
+                                <th data-halign="center" data-align="left">商品信息</th>
+                                <th data-halign="center" data-align="left">价格</th>
+                                <th data-halign="center" data-align="left">出发时间</th>
+                                <th data-halign="center" data-align="left">预约人数/座位</th>
+                            </tr>
+                            </thead>
+                            {dwt:datalist}
+                            <tr>
+
+                                <td class="text-center">
+                                    <?php
+                                    //  $isappnumb=true;//是否超员 true不超员 false超员
+                                    $disabled = "";
+                                    $s_seats  =GetLineSeatsNumb_yjyy($fields["id"]);
+
+                                    if (  $fields['seats'] > 0) {
+                                        //临时线路  有座位限制  则判断
+
+                                        // dump($s_seats);
+                                        // dump($arcRow['seats']);
+                                        if ($s_seats > 0 && $s_seats >= $fields['seats']) {
+
+                                            // $isappnumb = false;
+                                            $disabled = " disabled";
+                                            echo "满员";
+                                        }
+                                    }
+                                    ?>
+
+
+                                    <label class="checkbox-inline i-checks">
+                                        <input name='id' id='id' type='radio' <?php echo $disabled; ?> value="{dwt:field.id/}"/></label>
+                                </td>
+                                <td class="text-left">
+                                    <div style="min-width: 250px">
+                                        <?php $photo = $fields["litpic"];
+                                        if ($photo == "") $photo = "/images/arcNoPic.jpg";
+                                        ?>
+                                        <img data-original="<?php echo $photo; ?>" width="80" height="80" style='float:left; margin-right: 5px'/>
+                                        {dwt:field.goodscode/}
+
+                                        {dwt:field.typeid function='GetGoodsTypeName(@me)'/}
+
+                                        <br>
+                                        <?php
+                                        echo "<b>" . GetRedKeyWord($fields['goodsname'], $keyword) . "</b>";
+
+                                        ?>
+                                        {dwt:field.flag function='IsCommend(@me)'/}
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <?php
+
+                                    $price100 = $fields["price"];
+                                    $jfnum100 = $fields["jfnum"];
+                                    $price = $price100 / 100;
+                                    $jfnum = $jfnum100 / 100;
+                                    $jbnum=$price-$jfnum;
+                                    if($jfnum<=0)$jfnum=0;
+                                    if($jbnum<=0)$jbnum=0;
+
+
+                                    echo " 非会员 金币<span id='jbnum_basic' class='font-num text-danger'>$jbnum </span>";
+
+                                    echo "积分<span id='jfnum_basic' class='font-num text-danger'>$jfnum </span>";
+
+                                    $benprice = GetGoodBenefitInfoPrice($fields["goodsid"]);
+                                    if($benprice!="") echo "   <br>直通车卡:$benprice";
+
+                                     ?>
+                                </td>
+
+                                <td>
+                                    <div style="min-width: 90px">
+                                        <?php
+                                             echo "<div >" . date('Y-m-d H:i', $fields['gotime']) . "       </div>                    ";
+
+                                        ?>
+                                    </div>
+                                </td>
+                                <td>
+                                    <?php
+
+                                    $seats=$fields['seats'];
+                                    if (!$seats > 0) {
+
+                                        $seats= "不限制数量";
+                                    }
+
+                                    //$s_seats  =GetLineSeatsNumb_yjyy($fields["id"]);//已经预约人数
+                                    echo "{$s_seats}/{$seats}";
+                                    //echo date(' H时i分', $fields['backtime']);
+                                    //echo "<br>" . $fields['downsite'];
+                                    ?>
+                                </td>
+                            </tr>
+                            {/dwt:datalist}
+                        </table>
+                        {dwt:pagelist/}
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green"})
+    });
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.iframeAuto(index);
+</script>
+<!--表格-->
+<script type="text/javascript">
+    $('#closepage').click(function () {
+        var lineid = $('input:radio[name=id]:checked').val();
+        parent.$("#lineid").val(lineid);
+        parent.layer.closeAll('iframe');
+    })
+</script>
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<SCRIPT src="../ui/js/jquery.lazyload.plus.js" type=text/javascript></SCRIPT>
+
+</body>
+</html>

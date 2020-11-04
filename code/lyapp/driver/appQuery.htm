@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1">
+    <title>乘车检票</title>
+    <link href="../../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../ui/css/style.min.css" rel="stylesheet">
+    <link href="../../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet" media="screen">
+    <link href="../css/driver.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div class="main">
+    <div class="widget1   text-center">
+        <div class="row">
+            <div class="col-xs-12 text-left lefttext-16px ">
+                <?php
+                $devicecode = GetDeviceName($deviceid);
+
+
+                echo "<b>$goodsname</b>";//线路名称
+                echo "<br>$devicecode";//司机姓名
+                //echo "<br>";//车辆号
+                ?>
+                <span class="pull-right" style="font-size: 36px">
+                    <?php
+                    echo "<a href=\"#\" 
+                            onclick=\"layer.open({type: 2,title: '临时乘车人员添加', content: 'appQuery_temp_add.php?goodsid=$goodsid&lineid=$lineid&appttime=$appttime&deviceid=$deviceid'});\" 
+                            class=\"btn btn-white\">
+                            添加 </a>";
+                    ?>
+                </span>
+                <br>
+                <span class="label label-danger pull-left  " style="font-size: 16px">未检票人员</span>
+
+                <span class="label label-primary pull-left" style="font-size: 16px"> 已检票人员</span>
+                <br>
+                <span class="label legendLabel pull-left" style="font-size: 16px"> 点击"座位号"的圆图标可检票 </span>
+
+
+            </div>
+        </div>
+    </div>
+    <!-- <div class="tab" id="s-header">
+         <li class="    current ">
+             <a href="order.php">全部</a>
+         </li>
+         <li class="  ">
+             <a href="order.php?sta=0"> 已检票</a>
+         </li>
+         <li class="             ">
+             <a href="order.php?sta=1"> 未检票</a>
+         </li>
+
+     </div>-->
+
+    <div class="search-list list-view">
+        <ul>
+            <div class="page-container ">
+
+
+                {dwt:datalist}
+
+                <?php
+                $orderaddonlycpid = $fields["id"];
+                $iscc = $fields["iscc"];//是否乘车  1乘车  0未乘车
+
+                $ccstyle = " style='display:none' ";//默认已经乘车不显示
+                $wccstyle = "  ";//未乘车显示
+                if ($iscc == 1) {
+                    //已经乘车
+                    $ccstyle = " ";// 已经乘车显示
+                    $wccstyle = " style='display:none'  ";//未乘车不显示
+                }
+                $seatNumber = $fields["seatNumber"];
+                if ($seatNumber == "") {
+                    $seatNumber++;
+                }
+                $idcard = $fields["idcard"];
+                $tel = $fields["tel"];
+                $tel = "<a href=\"tel:{$tel}\">$tel <i class=\"fa fa-phone text-warning\"></i></a>";
+                $realname = $fields["realname"];
+                $seatNumber = $fields["seatNumber"];
+                $tjsite = $fields["tjsite"];
+                $idpic = $fields["idpic"];
+                //用户头像
+                if ($idpic == "") $idpic = "/images/arcNoPic.jpg";
+
+                $ztccode = "";//默认代表没有直能车卡
+                $ztclistid = $fields['orderlistztcid'];//直通车卡ID
+                if ($ztclistid > 0) {
+                    $ztccode = "<B>" . GetZtcCardCode($ztclistid) . "</B> ";
+                }
+
+
+                //获取年龄//如果特殊年龄才显示
+                $age = GetIDcardAge($idcard);
+                //dump($age);
+
+                $age_str = "[$age]岁";//默认背景为空
+                if ($age >= 60) $age_str = " <span class='badge-warning'>[$age]岁</span>";
+                if ($age >= 70) $age_str = " <span class='badge-success'>[$age]岁</span>";
+                if ($age >= 80) $age_str = " <span class='badge-danger'>[$age]岁</span>";
+
+                ?>
+                <li>
+                    <div class='list-item'>
+                        <a id="seatNumberBG_wcc<?php echo $orderaddonlycpid; ?>" <?php echo $wccstyle; ?> href="javascript:;" onClick='cc("<?php echo $orderaddonlycpid; ?>")'>
+                            <div class="seatNumberDiv  red-bg">
+                                <span class="seatNumber"><?php echo $seatNumber; ?></span>
+                            </div>
+                        </a>
+                        <a id="seatNumberBG_cc<?php echo $orderaddonlycpid; ?>" <?php echo $ccstyle; ?> href="javascript:;" onClick='wcc("<?php echo $orderaddonlycpid; ?>")'>
+                            <div class="seatNumberDiv  navy-bg">
+                                <span class="seatNumber"><?php echo $seatNumber; ?></span>
+                            </div>
+                        </a>
+                        <a href="javascript:;" onClick="showpic('<?php echo $idpic ?>')">
+                            <img class='pic' style='height: 75px;width: 100px' src="<?php echo $idpic; ?>" data-original="<?php echo $idpic; ?>">
+                        </a>
+
+
+                        <div class='d'>
+                            <p class='d-price'>
+                                <span class='h'>
+                                    <?php echo " $realname {$age_str} " ?>
+                                 </span>
+                            </p>
+                            <p class='d-price'>
+                                <span class='h'>
+                                    <?php echo "    $tel" ?>
+                                 </span>
+                            </p>
+                            <div class='d-main'>
+                                <p class='d-price'>
+                                    <span class='font-num'><?php echo $idcard; ?></span>
+                                </p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div>
+                        <!--                        <h3 class='d-title'><?php /*echo $ztccode */ ?></h3>-->
+
+                        <?php
+                        if ($tjsite != "") {
+                            echo " <span class='h'>
+                                   上车点:  $tjsite 
+                                    </span>";
+                        }
+                        ?>
+
+                    </div>
+                </li>
+
+                {/dwt:datalist}
+            </div>
+        </ul>
+    </div>
+
+
+    其他人
+    <div class="search-list list-view">
+        <ul>
+            <div class="page-container ">
+
+
+                <?php
+                $query3 = "SELECT money,realname,tel,info FROM #@__lycp_temp_money  WHERE lineid='$lineid' AND appttime='$appttime'   AND deviceid='$deviceid'    AND  isdel=0 ";
+
+                $dsql->SetQuery($query3);
+                $dsql->Execute("9991114");
+                while ($row1 = $dsql->GetArray("9991114")) {
+                    $money = $row1["money"];
+                    $realname = $row1["realname"];
+                    $tel = $row1["tel"];
+                    $info = $row1["info"];
+                    echo "<li>
+                                <div class='list-item'>
+                                    <div class='d'>
+                                        <p class='d-price'>
+                                            <span class='h'>
+                                              姓名:$realname
+                                                电话:$tel
+                                                金额:<span class='font-num'>$money
+                                                </span>
+                                             </span>
+                                        </p>
+                                       
+                                        <div class='d-main'>
+                                            <p class='d-price'>
+                                                
+                                                备注:$info
+                                            </p>
+                                        </div>
+                                    </div>
+            
+            
+                                </div>
+            
+                            </li>";
+                }
+
+
+                ?>
+
+
+            </div>
+        </ul>
+    </div>
+
+</div>
+<script src="/ui/js/jquery.min.js"></script>
+<script src="/ui/js/bootstrap.min.js"></script>
+<script src="/lyapp/js/main.js"></script>
+<script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+<script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+<script src="/ui/js/plugins/layer/layer.min.js"></script>
+
+
+<script type="text/javascript" charset="utf-8">
+    function showpic(url) {
+        layer.open({
+            type: 1,
+            title: false, //不显示标题栏
+            closeBtn: true,
+            area: '260px',
+            offset: '30px',
+            shade: 0.8,
+            id: 'LAY_layuipro', //设定一个id，防止重复弹出
+            resize: false,
+            btnAlign: 'c',
+            moveType: 1, //拖拽模式，0或者1
+            content: '<div style="padding: 4%; line-height: 22px; font-size: 14px; background-color: #393D49; color: #fff; " class="text-center"><div style="margin: 2%;"> <img src="' + url + '" style="max-width: 100%; "> </div></div>'
+        });
+    }
+
+    function cc(orderaddonlycpid) {
+        $.ajax({
+            type: "get",
+            url: "appQuery.php?dopost=savecc&orderaddonlycpid=" + orderaddonlycpid,
+            data: {},
+            dataType: 'html',
+            success: function (result) {
+                layer.msg(result, {
+                    time: 1000, //20s后自动关闭
+                });
+                $("#seatNumberBG_cc" + orderaddonlycpid).show();
+                $("#seatNumberBG_wcc" + orderaddonlycpid).hide();
+            }
+        });
+    }
+    function wcc(orderaddonlycpid) {
+        $.ajax({
+            type: "get",
+            url: "appQuery.php?dopost=savewcc&orderaddonlycpid=" + orderaddonlycpid,
+            data: {},
+            dataType: 'html',
+            success: function (result) {
+                layer.msg(result, {
+                    time: 1000, //20s后自动关闭
+                });
+                $("#seatNumberBG_cc" + orderaddonlycpid).hide();
+                $("#seatNumberBG_wcc" + orderaddonlycpid).show();
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

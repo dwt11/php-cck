@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle ?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <form class="ibox-content">
+
+
+                    <!--工具框   开始-->
+                    <div class="btn-group" id="Toolbar">
+                        <?php
+                        echo $roleCheck->RoleCheckToLink("sys/phoneMsg_Template_add.php?depid=$depid", "", "btn btn-white", "true", "glyphicon glyphicon-plus");
+                        ?>
+                    </div>
+
+                    <!--工具框   结束-->
+
+
+                    <!--表格数据区------------开始-->
+                    <form name='form2' action='' method='post' class="form-horizontal">
+                        <input type="hidden" name="dopost" value="save">
+
+                        <div class="table-responsive">
+                            <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                                <thead>
+                                <tr>
+                                    <th align="center" data-halign="center" data-align="left">模板名称</th>
+                                    <th align="center" data-halign="center" data-align="left">
+                                        短信签名
+                                        <i class='glyphicon glyphicon-question-sign' aria-hidden='true' data-toggle='tooltip' data-placement='top' title='必须与《阿里大于》申请的一致'></i>
+                                    </th>
+                                    <th align="center" data-halign="center" data-align="center">
+                                        短信模板编号
+                                        <i class='glyphicon glyphicon-question-sign' aria-hidden='true' data-toggle='tooltip' data-placement='top' title='必须与《阿里大于》申请的一致'></i>
+                                    </th>
+
+                                    <th align="center" data-halign="center" data-align="left">
+                                        短信模板
+                                        <i class='glyphicon glyphicon-question-sign' aria-hidden='true' data-toggle='tooltip' data-placement='top' title='发送模板内容和参数示例，与《阿里大于》申请的一致'></i>
+                                    </th>
+
+
+                                    <th align="center" data-halign="center" data-align="center">操作</th>
+                                </tr>
+                                </thead>
+                                <?php
+
+                                foreach ($template_array as $display) {
+                                    ?>
+                                    <tr>
+
+                                        <td>
+                                            <?php echo $display['name']; ?>
+                                        </td>
+
+                                        <td>
+                                            <?php echo $display['signName']; ?>
+                                        </td>
+
+                                        <td>
+                                            <?php echo $display['templateCode']; ?>
+                                        </td>
+                                    <td>
+                                        <?php echo $display['templateBody'];?>
+                                    </td>
+                                        <td>
+
+                                         <!--   <a onclick="layer.open({type: 2,title: '测试', content: 'phoneMsg_Template_test.php?name=<?php /*echo $display['name']*/?>&signName=<?php /*echo $display['signName']*/?>&templateCode=<?php /*echo $display['templateCode']*/?>'});"  href='javascript:' data-toggle='tooltip' data-placement='top' title='测试' > 测试 </a>
+                                         -->   <?php
+
+                                            $id = $display['id'];
+                                            echo $roleCheck->RoleCheckToLink("sys/phoneMsg_Template_test.php?id=$id", "", "", true);
+                                            echo $roleCheck->RoleCheckToLink("sys/phoneMsg_Template_edit.php?id=$id", "", "", true);
+                                            echo $roleCheck->RoleCheckToLink("sys/phoneMsg_Template_del.php?id=$id");
+                                            ?>
+
+
+                                        </td>
+                                    </tr>
+                                    <?php
+
+                                }
+                                ?>
+                            </table>
+
+
+                        </div>
+                    </form>
+                    <!--表格数据区------------结束-->
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+
+</body>
+</html>
+
+

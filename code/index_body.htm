@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!--360浏览器优先以webkit内核解析-->
+    <title>欢迎页</title>
+    <link href="ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="ui/css/animate.min.css" rel="stylesheet">
+    <link href="ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>系统信息</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="ibox-content" style="min-height: 230px">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <dl class="dl-horizontal">
+
+                                <dt>姓名：</dt>
+                                <dd style="min-width: 200px"><?php echo $realName . " (" . $userName . ") "; ?></dd>
+                                <dt>部门：</dt>
+                                <dd style="min-width: 200px"><?php echo $depAllName ?></dd>
+                                <dt>权限：</dt>
+                                <dd style="min-width: 200px"><?php echo $groupNames ?></dd>
+                                <dt>登录次数：</dt>
+                                <dd style="min-width: 200px"><?php echo $loginNumb; ?></dd>
+                                <dt>上次登录时间：</dt>
+                                <dd style="min-width: 200px"><?php echo $loginTime; ?></dd>
+                                <dt>上次登录IP：</dt>
+                                <dd style="min-width: 200px"><?php echo $loginIp; ?></dd>
+                            </dl>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>功能列表</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link" data-toggle='tooltip' data-placement='top' title='收缩面板'>
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a onclick="layer.open({type: 2,title: '添加功能', content: 'index_menuAdd.php'});" href='javascript:' data-toggle='tooltip' data-placement='top' title='添加功能'><i class=" fa fa-plus"></i></a>
+                        <a id="manageMenu" onclick="manageMenu()" data-toggle='tooltip' data-placement='top' title='整理'>
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <a id="completeMenu" onclick="completeMenu()" data-toggle='tooltip' data-placement='top' title='完成' style="display: none">
+                            <i class="fa fa-check"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <?php
+                    echo $menuLink;
+                    ?>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <!--
+                <div class="col-sm-6">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>其他网址</h5>
+
+                            <div class="ibox-tools">
+                                <a class="collapse-link" data-toggle='tooltip' data-placement='top' title='收缩面板'>
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a onclick="layer.open({type: 2,title: '添加网址', content: 'index_quickAdd.php'});" href='javascript:' data-toggle='tooltip' data-placement='top' title='添加网址'><i class=" fa fa-plus"></i></a>
+                                <a id="manageQuick" onclick="manageQuick()" data-toggle='tooltip' data-placement='top' title='整理'>
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <a id="completeQuick" onclick="completeQuick()" data-toggle='tooltip' data-placement='top' title='完成' style="display: none">
+                                    <i class="fa fa-check"></i>
+                                </a>
+                            </div>
+
+
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row" id="quick">
+                                <?php echo $quick; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        -->
+
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>最近访问</h5>
+
+                    <div class="ibox-tools">
+                        <a class="collapse-link" data-toggle='tooltip' data-placement='top' title='收缩面板'>
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a id="manageHistory" onclick="manageHistory()" data-toggle='tooltip' data-placement='top' title='整理'>
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <a id="completeHistory" onclick="completeHistory()" data-toggle='tooltip' data-placement='top' title='完成' style="display: none">
+                            <i class="fa fa-check"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <?php
+                    echo $historyLink;
+                    ?>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+<!--这里是子页面的连接点击后显示到主界面TAB中-->
+<script src="ui/js/jquery.min.js"></script>
+<script src="ui/js/bootstrap.min.js"></script>
+<script src="ui/js/content.min.js"></script>
+<script src="ui/js/plugins/layer/layer.min.js"></script>
+<script type="text/javascript" src="ui/js/contabs.min.child.js"></script>
+<!--//连接示例<a  class="J_menuItem" data-index=='sys/sysFunction.php' href='sys/sysFunction.php'>系统功能管理</a>
+这里是子页面的连接点击后显示到主界面TAB中-->
+
+<!--右下角自动隐藏提示框 显示提示-->
+<script src="ui/js/plugins/toastr/toastr.min.js"></script>
+<link href="ui/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<script>
+    /*-------------------其他 网址的操作*/
+    function manageQuick() {
+        $("button[name='closeQuick']").show();//显示删除button
+        $("#manageQuick").hide();//右上角隐藏工具按钮
+        $("#completeQuick").show(); //右上角 显示完成按钮
+    }
+
+    function completeQuick() {
+        $("button[name='closeQuick']").hide();//隐藏删除button
+        $("#completeQuick").hide();//右上角 隐藏 完成按钮
+        $("#manageQuick").show(); //右上角 显示工具按钮
+    }
+
+    function delQuick(id) {
+        $("#quick" + id).hide(); //隐藏当前连接
+        $.ajax({
+            type: "post",
+            url: "index_body.php",
+            data: "dopost=delQuick&id=" + id,
+            dataType: 'html',
+            success: function (result) {
+                parent.display_tips("操作成功");
+            }
+        });
+    }
+
+    /*-------------------其他 网址的操作*/
+
+
+    /*-------------------快捷功能的操作*/
+    function manageMenu() {
+        $("button[name='closeMenu']").show();//显示删除button
+        $("#manageMenu").hide();//右上角隐藏工具按钮
+        $("#completeMenu").show(); //右上角 显示完成按钮
+
+    }
+
+    function completeMenu() {
+        $("button[name='closeMenu']").hide();//隐藏删除button
+        $("#completeMenu").hide();//右上角 隐藏 完成按钮
+        $("#manageMenu").show(); //右上角 显示工具按钮
+
+    }
+
+    function delMenu(id) {
+        $("#menu" + id).unbind("click");//禁用当前连接的click 如果没有此代码,则删除后,会将原连接在新的TAB中打开
+        $("#menu" + id).hide(); //隐藏当前连接
+        $.ajax({
+            type: "post",
+            url: "index_body.php",
+            data: "dopost=delMenu&id=" + id,
+            dataType: 'html',
+            success: function (result) {
+                parent.display_tips("操作成功");
+            }
+        });
+    }
+
+    /*-------------------快捷功能的操作*/
+
+
+
+
+    /*-------------------访问历史 记录*/
+    function manageHistory() {
+        $("button[name='closeHistory']").show();//显示删除button
+        $("#manageHistory").hide();//右上角隐藏工具按钮
+        $("#completeHistory").show(); //右上角 显示完成按钮
+    }
+
+    function completeHistory() {
+        $("button[name='closeHistory']").hide();//隐藏删除button
+        $("#completeHistory").hide();//右上角 隐藏 完成按钮
+        $("#manageHistory").show(); //右上角 显示工具按钮
+    }
+
+    function delHistory(id) {
+        $("#History" + id).unbind("click");//禁用当前连接的click 如果没有此代码,则删除后,会将原连接在新的TAB中打开
+        $("#History" + id).hide(); //隐藏当前连接
+        $.ajax({
+            type: "post",
+            url: "index_body.php",
+            data: "dopost=delHistory&id=" + id,
+            dataType: 'html',
+            success: function (result) {
+                parent.display_tips("操作成功");
+            }
+        });
+    }
+
+    /*-------------------访问历史 记录*/
+
+
+</script>
+</body>
+
+</html>
+

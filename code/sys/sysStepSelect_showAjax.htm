@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight" style="background-color: #ffffff">
+        <?php
+if($dopost=='edit') {
+    $arr = $dsql->GetOne("SELECT * FROM `#@__sys_stepselect` WHERE id='$id' ");
+                  //$sbjs = " onsubmit=\"alert('该分类是系统内置枚举，不允许修改！'); return false;\" ";
+                  //if($arr['issystem']==0) $sbjs = '';
+                  ?>
+                  <!-- 编辑表单 -->
+
+        <form action='sysStepSelect.php' method='get' class="form-horizontal" target="_parent">
+            <INPUT TYPE="hidden" NAME="dopost" value="edit_save"/>
+            <INPUT TYPE="hidden" NAME="id" value="<?php echo $arr['id']; ?>"/>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">类别名:</label>
+
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="itemname" value="<?php echo $arr['itemname']; ?>" <?php if($arr['issystem']==1) echo "readonly='readonly' "; ?>>
+                    <?php if($arr['issystem']==1) echo "<span class=\"help-block m-b-none\">系统内置的类别名不可以修改!</span>"; ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">缓存组名:</label>
+
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="egroup" value="<?php echo $arr['egroup']; ?>"  <?php if($arr['issystem']==1) echo "readonly='readonly' "; ?>>
+                    <span class="help-block m-b-none">缓存组名必须为英文或数字组合</span>
+                    <?php if($arr['issystem']==1) echo "<span class=\"help-block m-b-none\">系统内置的缓存组名不可以修改!</span>"; ?>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">备注:</label>
+
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="description" value="<?php echo $arr['description']; ?>">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="text-center">
+                    <button class="btn btn-primary" type="submit">保存内容</button>
+                </div>
+            </div>
+
+
+        </form>
+        <?php
+} else if($dopost=='addnew') {
+?>
+                  <!-- 新增类别表单 -->
+        <form action='sysStepSelect.php' method='post' class="form-horizontal" target="_parent">
+            <INPUT TYPE="hidden" NAME="dopost" value="addnew_save"/>
+
+
+
+
+
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">类别名:</label>
+
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="itemname" >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">缓存组名:</label>
+
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="egroup" >
+                    <span class="help-block m-b-none">缓存组名必须为英文或数字组合</span>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">备注:</label>
+
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="description" >
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="text-center">
+                    <button class="btn btn-primary" type="submit">保存内容</button>
+                </div>
+            </div>
+
+
+
+
+        </form>
+        <?php
+} else if($dopost=='view') {
+      $arr = $dsql->GetOne("SELECT * FROM `#@__sys_stepselect` WHERE id='$id' ");
+
+                  ?>
+                  <!-- 预览联动表单 -->
+
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">类别组:</label>
+
+            <div class="col-sm-2">
+                <select class="form-control m-b" >
+                    <option value='0'>--请选择--</option>
+                    <?php
+          $options=getOptionsList($arr['egroup']);
+          echo $options; ?>
+                </select>
+            </div>
+        </div>
+
+        <?php
+}
+?>
+
+
+</div>
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<script>
+    //让这个弹出层iframe自适应高度150109
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.iframeAuto(index);
+</script>
+
+
+
+</body>
+</html>

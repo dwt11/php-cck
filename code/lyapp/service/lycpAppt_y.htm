@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1">
+    <title>预约</title>
+    <link href="../../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../ui/css/style.min.css" rel="stylesheet">
+    <link href="../../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet" media="screen">
+    <style>
+        td {
+            padding-left: 5px;
+            line-height: 25px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="main">
+    <?php include("../index_heard.php"); ?>
+    <div class="widget1   text-center">
+        <div class="row">
+            <div class="col-xs-12 text-left lefttext">
+                我的预约
+            </div>
+        </div>
+    </div>
+    <div class="tab" id="s-header">
+
+        <li class="<?php if ($sta == "1") echo " current " ?> ">
+            <a href="?sta=1">未出行</a>
+        </li>
+        <li class="<?php if ($sta == "2") echo " current " ?>  ">
+            <a href="?sta=2"> 已出行</a>
+        </li>
+    </div>
+
+    <ul class="sortable-list  agile-list-dwt">
+        {dwt:datalist}
+        <li id="li{dwt:field.order_addon_lycp_id/}">
+            <?php
+            //用于与当前日期INT比较后,获取 是否已经出行
+            $gotime_int = $fields['appttime'];
+
+
+             //if ($fields["tmp"] == '每日') {
+            //固定线路 取用户输入的发车日期
+            //日期显示
+            $gotime = date('Y年m月d日  H时i分', $gotime_int);
+
+
+
+
+            $gosite = $downsite = $goodsname = "";
+            $questr10 = "SELECT goodsname,gosite,downsite  FROM `#@__goods` INNER JOIN #@__goods_addon_lycp  ON  #@__goods.id=#@__goods_addon_lycp.goodsid    WHERE #@__goods.id='{$fields['goodsid']}'                ";
+            $rowarc10 = $dsql->GetOne($questr10);
+            if (isset($rowarc10)) {
+                $downsite = $rowarc10["downsite"];
+                $goodsname = $rowarc10["goodsname"];
+                $gosite = $rowarc10["gosite"];
+            }
+
+
+            ?>
+            <table width="100%">
+                <tr>
+                    <td width="30%" align="right">线路名称:</td>
+                    <td width="70%"><b><?php echo $goodsname ?></b></td>
+                </tr>
+
+                <tr>
+                    <td align="right">出发时间:</td>
+                    <td><?php echo $gotime ?></td>
+                </tr>
+
+
+
+
+
+                <?php
+
+
+                //$gosite = $fields["gosite"];//默认的起始站点
+                if ($fields['tjsite'] != "") $gosite = $fields['tjsite'];//如果用户选择了上车点,则用用户的
+
+                if($gosite!=""){
+                    echo " <tr>
+                                <td align=\"right\">出发乘车地点:</td>
+                                <td>{$gosite}</td>
+                            </tr>";
+                }
+                if($downsite!=""){
+                    echo "  <tr>
+                                <td align=\"right\">返回乘车地点:</td>
+                                <td>      {$downsite}                   </td>
+                            </tr>";
+                }
+
+                ?>
+
+
+
+
+                <?php
+                /*if ($fields['carinfo_desc'] != "") {
+                    echo '<tr>
+                        <td width="40%" align="right">车辆信息:</td>
+                        <td>                                            ' . $fields['carinfo_desc'] . '
+
+                        </td>
+                    </tr>';
+
+                }*/
+
+
+                $name = $tel = $idcard = "";
+
+                $name = $fields["realname"];
+                $tel = GetPhoneCode($fields["tel"]);
+                $idcard = GetPhoneCode($fields["idcard"]);
+
+                ?>
+                <tr>
+                    <td align="right">联系方式:</td>
+                    <td>        <?php echo $name . " " . $tel ?>                    </td>
+                </tr>
+                <tr>
+                    <td align="right">身份证:</td>
+                    <td>        <?php echo $idcard ?>                    </td>
+                </tr>
+            </table>
+
+
+            <div class='hr-line-dashed' style="margin: 0; padding: 0;margin-top: 5px;margin-bottom:  5px"></div>
+
+            <div style="text-indent:2em">
+                行程与出发返程时间仅供参考，根据实际情况而定，最终行程与时间以导游或司机安排为准，敬请谅解并积极配合。
+            </div>
+            <div class="clearfix"></div>
+            <div class='hr-line-dashed' style="margin: 0; padding: 0;margin-top: 5px;margin-bottom:  5px"></div>
+
+            <p>
+            <div class="pull-right">
+                <?php
+                // dump($gotime_1);
+                if ($gotime_int < time()) echo "<span class=\"alert-danger\">已出行</span>";
+                ?>
+            </div>
+            创建日期：{dwt:field.createtime function="GetDateMk(@me)" /}
+            <?php
+
+
+            //判断是直通车卡还是其他 人
+            $ztc_str = "非直通车卡";
+            if ($fields["orderlistztcid"] > 0) $ztc_str = "直通车会员卡";
+            echo " [<b>$ztc_str</b>]";
+
+            //根据直通车订单的子id获取  直通车卡的所属clientid,判断是否一起游
+            $queryztc = "
+                        SELECT clientid  FROM  `#@__order` 
+                        LEFT JOIN   `#@__order_addon_ztc` ON   `#@__order`.id=  `#@__order_addon_ztc`.orderid   
+                         WHERE `#@__order_addon_ztc`.id=" . $fields["orderlistztcid"];
+            //dump($queryztc);
+            $rowztc1111 = $dsql->getone($queryztc);
+            if (isset($rowztc1111["clientid"]) && $rowztc1111["clientid"] > 0) {
+
+
+                //乘车卡的用户id不等于订单的用户ID,则使用了一起游
+                if ($rowztc1111["clientid"] != $fields["orderclientid"]) echo " [<b>一起游</b>]";//echo "[\"一起游\"朋友预订]";//自己的卡被别人预订
+                //if ($fields["orderclientid"] != $CLIENTID && $fields["orderclientid"] > 0) echo "[<b>一起游</b>]";// echo "[\"一起游\"帮朋友预订]";//自己预订 别人的卡
+            }
+            ?>
+            </p>
+            <div class="clearfix"></div>
+
+        </li>
+        {/dwt:datalist}
+    </ul>
+    {dwt:pagelist listitem="infos,index,end,pre,next" listsize="5"/}
+    <?php include("../index_foot.php"); ?>
+</div>
+
+<script src="/ui/js/jquery.min.js"></script>
+<script src="/ui/js/bootstrap.min.js"></script>
+<script src="/lyapp/js/main.js"></script>
+<script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+<script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+<script src="/lyapp/js/quickButton.js"></script>
+<script src="/ui/js/plugins/layer/layer.min.js"></script>
+
+</body>
+</html>

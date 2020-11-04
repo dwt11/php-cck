@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>选择微信账户</title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg" style="min-width: 800px">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="alert alert-warning alert-dismissable">
+                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                        1、此表只列出了，来源为“微信”，没有推荐人,没有交易订单、积分和金币记录的用户（自主通过微信访问公众号添加）。<br>
+                        2、在此表选择用户后，会将此微信用户的所有数据删除，请谨慎操作！！！！！！！<br>
+                        3、绑定后，原手工添加的账户，用户在微信操作时，功能与自主注册的完全一致。
+                    </div>
+                    <div class="alert alert-warning alert-dismissable">
+                        绑定手动添加目标用户信息
+
+                        <?php
+                        echo "姓名:<b>". $realname_1."</b> 电话:<b>".$mobilephone_1 ."</b> 身份证:<b>".$idcard_1."</b> 介绍人:<b>".$sponsorname_1."</b>";
+?>
+                    </div>
+
+
+                    <div class="btn-group" id="Toolbar2">
+                        <input type="submit" id="closepage" value="确定" class="btn btn-outline  btn-default">
+                    </div>
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+                                <div class="pull-left ">
+                                    <input name="keyword" type="text" placeholder="微信呢称、姓名、手机、身份证号" class="form-control" value="<?php echo $keyword?>">
+                                    <input name="id" type="hidden"  value="<?php echo $id?>">
+                                </div>
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th align="center" data-halign="center" data-align="center"></th>
+                                <th align="center" data-halign="center" data-align="center">序号</th>
+                                <th data-halign="center" data-align="left">部门</th>
+                                <th align="center" data-halign="center" data-align="left">联系方式</th>
+                                <th align="center" data-halign="center" data-align="left">微信信息</th>
+                                <th align="center" data-halign="center" data-align="center">微信头像</th>
+                                <th align="center" data-halign="center" data-align="center">推荐人</th>
+                            </tr>
+                            </thead>
+                            {dwt:datalist}
+                            <tr>
+                                <td>
+                                    <label class="checkbox-inline i-checks"><input name='id' id='id' type='radio' value="{dwt:field.id/}"/></label>
+                                </td>
+                                <td>{dwt:field.autoindex/}</td>
+                                <td ><?php echo GetDepsNameByDepId($fields['depid']);?></td>
+                                <td >
+                                    {dwt:field.realname/}<br>
+                                    {dwt:field.mobilephone/}<br>
+                                    {dwt:field.idcard/}
+                                </td>
+                                <td>
+                                    {dwt:field.nickname/}<br>
+                                    添加日期：{dwt:field.senddate function='GetDateTimeMk(@me)' /}
+                                </td>
+                                <td>
+                                    <?php $photo=$fields["photo"];
+                                    if($photo=="")$photo="/images/zw.jpg";
+                                 ?>
+                                    <img src="<?php echo $photo;?>" width="80" height="80"/></td>
+
+                                <td>{dwt:field.sponsorid function="getOneCLientRealName(@me)"/}
+                                </td>
+
+                            </tr>
+                            {/dwt:datalist}
+                        </table>
+                        {dwt:pagelist/}
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green"})
+    });
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.iframeAuto(index);
+</script>
+<!--表格-->
+<script type="text/javascript">
+    $('#closepage').click(function () {
+        var clientid_s = $('input:radio[name=id]:checked').val();//原微信的用户ID
+        var id = <?php echo $id?>;//目标手动添加的用户ID
+        if(!clientid_s){alert("请选择会员");return false;}
+        parent.location.href='client_updateWeixin.php?dopost=save&clientid_s='+clientid_s+'&id='+id;
+        parent.layer.closeAll('iframe');
+    })
+</script>
+</body>
+</html>

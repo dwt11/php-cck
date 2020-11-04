@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle; ?></h5>
+                </div>
+                <!--标题栏结束-->
+
+
+                <div class="ibox-content">
+
+                    <!--工具框   开始-->
+
+                    <div class="btn-group" id="Toolbar">
+                        <?php echo $roleCheck->RoleCheckToLink("goods/lyht_add.php", "", "btn btn-white", "", "glyphicon glyphicon-plus"); ?>
+                    </div>
+
+                    <!--工具框   结束-->
+
+
+                    <!--  内容列表   -->
+                    <div class="table-responsive">
+                        <table id="datalist" data-striped="true">
+                            <thead>
+                            <tr>
+                                <th data-halign="center" data-align="center">ID</th>
+                                <th data-halign="center" data-align="left">标题</th>
+                                <th data-halign="center" data-align="center">添加时间</th>
+                                <th data-halign="center" data-align="center">操作</th>
+                            </tr>
+                            </thead>
+                                {dwt:datalist}
+                                <tr>
+                                    <td> {dwt:field.id/}</td>
+                                    <td>      {dwt:field.title/}                               </td>
+                                    <td>{dwt:field.createtime function='GetDateMk(@me)'/}</td>
+                                    <td>
+                                        <?php
+                                        echo $roleCheck->RoleCheckToLink("goods/lyht_edit.php?id=" . $fields['id']);
+                                        if($fields["id"]>2)echo $roleCheck->RoleCheckToLink("goods/lyht_del.php?id=" . $fields['id']);
+                                        ?>
+                                    </td>
+                                </tr>
+                                {/dwt:datalist}
+                        </table>
+                        {dwt:pagelist/}
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+
+</body>
+</html>

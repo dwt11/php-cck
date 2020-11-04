@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle ?> </h5> &nbsp;
+                    <span class="badge badge-primary">正常</span>
+                    <span class="badge badge-warning">停用</span>
+
+
+                </div>
+                <div class="ibox-content icons-box">
+                    <!--工具框   开始-->
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+                                <div class="pull-left">
+                                    <select name='typeid' class='form-control'>
+                                        <?php echo $optionarr ?>
+                                    </select>
+                                </div>
+                                <div class="pull-left">
+                                    <select name='state' class='form-control'>
+                                        <option value="" >车辆状态</option>
+                                        <option value="正常" <?php if($state=="正常")echo " selected "?>>正常</option>
+                                        <option value="停用" <?php if($state=="停用")echo " selected "?>>停用</option>
+                                    </select>
+                                </div>
+                                <div class="pull-left ">
+                                    <input name="keyword" type="text" placeholder="编号/车牌号" class="form-control" value="<?php echo $keyword ?>">
+                                </div>
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--工具框   结束-->
+                    <ul class="bs-glyphicons-plus-10">
+                        {dwt:datalist}
+                        <?php
+                        $class = " navy-bg ";
+                        if ($fields["state"] != "正常") $class = " yellow-bg ";
+                        ?>
+                        <li class="<?php echo $class; ?>">
+                                <span style="font-size: 16px;" class="text-center">
+                                        <?php
+                                        echo "编号:" . $fields["devicecode"];
+                                        echo "<br>车牌号:" . $fields["devicename"];
+                                        ?>
+
+                                    </span>
+                            <div class="clearfix"></div>
+                            <span class="text-left ">
+                                   <br> 点击查看使用明细
+                                <?php
+                                //dump(GetDateMk($fields["appttime"]));
+                                //echo getAppt($fields["appttime"]);
+                                ?>
+                                </span>
+                        </li>
+                        {/dwt:datalist}
+                    </ul>
+
+                </div>
+
+                {dwt:pagelist/}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<SCRIPT src="../ui/js/jquery.lazyload.plus.js" type=text/javascript></SCRIPT>
+
+</body>
+</html>

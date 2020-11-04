@@ -1,0 +1,174 @@
+<?php
+
+
+$addon_lyapp_array_json = json_encode($info[$deviceid]);
+//$addon_lyapp_array_json = str_replace("\\\"", "\"", $addon_lyapp_array_json);
+
+
+
+//dump($addon_lyapp_array_json);
+//$addon_lyapp_array = json_decode($addon_lyapp_array_json, TRUE);
+//dump($addon_lyapp_array_json);
+//dump($addon_lyapp_array);
+
+
+?>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg" style="min-width:800px">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <h5>拖动进行排序</h5>
+                <div class="ibox-content">
+                    <form name="form2" method="get" action=""  target="_parent">
+                        <div class="btn-group" id="Toolbar2">
+                            <input type="hidden" id="dopost" name="dopost" value="moveSave"  >
+                            <input type="submit" id="closepage" value="保存" class="btn  btn-primary">
+                        </div>
+                        <!--表格数据区------------开始-->
+                        <div class="row  dd-handle " style="background:#66CCCC">
+                            <div class="col-sm-1 text-center  "><b>座位号</b></div>
+                            <div class="col-md-2 text-center  "><b>姓名</b></div>
+                            <div class="col-md-3  text-center "><b>手机</b></div>
+                            <div class="col-md-4  text-center  "><b>身份证</b></div>
+                        </div>
+                        <div class="dd" id="nestable2">
+
+
+                        </div>
+                        <textarea id="moveData" name="moveData" style="display: none"></textarea>
+
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<!--表格-->
+<script src="../ui/js/plugins/nestable/jquery.nestable.TZ.js"></script>
+<!--表格-->
+<script>
+    $(document).ready(function () {
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        parent.layer.iframeAuto(index);
+
+        //$("#nestable2").nestable();  //初始化
+
+        //加载数据
+        var data_json =<?php echo $addon_lyapp_array_json?>;
+        display(data_json, $("#nestable2"));
+
+
+        var updateOutput = function (e) {
+            var list = e.length ? e : $(e.target), output = list.data("output");
+            if (window.JSON) {
+                list_index_json = list.nestable("serialize");
+                var list_index_array = [];//排序后的ID数值
+
+                var new_data_json = [];
+                //获取 重新排序 后的ID
+                for (var i = 0; i < list_index_json.length; i++) {
+                    var id = list_index_json[i].id;
+
+                    new_data_json.push(getDataOne(data_json, id));
+                    //console.log(id);
+                    list_index_array.push(id.toString());
+                }
+
+                //console.log(new_data_json);
+                /*if(list_index_json!=""){
+                 //arr.indexOf(str);//查找 在数组 中的位置
+                 indexnumb=list_index_json.indexOf(id)+1;
+                 }*/
+
+                display(new_data_json, $("#nestable2"));
+                $("#moveData").val(list_index_array);
+
+            } else {
+                output.val("浏览器不支持")
+            }
+        };
+        $("#nestable2").nestable({group: 1}).on("change", updateOutput);
+        updateOutput($("#nestable2").data("output", $("#moveData")));
+
+        //data_json初始数据
+        // , en_html,要填充的目标
+        // listindexjson  排序值
+
+
+        function getDataOne(data_json, id_index) {
+            for (var i = 0; i < data_json.length; i++) {
+                var object = data_json[i];
+
+                var id = object.id;
+                if (id == id_index)return object;
+
+            }
+
+        }
+
+
+        function display(data_json, en_html) {
+
+
+            en_html.html("");
+            html_str = "<ol class='dd-list'>";
+            for (var i = 0; i < data_json.length; i++) {
+                var object = data_json[i];
+
+                var id = object.id;
+                var indexnumb = i + 1;//默认排序
+
+                //console.log(data_json);
+
+                var realname = unescape(object.realname.replace(/\\u/gi, '%u'));//unicode转汉字
+                html_str += "<li class='dd-item' data-id=\"" + id + "\">";
+                html_str += "<div class=\"row dd-handle\">";
+                html_str += "<div class=\"col-md-1  text-center id='zw_$id'\">" + indexnumb + "</div>";
+                html_str += "<div class=\"col-md-2   text-center\">" +  realname + "</div>";
+                html_str += "<div class=\"col-md-3   text-center\">" + object.tel + "</div>";
+                html_str += "<div class=\"col-md-4   text-center\">" + object.idcard + "</div>";
+                html_str += "</div>";
+                html_str += "</li>";
+
+
+            }
+            html_str += "</ol>";
+            en_html.append(html_str);
+        }
+
+
+    });
+
+
+</script>
+
+</body>
+</html>
+
+
+
+

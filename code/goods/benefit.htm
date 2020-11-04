@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $title ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $title ?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content">
+                     <div class="alert alert-warning alert-dismissable">
+                         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                         1、旅游产品"只有金币使用"中的"直通车"会员选项起作用
+                     </div>
+
+
+                    <div class="btn-group" id="Toolbar2">
+                        <form name='form3' action='' method='get'>
+                            <div class="input-group">
+                                <div class="pull-left">
+                                    <select name='typeid' class='form-control'>
+                                        <?php echo $optionarr ?>
+                                    </select>
+                                </div>
+                                <div class="pull-left">
+                                    <input type='text' name='keyword' value='<?php echo $keyword ?>'
+                                           class='form-control' placeholder='编号/商品名称' data-toggle='tooltip'
+                                           data-placement='bottom' data-html="true"
+                                           title="<p align='left'>编号/商品名称</p>"/>
+                                </div>
+                                <div class="pull-left">
+                                    <div class="input-group-btn">
+                                        <button type="submit" name="imageField" class="btn btn-outline  btn-default">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <?php
+                    $goodsid_list = "";//用于保存,要提交的商品ID表单
+
+                    $bf = new benefitClass();
+
+                    ?>
+
+
+                    <form name="form1" id="form1" action="" method="post" class="form-horizontal">
+                        <input type="hidden" value="save" name="dopost" id="dopost">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#tab-1" aria-expanded="true">
+                                        金币使用
+                                        <i class='glyphicon glyphicon-question-sign' aria-hidden='true'
+                                           data-toggle='tooltip' data-placement='top' data-html="true"
+                                           title="<p align='left'>金币和积分数量使用上限。如果金币不够需要现金补齐，如果积分不够可以金币和现金补齐。</p>"></i>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab-2" aria-expanded="false">二级返还</a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab-3" aria-expanded="false">三级返还</a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="tab" href="#tab-4" aria-expanded="false">购买优惠
+                                        <i class='glyphicon glyphicon-question-sign' aria-hidden='true'
+                                           data-toggle='tooltip' data-placement='top' data-html="true"
+                                           title="<p align='left'>按百分数计算,例如9折,要输入90</p>"></i>
+
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+
+
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table data-toggle="table" data-classes="table table-hover table-condensed"
+                                                   data-striped="true" data-sort-order="desc"
+                                                   data-mobile-responsive="true">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">商品信息</th>
+                                                    <th class="text-center">
+                                                        有效期
+                                                        <i class='glyphicon glyphicon-question-sign' aria-hidden='true'
+                                                           data-toggle='tooltip' data-placement='top'
+                                                           title='清空为不限制时间'></i>
+                                                    </th>
+                                                    <?php
+                                                    echo $bf->get_th_str();
+                                                    ?>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {dwt:datalist}
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <div style="min-width: 150px">
+                                                            <?php /*$photo = $fields["litpic"];
+                                                        if ($photo == "") $photo = "../images/arcNoPic.jpg";
+                                                        */ ?><!--
+                                                        <img src="<?php /*echo "/" . $photo; */ ?>" width="80" height="80" style='float:left; margin-right: 5px'/>
+                                                        -->
+                                                            {dwt:field.id/}
+                                                            <a href="?typeid={dwt:field.typeid '/}">
+                                                                [{dwt:field.typeid function='GetGoodsTypeName(@me)'/}]
+                                                            </a>
+                                                            {dwt:field.goodscode/}
+                                                            <br><?php echo GetRedKeyWord($fields['goodsname'], $keyword); ?>
+                                                            <br> <span class="text-warning">
+                                                                <?php
+                                                                $price=$fields["price"]/100;
+                                                                echo "￥".$price;
+                                                                ?>
+
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <?php
+                                                    $goodsid = $fields["id"];
+                                                    echo $bf->getFormToCol("金币使用", $goodsid);
+                                                    ?>
+                                                </tr>
+                                                {/dwt:datalist}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div id="tab-2" class="tab-pane ">
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table data-toggle="table" data-classes="table table-hover table-condensed"
+                                                   data-striped="true" data-sort-order="desc"
+                                                   data-mobile-responsive="true">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">商品信息</th>
+                                                    <th class="text-center">
+                                                        有效期
+                                                        <i class='glyphicon glyphicon-question-sign' aria-hidden='true'
+                                                           data-toggle='tooltip' data-placement='top'
+                                                           title='清空为不限制时间'></i>
+                                                    </th>
+                                                    <?php
+                                                    echo $bf->get_th_str();
+                                                    ?>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {dwt:datalist}
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <div style="min-width: 150px">
+                                                            <?php /*$photo = $fields["litpic"];
+                                                        if ($photo == "") $photo = "../images/arcNoPic.jpg";
+                                                        */ ?><!--
+                                                        <img src="<?php /*echo "/" . $photo; */ ?>" width="80" height="80" style='float:left; margin-right: 5px'/>
+                                                        -->
+
+                                                            <a href="?typeid={dwt:field.typeid '/}">
+                                                                [{dwt:field.typeid function='GetGoodsTypeName(@me)'/}]
+                                                            </a>
+                                                            {dwt:field.goodscode/}
+                                                            <br><?php echo GetRedKeyWord($fields['goodsname'], $keyword); ?>
+                                                            <br> <span class="text-warning">
+                                                                <?php
+                                                                $price=$fields["price"]/100;
+                                                                echo "￥".$price;
+                                                                ?>
+
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <?php
+                                                    $goodsid = $fields["id"];
+                                                    echo $bf->getFormToCol("二级返还", $goodsid);
+                                                    ?>
+                                                </tr>
+                                                {/dwt:datalist}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div id="tab-3" class="tab-pane ">
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table data-toggle="table" data-classes="table table-hover table-condensed"
+                                                   data-striped="true" data-sort-order="desc"
+                                                   data-mobile-responsive="true">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">商品信息</th>
+                                                    <th class="text-center">
+                                                        有效期
+                                                        <i class='glyphicon glyphicon-question-sign' aria-hidden='true'
+                                                           data-toggle='tooltip' data-placement='top'
+                                                           title='清空为不限制时间'></i>
+                                                    </th>
+                                                    <?php
+                                                    echo $bf->get_th_str();
+                                                    ?>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {dwt:datalist}
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <div style="min-width: 150px">
+                                                            <?php /*$photo = $fields["litpic"];
+                                                        if ($photo == "") $photo = "../images/arcNoPic.jpg";
+                                                        */ ?><!--
+                                                        <img src="<?php /*echo "/" . $photo; */ ?>" width="80" height="80" style='float:left; margin-right: 5px'/>
+                                                        --><a href="?typeid={dwt:field.typeid '/}">[{dwt:field.typeid
+                                                                                                   function='GetGoodsTypeName(@me)'/}]</a>
+                                                            {dwt:field.goodscode/}
+                                                            <br><?php echo GetRedKeyWord($fields['goodsname'], $keyword); ?>
+                                                            <br> <span class="text-warning">
+                                                                <?php
+                                                                $price=$fields["price"]/100;
+                                                                echo "￥".$price;
+                                                                ?>
+
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <?php
+                                                    $goodsid = $fields["id"];
+                                                    echo $bf->getFormToCol("三级返还", $goodsid);
+                                                    ?>
+                                                </tr>
+                                                {/dwt:datalist}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div id="tab-4" class="tab-pane ">
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table data-toggle="table" data-classes="table table-hover table-condensed"
+                                                   data-striped="true" data-sort-order="desc"
+                                                   data-mobile-responsive="true">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">商品信息</th>
+                                                    <th class="text-center">
+                                                        有效期
+                                                        <i class='glyphicon glyphicon-question-sign' aria-hidden='true'
+                                                           data-toggle='tooltip' data-placement='top'
+                                                           title='清空为不限制时间'></i>
+                                                    </th>
+                                                    <?php
+                                                    echo $bf->get_th_str();
+                                                    ?>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {dwt:datalist}
+                                                <tr>
+                                                    <td class="text-left">
+                                                        <div style="min-width: 150px">
+                                                            <?php /*$photo = $fields["litpic"];
+                                                        if ($photo == "") $photo = "../images/arcNoPic.jpg";
+                                                        */ ?><!--
+                                                        <img src="<?php /*echo "/" . $photo; */ ?>" width="80" height="80" style='float:left; margin-right: 5px'/>
+                                                        --><a href="?typeid={dwt:field.typeid '/}">[{dwt:field.typeid
+                                                                                                   function='GetGoodsTypeName(@me)'/}]</a>
+                                                            {dwt:field.goodscode/}
+                                                            <br><?php echo GetRedKeyWord($fields['goodsname'], $keyword); ?>
+                                                            <br> <span class="text-warning">
+                                                                <?php
+                                                                $price=$fields["price"]/100;
+                                                                echo "￥".$price;
+                                                                ?>
+
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <?php
+                                                    $goodsid = $fields["id"];
+                                                    echo $bf->getFormToCol("购买优惠", $goodsid);
+                                                    ?>
+                                                </tr>
+                                                {/dwt:datalist}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="table-responsive"><br>
+                            <?php
+                            $form_list = $bf->get_all_formname_str();
+                            $goodsid_yz_old = $bf->get_goodsid_yz_old_str();
+                            echo "<input type=\"hidden\" value=\"$form_list\" name=\"form_list\" id=\"form_list\">";
+                            echo "<input type=\"hidden\" value=\"$goodsid_yz_old\" name=\"goodsid_yz_old\" id=\"goodsid_yz_old\">";
+                            ?>
+
+
+                            <div class="text-center">
+                                <button class="btn btn-primary" type="submit">保存当前页内容</button>
+                            </div>
+
+                            {dwt:pagelist/}
+
+                        </div>
+                    </form>
+
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+</body>
+</html>

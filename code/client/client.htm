@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body>
+<!--标题栏和 添加按钮            开始-->
+<div class="ibox-title">
+    <h5><?php echo $sysFunTitle ?></h5>
+</div>
+<!--标题栏和 添加按钮   结束-->
+<div class="ibox-content">
+    <!--工具框   开始-->
+    <div class="btn-group" id="Toolbar">
+        <?php echo $roleCheck->RoleCheckToLink("client/client_add.php", "", "btn btn-white", "", "glyphicon glyphicon-plus"); ?>
+    </div>
+    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+        <form name="form2" method="get" action="client.php">
+            <div class="input-group">
+                <!-- <div class="pull-left">
+                                    <?php
+                //150610添加
+                //判断dwt_emp_dep_plus是否存在,如果存在,则按顶级部门来查询显示不同的权限组
+                //dump($GLOBALS['CUSERLOGIN']->getUserType());
+                if (!$GLOBAMOREDEP) {
+                    //???????????????这里要取 部门管理员登录后的顶级部门ID
+                    //$depid=;
+                    echo "<input type=\"hidden\" name=\"depid\" value=\"$depid\" />";
+                } else {
+                    $depOptions = GetDepOptionListRole($depid);
+                    //dump($emp_dep);
+                    echo "<select  class='form-control' name='depid' id='depid'  >\r\n";
+                    echo "<option value='0'>请选择公司...</option>\r\n";
+                    echo $depOptions;
+                    echo "</select>";
+                } ?>
+                                </div>-->
+
+
+                <div class="pull-left ">
+                    <select class='form-control' name='rank' id='rank'>
+                        <option value="" selected>会员类型</option>
+                        <?php echo $rankoption; ?>
+                    </select>
+                </div>
+                <div class="pull-left ">
+                    <select class='form-control' name='orderby' id='orderby'>
+                        <option value="" selected>排序类型</option>
+                        <option value="jf" <?php if ($orderby == 'jf') echo "selected" ?>>积分排序</option>
+                        <option value="jb" <?php if ($orderby == 'jb') echo "selected" ?>>金币排序</option>
+                    </select>
+                </div>
+                <div class="pull-left ">
+                    <select class='form-control' name='jbnum_t' id='jbnum_t'>
+                        <option value="" selected>金币余额区间查询</option>
+                        <option value="499" <?php if ($jbnum_t == '499') echo "selected" ?>>500以下</option>
+                        <option value="500" <?php if ($jbnum_t == '500') echo "selected" ?>>500</option>
+                        <option value="2000" <?php if ($jbnum_t == '2000') echo "selected" ?>>501-2000</option>
+                        <option value="2001" <?php if ($jbnum_t == '2001') echo "selected" ?>>2000以上</option>
+                    </select>
+                </div>
+                <!-- <div class="pull-left ">
+                                    <select class='form-control' name='isorder' id='isorder'>
+                                        <option value="" selected>是否交易</option>
+                                        <option value="1" <?php /*if ($isorder == '1') echo "selected" */ ?>>未交易</option>
+                                        <option value="2" <?php /*if ($isorder == '2') echo "selected" */ ?>>已交易</option>
+                                    </select>
+                                </div>-->
+                <div class="pull-left ">
+                    <select class='form-control' name='from' id='from'>
+                        <option value="" selected>来源</option>
+                        <option value="微信" <?php if ($from == '微信') echo "selected" ?>>微信</option>
+                        <option value="手工添加" <?php if ($from == '手工添加') echo "selected" ?>>手工添加</option>
+                        <option value="手机验证" <?php if ($from == '手机验证') echo "selected" ?>>手机验证</option>
+                        <option value="手工绑定" <?php if ($from == '手工绑定') echo "selected" ?>>手工绑定</option>
+                    </select>
+                </div>
+                <div class="pull-left ">
+                    <input name="keyword" type="text" placeholder="会员姓名、手机、身份证号" class="form-control" value="<?php echo $keyword ?>">
+
+                </div>
+                <div class="pull-left ">
+                    <input name="sponsoriid" type="text" placeholder="推荐人ID" class="form-control" value="<?php echo $sponsoriid ?>">
+
+                </div>
+
+                <div class="pull-left ">
+
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-white">
+                            搜索
+                        </button>
+                    </div>
+
+                </div>
+                <div class="pull-left ">
+                    <?php if ($jbnum_t > 0) echo " 当前查询金币合计" . $jbtotal; ?>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--工具框   结束-->
+
+
+    <!--表格数据区------------开始-->
+    <div class="table-responsive">
+
+
+        <table id="datalist">
+            <thead>
+            <tr>
+                <th data-halign="center" data-align="center">序号</th>
+                <th data-halign="center" data-align="left">部门</th>
+                <th data-halign="center" data-align="left">联系方式</th>
+                <th data-halign="center" data-align="left">介绍人</th>
+                <th data-halign="center" data-align="left">积分</th>
+                <th data-halign="center" data-align="left">金币</th>
+                <th data-halign="center" data-align="center">添加日期</th>
+                <th data-halign="center" data-align="left">会员级别</th>
+                <th align="center" data-halign="center" data-align="center">微信信息</th>
+                <th data-halign="center" data-align="center">操作</th>
+            </tr>
+            </thead>
+            {dwt:datalist}
+            <tr>
+                <td>{dwt:field.autoindex /}</td>
+                <td>
+                    <div style="min-width: 70px"></div>
+
+                    <?php echo GetDepsNameByDepId($fields['depid']); ?>
+                </td>
+                <td>{dwt:field.realname/} [ID:{dwt:field.id /}]
+                    <br>
+                    {dwt:field.mobilephone /}
+                    <?php echo getPhoneIsCheck($fields["mobilephone_check"], $fields["mobilephone_checkDate"]); ?>
+                    <br>来源：{dwt:field.from /}
+                    <?php if ($fields["description"] != "") echo "<br>备注：" . $fields["description"]; ?>
+                </td>
+
+                <td>
+
+                    <?php echo getOneCLientRealName($fields["sponsorid"]); ?>
+                </td>
+                <?php
+                $jfnum = $fields["jfnum"] / 100;
+                $jbnum = $fields["jbnum"] / 100;
+                ?>
+                <td><?php if ($jfnum > 0) echo $jfnum; ?></td>
+                <td><?php if ($jbnum > 0) echo $jbnum; ?></td>
+
+                <td>{dwt:field.senddate function='GetDateTimeMk(@me)' /}</td>
+
+
+                <td>
+                    <div style="min-width: 120px"></div>
+
+                    <?php
+                    echo GetClientAllType($fields['id']);
+
+                    ?>
+                </td>
+
+
+                <td>
+                    <?php
+                    if ($fields["openid"] != "") {
+                        echo $fields["nickname"];
+                        $photo = $fields["photo"];
+                        if ($photo == "") $photo = "../images/zw.jpg";
+                        echo "<br><img src=\"{$photo}\"  data-original=\"{$photo}\" width=\"80\" height=\"80\"/>";
+
+                    } else {
+                        echo "无微信信息";
+                    }
+                    ?>
+
+
+                </td>
+
+                <td style="min-width: 90px">
+                    <div style="min-width: 120px"></div>
+                    <?php
+                    $clientid = $fields['id'];
+                    echo $roleCheck->RoleCheckToLink("client/client_edit.php?id={$clientid}", "编辑", "", "");
+                    echo $roleCheck->RoleCheckToLink("client/client_del.php?id={$clientid}");
+                    echo "<br>";
+
+                    //短信   160612注释 掉  不能手工验证手机号
+                    // if($fields["mobilephone_check"]!=1){echo $roleCheck->RoleCheckToLink("client/client_phoneCheck.php?id=".$fields['id']);}
+                    //else{ echo  $roleCheck->RoleCheckToLink("client/client_view_phoneMsg.php?id=".$fields['id'], "", "", true);}
+
+                    //登录信息
+                    //if (getIsUser($fields["id"]) == false) {
+                    //    echo " <span style='color: #666666;text-decoration:line-through;'>登录详情</span> ";
+                    //    echo $roleCheck->RoleCheckToLink("client/client_user_add.php?id={$clientid}", "", "", true);
+                    //} else {
+                    echo $roleCheck->RoleCheckToLink("client/client_view_user.php?id={$clientid}", "", "", true);
+                    echo $roleCheck->RoleCheckToLink("client/client_user_edit.php?id={$clientid}", "", "", true);
+                    //}
+                    echo "<br>";
+
+                    //微信
+
+                    if (($fields["openid"]) == "") {
+                        echo " <span style='color: #666666;text-decoration:line-through;'>微信详情</span> ";
+                        echo " <span style='color: #666666;text-decoration:line-through;'>微信解绑</span> ";
+                        //if ($fields["from"] == "手工添加") {
+                        echo $roleCheck->RoleCheckToLink("client/client_updateWeixin.php?id={$clientid}", "", "", true);
+                        //}else{
+                        //    echo " <span style='color: #666666;text-decoration:line-through;'>微信绑定</span> ";
+
+                        //}
+                    } else {
+                        echo $roleCheck->RoleCheckToLink("client/client_view_weixin.php?id={$clientid}", "微信详情", "", true);
+                        $confirmInfo = "进行此操作后会员将无法从微信登录<br>必须重新[微信绑定]后才可以使用";
+                        echo $roleCheck->RoleCheckToLink("client/client_WeixinClear.php?id={$clientid}", "微信解绑", "", true, "", true, $confirmInfo);
+                        echo " <span style='color: #666666;text-decoration:line-through;'>微信绑定</span> ";
+                    }
+
+
+                    echo "<br>";
+                    echo $roleCheck->RoleCheckToLink("client/client_view_jf.php?id={$clientid}", "", "", true);
+                    echo $roleCheck->RoleCheckToLink("client/client_view_jb.php?id={$clientid}", "", "", true);
+                    //echo $roleCheck->RoleCheckToLink("client/clientScoresLog.php?id={$clientid}", "", "", true);
+
+                    //echo $fields['id'];
+
+                    /*if ($fields['jbnum'] >= 2000) {
+                        echo "<br>";
+                        echo $roleCheck->RoleCheckToLink("client/client_to2k.php?id={$clientid}", "转为合伙人送两千积分,扣两千金币", "", "", "", true);
+                    } else {
+                        echo "<br> <span style='color: #666666;text-decoration:line-through;'>转为合伙人送两千积分,扣两千金币</span> ";
+                    }
+
+                    if ($fields['rank'] == 0) {
+                        echo "<br>";
+                        echo $roleCheck->RoleCheckToLink("client/client_to10w.php?id={$clientid}", "转为合伙人送十万积分", "", "", "", true);
+                    } else {
+                        echo "<br> <span style='color: #666666;text-decoration:line-through;'>转为合伙人送十万积分</span> ";
+                    }*/
+
+                    /*if ($fields['rank'] == 1) {
+                        echo "<br>";
+                        echo $roleCheck->RoleCheckToLink("client/client_tonohhr.php?id={$clientid}", "撤消合伙人", "", "", "", true);
+                    } else {
+                        echo "<br> <span style='color: #666666;text-decoration:line-through;'>撤消合伙人</span> ";
+                    }*/
+                    ?>
+
+                </td>
+            </tr>
+            {/dwt:datalist}
+
+        </table>
+        {dwt:pagelist/}
+
+
+    </div>
+    <!--表格数据区------------结束-->
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table-2.js"></script>
+<!--表格-->
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<SCRIPT src="../ui/js/jquery.lazyload.plus.js" type=text/javascript></SCRIPT>
+
+</body>
+</html>

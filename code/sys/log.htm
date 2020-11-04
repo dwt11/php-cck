@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content">
+
+
+                    <!--工具框   开始-->
+                    <div class="btn-group" id="Toolbar">
+                        <a href="javascript:DelSel();" id="DelSel" class="btn btn-white" data-toggle='tooltip' data-placement='top' title='删除选中'><i class='glyphicon glyphicon-minus' aria-hidden='true'></i></a>
+                        <a href="javascript:ClearLog();" id="ClearLog" class="btn btn-white" data-toggle='tooltip' data-placement='top' title='清空所有'><i class='glyphicon glyphicon-remove' aria-hidden='true'></i></a>
+
+                    </div>
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+                                <div class="pull-left ">
+                                    <input name="userName" type="text" placeholder="用户登录名" class="form-control" id="userName" value="<?php echo $userName?>"/>
+                                </div>
+                                <div class="pull-left ">
+                                    <input name="logfilename" type="text" placeholder="文件名称" class="form-control" id="logfilename" value="<?php echo $logfilename?>"/>
+                                </div>
+                                <div class="pull-left ">
+                                    <input name="cip" type="text" id="cip" placeholder="IP地址" class="form-control" value="<?php echo $cip?>"/>
+                                </div>
+                                <div class="pull-left">
+                                    <select name="dtime" id="dtime" class='form-control'>
+                                        <option value="0" <?php if($dtime==0) echo " selected"?> selected>选择时间段</option>
+                                        <option value="7" <?php if($dtime==7) echo " selected"?>>一周内</option>
+                                        <option value="15" <?php if($dtime==15) echo " selected"?>>15天内</option>
+                                        <option value="30" <?php if($dtime==30) echo " selected"?>>30天以内</option>
+                                        <option value="60" <?php if($dtime==60) echo " selected"?>>60天以内</option>
+                                    </select>
+                                </div>
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--工具框   结束-->
+
+
+
+
+
+
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th align="center" data-halign="center" data-align="center">
+                                    <input name='selAllBut'  id='selAllBut' type='checkbox'   class="i-checks"  data-toggle='tooltip' data-placement='top' title='全选/全否'/>
+                                </th>
+                                <th align="center" data-halign="center" data-align="center">用户名</th>
+                                <th align="center" data-halign="center" data-align="left">功能名称</th>
+                                <th align="center" data-halign="center" data-align="left">访问功能</th>
+                                <th align="center" data-halign="center" data-align="center">方式</th>
+                                <th align="center" data-halign="center" data-align="center">访问IP</th>
+                                <th align="center" data-halign="center" data-align="center">时间</th>
+                                <th align="center" data-halign="center" data-align="left">Query参数</th>
+                            </tr>
+                            </thead>
+                            {dwt:datalist}
+                            <tr>
+                                <td>
+                                    <input name='logs' type='checkbox'   class="i-checks"  value='{dwt:field.lid/}'/>
+                                </td>
+                                <td>
+                                    {dwt:field.userName/}
+                                </td>
+                                <td>
+                                    <?php echo getFileTitle($fields['filename']);?>
+                                </td>
+                                <td>
+                                    {dwt:field.filename/}
+                                </td>
+                                <td>
+                                    {dwt:field.method/}
+                                </td>
+                                <td>
+                                    {dwt:field.cip/}
+                                </td>
+                                <td>
+                                    {dwt:field.dtime function="GetDateTimeMk(@me)" /}
+                                </td>
+                                <td>
+                                    <input type="text" value="{dwt:field.query/}" name="t1" class="form-control"/>
+                                </td>
+                            </tr>
+                            {/dwt:datalist}
+                        </table>
+                        {dwt:pagelist/}
+
+
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green"})
+
+        //是否全选
+        $("input[name='selAllBut']").on('ifChecked', function(event){
+            $("input[name='logs']").iCheck('check');
+        });
+        $("input[name='selAllBut']").on('ifUnchecked', function(event){
+            $("input[name='logs']").iCheck('uncheck');
+        });
+    });
+
+</script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+
+<script language="javascript">
+    function DelSel() {
+            var nid = getCheckboxItem('logs');
+            if (nid == "") {
+                layer.alert('请选择要删除的数据', {icon: 6});
+                return;
+            }
+            layer.confirm('您确定要删除此内容吗？', {icon: 3, title: '提示'}, function (index) {
+                location.href = "log_del.php?dopost=del&ids=" + nid;
+            });
+    }
+    function ClearLog() {
+        layer.confirm('您确定要清空所有日志吗？', {icon: 3, title: '提示'}, function (index) {
+            location.href = "log_del.php?dopost=clear";
+        });
+    }
+</script>
+</body>
+</html>
+
+

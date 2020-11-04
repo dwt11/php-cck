@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>选择会员</title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg" style="min-width: 800px">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="btn-group" id="Toolbar2">
+                        <input type="submit" id="closepage" value="确定" class="btn  btn-primary">
+                    </div>
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+                                <div class="pull-left ">
+                                    <input name="keyword" type="text" placeholder="姓名、手机、身份证号" class="form-control" value="<?php echo $keyword ?>">
+                                    <input name="dopost" type="hidden"   value="<?php echo $dopost ?>">
+                                </div>
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th align="center" data-halign="center" data-align="center"></th>
+                                <th data-halign="center" data-align="left">部门</th>
+                                <th align="center" data-halign="center" data-align="center">姓名</th>
+                                <th align="center" data-halign="center" data-align="left">电话/身份证</th>
+                                 <th align="center" data-halign="center" data-align="center">积分</th>
+                                <th align="center" data-halign="center" data-align="center">金币</th>
+                                <th data-halign="center" data-align="left">会员级别</th>
+                                <th align="center" data-halign="center" data-align="center">推荐人</th>
+                            </tr>
+                            </thead>
+                            {dwt:datalist}
+                            <tr>
+                                <td>
+                                    <label class="checkbox-inline i-checks"><input name='clientid' id='clientid' type='radio' value="{dwt:field.clientid/}"/></label>
+                                </td>
+                                <td><div style="max-width:120px "><?php echo GetDepsNameByDepId($fields['depid']); ?></div></td>
+                                <td ><div style="min-width:50px;max-width: 50px ">{dwt:field.realname/}</div> </td>
+                                <td >{dwt:field.mobilephone/}<br>{dwt:field.idcard/}</td>
+                                <td ><?php echo (int)$fields["jfnum"]/100?></td>
+                                <td ><?php echo (int)$fields["jbnum"]/100?></td>
+                                <td>
+                                     <div style="min-width: 120px"></div>
+
+                                    <?php
+                                    echo GetClientAllType($fields['id']);
+
+                                    ?>
+                                </td>   <td>{dwt:field.sponsorid function="getOneCLientRealName(@me)"/}</td>
+                            </tr>
+                            {/dwt:datalist}
+                        </table>
+                        {dwt:pagelist/}
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ <script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green"})
+    });
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.iframeAuto(index);
+</script>
+<!--表格-->
+<script type="text/javascript">
+    $('#closepage').click(function () {
+        var clientid = $('input:radio[name=clientid]:checked').val();
+
+        if (!clientid) {
+            alert("请选择会员");
+            return false;
+        }
+        parent.$("#clientid").val(clientid);
+        parent.layer.closeAll('iframe');
+    })
+</script>
+</body>
+</html>

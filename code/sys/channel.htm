@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle ?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content">
+                    <!--表格数据区------------开始-->
+
+
+                    <div class="btn-group" id="Toolbar">
+                        <a href="channel_add.php" class="btn btn-outline btn-default" data-toggle='tooltip' data-placement='top' title='新增模型'><i class='glyphicon glyphicon-plus' aria-hidden='true'></i></a>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th class="text-center">id号</th>
+                                <th class="text-center">模型名称</th>
+                                <th class="text-center">识别id</th>
+                                <th class="text-center">主表</th>
+                                <th class="text-center">附加表</th>
+                                <th class="text-center">列表模板</th>
+                                <th class="text-center">添加模板</th>
+                                <th class="text-center">编辑模板</th>
+                                <th class="text-center"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {dwt:datalist}
+                            <tr>
+                                <td class="text-center">{dwt:field.id /}</td>
+                                <td class="text-center"> {dwt:field.typename /}</td>
+                                <td class="text-center">{dwt:field.nid /}</td>
+                                <td class="text-center">{dwt:field.maintable function="str_replace('#@__',$cfg_dbprefix,@me)" /}</td>
+                                <td class="text-center">{dwt:field.addtable function="str_replace('#@__',$cfg_dbprefix,@me)" /}</td>
+                                <td class="text-center">{dwt:field.templist /}</td>
+                                <td class="text-center">{dwt:field.tempadd /}</td>
+                                <td class="text-center">{dwt:field.tempedit /}</td>
+                                <td class="text-center">
+                                    <a href='channel_edit.php?id={dwt:field.id/}'>编辑</a>
+                                   <?php if($fields["id"]>4){?>
+                                  删除  <!--<a href='channel_del.php?id={dwt:field.id/}'>删除</a>-->
+                                    <?php }?>
+                                   <br> <a href='field.php?id={dwt:field.id/}'>字段信息</a>
+                                </td>
+                            </tr>
+                            {/dwt:datalist}
+                            </tbody>
+                        </table>
+                        {dwt:pagelist listsize="5"/}
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+</body>
+</html>

@@ -1,0 +1,69 @@
+{dwt:config name='pagesize' value='30' /}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <title><?php echo $sysFunTitle?></title>
+    <link href="../css/base.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery.min.js"></script>
+    
+    <script src="../js/main.js"></script>
+    <script src="../js/dialog.js"></script>
+</head>
+<body leftmargin="8" topmargin="8" background='../images/allbg.gif' >
+<table width="98%" border="0" cellpadding="0" cellspacing="1" bgcolor="#ccd9b9" align="center" style="margin-bottom:5px">
+    <tr>
+        <td height="35" background="../images/tbg.gif" align="center"><strong> <?php echo $sysFunTitle?> </strong></td>
+    </tr>
+</table>
+<table width="98%" border="0" cellpadding="1" cellspacing="1" align="center" class="tbtitle" style="background:#cfcfcf;">
+    <tr >
+        <td  height="28"  width="150"  background='../images/tbg.gif'>
+            <div class="toolbox">
+                <a href="channel_add.php" class='np coolbg'>增加新模型</a>
+            </div>
+
+
+
+        </td>
+    </tr>
+</table>
+
+<table width="98%" border="0" cellpadding="2" cellspacing="1" bgcolor="#CFCFCF" align="center" style="margin-top:8px">
+    <tr align="center" bgcolor="#FBFCE2" height="28">
+        <td >id号</td>
+        <td >模型名称</td>
+        <td >识别id</td>
+        <td >附加表</td>
+        <td >发布程序</td>
+        <td >编辑程序</td>
+        <td >管理程序</td>
+        <td></td>
+    </tr>
+    {dwt:datalist}
+    <tr align="center" bgcolor="#FFFFFF" height="24"
+        onMouseMove="javascript:this.bgColor='#FCFDEE';" onMouseOut="javascript:this.bgColor='#FFFFFF';">
+        <td>{dwt:field.id /}</td>
+        <td>
+            <a href='channel_edit.php?id={dwt:field.id/}&dopost=edit'><u>{dwt:field.typename /}</u></a>
+        </td>
+        <td>{dwt:field.nid /}</td>
+        <td>{dwt:field.addtable function="str_replace('#@__',$cfg_dbprefix,@me)" /}</td>
+        <td>{dwt:field.addcon /}</td>
+        <td>{dwt:field.editcon /}</td>
+        <td>{dwt:field.mancon /}</td>
+        <td>
+            <a href='channel_edit.php?id={dwt:field.id/}&dopost=edit'>更改</a>
+            <a href='channel_field.php?id={dwt:field.id/}&dopost=edit'>11字段信息</a>
+            <a href='channel_del.php?id={dwt:field.id/}'>删除</a>
+        </td>
+    </tr>
+    {/dwt:datalist}
+    <tr align="center" bgcolor="#F9FCEF" height="28">
+        <td colspan="8">
+            {dwt:pagelist listsize="5"/}
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+<title><?php echo $sysFunTitle?></title>
+<link href="../css/base.css" rel="stylesheet" type="text/css" />
+<script src="../js/jquery.min.js"></script>
+
+<script src="../js/main.js"></script>
+<script language="javascript">
+function moveArc(archivesid){
+	var qstr=getCheckboxItem("arcID");
+	location="archives_del.php?archivesid="+archivesid+"&dopost=return&qstr="+qstr;
+}
+function clearArc(archivesid){
+	var qstr=getCheckboxItem();
+	if(archivesid==0) archivesid = getOneItem();
+	location="archives_del.php?qstr="+qstr+"&archivesid="+archivesid+"&dopost=clear";
+}
+function clear(archivesid){
+	var qstr=getCheckboxItem("arcID");
+	location="archives_del.php?qstr="+qstr+"&archivesid="+archivesid+"&dopost=clear";
+}
+
+</script>
+</head>
+<body leftmargin="8" topmargin="8" background='../images/allbg.gif' >
+<table width="98%" border="0" cellpadding="0" cellspacing="1" bgcolor="#ccd9b9" align="center" style="margin-bottom:5px">
+  <tr>
+    <td height="35" background="../images/tbg.gif"><table width="98%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="center"><strong> <?php echo $sysFunTitle?> </strong></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+
+  <form name="form2">
+
+<table width="98%" border="0" cellpadding="2" cellspacing="1" bgcolor="#cfcfcf" align="center">
+  <tr >
+    <td height="28" colspan="8"  background='../images/tbg.gif' align="center"> {dwt:pagelist/} </td>
+  </tr>
+    <tr align="center" bgcolor="#FBFCE2" height="25">
+    <td >ID</td>
+    <td >选择</td>
+    <td>模型栏目</td>
+    <td>标题</td>
+    <td >更新时间</td>
+    <td >点击</td>
+    <td>发布人</td>
+    <td>操作</td>
+
+
+    </tr>
+    {dwt:datalist}
+    <tr align='center' bgcolor="#FFFFFF"  onMouseMove="javascript:this.bgColor='#FCFDEE';" onMouseOut="javascript:this.bgColor='#FFFFFF';"
+	height="25">
+      <td>{dwt:field.id/}</td>
+      <td><input name="arcID" type="checkbox" id="arcID" value="{dwt:field.id/}" class="np"></td>
+      <td align="left"><a href='archives.php?typeid={dwt:field.typeid/}'>{dwt:field.channelid function='GetChannelTypeName(@me)'/}&nbsp;{dwt:field.typeid function='GetAllTypeName(@me)'/}</a></td>
+      <td align='left'>{dwt:field.title/}</td>
+      <td>{dwt:field.senddate function='GetDateTimeMk(@me)'/}</td>
+      <td>{dwt:field.click/}</td>
+    <td>{dwt:field.userid function=GetEmpNameById(@me)/}</td>
+      <td><a href="javascript:moveArc({dwt:field.id/})">还原</a> | <a href="javascript:clearArc({dwt:field.id/})">彻底删除</a></td>
+    </tr>
+    {/dwt:datalist}
+    <tr bgcolor="#ffffff">
+      <td height="24" colspan="8">&nbsp; 
+      <a href="javascript:selAll('arcID')" id="selAllBut" class="coolbg">全选</a> 
+      <a href="javascript:moveArc(0)"   onclick="return confirm('你真的确定要还原吗？');"  class="coolbg">还原</a> 
+      <a href="javascript:clear(0)"   onclick="return confirm('你真的确定要彻底删除吗？');"  class="coolbg">彻底删除</a>
+      </td>
+    </tr>
+  <tr >
+    <td height="28" colspan="8"  background='../images/tbg.gif' align="center"> {dwt:pagelist/} </td>
+  </tr>
+</table>
+  </form>
+</body>
+</html>

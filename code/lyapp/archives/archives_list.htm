@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>新闻列表</title>
+    <link href="/ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/ui/css/style.min.css" rel="stylesheet">
+    <link href="/lyapp/css/style.css" rel="stylesheet" media="screen">
+    <!--    <link href="/ui/css/plugins/iscroll/iscroll.css" rel="stylesheet">
+    -->
+</head>
+<body>
+{dwt:php} include("../index_heard.php");{/dwt:php}
+
+<div class="box">
+    <!--<div id="wrapper" class="box" style="margin-top:50px;">
+    -->
+
+    <!--    <div id="scroller">
+            <div id="scroller-pullDown">
+                <span id="down-icon" class="icon-double-angle-down pull-down-icon"></span>
+                <span id="pullDown-msg" class="pull-down-msg">下拉刷新</span>
+            </div>
+
+    -->
+    <dl class="newslist">
+
+        <dt>
+            <ul>
+
+                <!--                    <div id="scroller-content" class="page-container ">
+                -->
+                {dwt:arclist orderby="pubdate"}
+
+
+                <li>
+
+                    <a href="[field:arcurl/]"><img src="[field:litpic/]" alt="[field:fulltitle/]"></a>
+
+                    <h3><a href="[field:arcurl/]">[field:fulltitle/]</a></h3>
+
+                    <p></p>
+
+                </li>
+
+
+                {/dwt:arclist}
+                <!--                    </div>
+                -->
+
+            </ul>
+        </dt>
+
+
+    </dl>
+    <div style=" margin: 10px;"> {dwt:pagelist listitem="infos,index,end,pre,next," listsize="5"/}</div>
+
+    <!--        <div id="scroller-pullUp">
+                <span id="up-icon" class="icon-double-angle-up pull-up-icon"></span>
+                <span id="pullUp-msg" class="pull-up-msg">上拉加载更多</span>
+            </div>
+        </div>
+    -->
+
+</div>
+<script src="/ui/js/jquery.min.js"></script>
+<script src="/lyapp/js/main.js"></script>
+<script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+<script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+<script src="/lyapp/js/quickButton.js"></script>
+<script src="/ui/js/plugins/layer/layer.min.js"></script>
+<!--<script src="/ui/js/plugins/iscroll/iscroll.js"></script>
+<script src="/ui/js/plugins/iscroll/iscroll-app.js"></script>
+<script>
+    /*    $(function () {
+     //用于控制图片自适应宽度和高度 151106添加
+     var autocss = {"max-width": "100%", "height": "auto"};
+     $("img").css(autocss);
+     });*/
+    iscrollloaded("{dwt:php}  echo $lv->nextPageUrl;{/dwt:php}");
+</script>
+-->
+</body>
+</html>

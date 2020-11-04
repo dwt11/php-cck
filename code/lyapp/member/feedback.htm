@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1">
+    <title>建议反馈</title>
+    <link href="/ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/ui/css/animate.min.css" rel="stylesheet">
+    <link href="/ui/css/style.min.css" rel="stylesheet">
+    <link href="/lyapp/css/style.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div class="main">
+    <?php include("../index_heard.php"); ?>
+    <div class="widget1   text-center">
+        <div class="row">
+            <div class="col-xs-6 text-left lefttext">
+                建议反馈
+            </div>
+
+        </div>
+        <a href="feedback_add.php" class="btn btn-white btn-rounded">添加</a>
+    </div>
+
+    <div class="ibox-content">
+        <div class="project-list">
+            <table class="table table-hover">
+                <tbody>
+                {dwt:datalist}
+                <tr id="tr{dwt:field.id /}">
+                    <td class="project-title">
+                        <a href="feedback_view.php?id={dwt:field.id/}">{dwt:field.body/}</a>
+                        <br/>
+                        <?php
+                        if ($fields["completeBody"] == "") {
+                            echo "未回复";
+                        } else {
+                            echo "[" . GetDateMk($fields["completeTime"]) . "] 回复内容:" . $fields["completeBody"];
+                        }
+                        ?>
+                    </td>
+                    <td class="project-actions">
+                        <small> {dwt:field.dtime function="GetDateMk(@me)" /}</small>
+                        <br/>
+                        <?php
+                        if ($fields["completeBody"] == "") {
+                            echo "
+                             <span onclick='del(" . $fields["id"] . ")' href='#' class='btn btn-primary btn-xs'>删除</span>
+                        <a href='feedback_edit.php?id=" . $fields["id"] . "'  class=\"btn btn-primary btn-xs\">编辑</a>";
+                        } ?>
+                    </td>
+                </tr>
+                {/dwt:datalist}
+                </tbody>
+            </table>
+        </div>
+        {dwt:pagelist listitem="infos,index,end,pre,next" listsize="5"/}
+        <br>
+        <div class="clearfix"></div>
+    </div>
+    <?php include("../index_foot.php"); ?>
+</div>
+<script src="/ui/js/jquery.min.js"></script>
+<script src="/ui/js/bootstrap.min.js"></script>
+<script src="/lyapp/js/main.js"></script>
+<script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+<script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+<script src="/lyapp/js/quickButton.js"></script>
+<script src="/ui/js/plugins/layer/layer.min.js"></script>
+
+<script>
+    function del(id) {
+        $.ajax({
+            type: "post",
+            url: "feedback_del.php?id=" + id,
+            data: {},
+            dataType: 'html',
+            success: function (result) {
+                layer.msg('删除成功', {
+                    time: 1000, //20s后自动关闭
+                });
+                $("#tr" + id).hide();
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

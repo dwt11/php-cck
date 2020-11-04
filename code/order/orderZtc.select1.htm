@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>选择会员</title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg"  >
+<div class="wrapper wrapper-content animated fadeInRight" style="background-color: #ffffff">
+    <form name="form1" id="form1" action="" method="post" class="form-horizontal" >
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">第一步查找会员(输入手机号):</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name="mobilephone" value="" placeholder="手机号码">
+                <input type="hidden"   name="dopost" value="search">
+                <!--//171102修改为不用激活判断<input type="hidden"   name="isjihuo_not_panduan" value="<?php /*echo $isjihuo_not_panduan*/?>">-->
+            </div>
+        </div>
+
+
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-2 text-center">
+                <button class="btn btn-primary" type="submit">查找乘车卡</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--验证用-->
+<script src="../ui/js/plugins/validate/jquery.validate.min.js"></script>
+<script>
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.iframeAuto(index);
+
+    $().ready(function () {
+        $("#form1").validate({
+            rules: {
+                mobilephone: {required: !0, minlength: 11, isMobile: !0}
+            },
+            messages: {
+                mobilephone: {required: "请填写会员的手机号", minlength: "手机号应为11个数字", isMobile: "手机号应以13/14/15/17/18开头"}
+            }
+        })
+    });
+</script>
+
+</body>
+</html>

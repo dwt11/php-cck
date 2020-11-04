@@ -1,0 +1,7 @@
+SQL标签
+>>dede>>
+{dwt:sql sql=''}
+[field:title/]
+{/dede}
+>>dede>>
+sql='' 完整的SQL语句

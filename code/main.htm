@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <title><?php echo $cfg_softname . " " . $cfg_version; ?></title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="ui/css/animate.min.css" rel="stylesheet">
+    <link href="ui/css/style.min.css" rel="stylesheet">
+    <script language="javascript">
+        function logOut() {
+            layer.confirm('您是否要退出系统？', {icon: 3, title: '提示'}, function (index) {
+                window.parent.location.href = "exit.php";
+            });
+        }
+    </script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden" onload="times()">
+<div id="wrapper">
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="nav-close"><i class="fa fa-times-circle"></i>
+        </div>
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+
+
+                <!--登录的用户信息-------------开始-->
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                        <span></span>
+                        <span class="clear">
+                               <span class="block m-t-xs">
+                                   <strong class="font-bold">
+                                       <?php
+                                       //此处不能太长,如果太长的话,分辨率小的时候,会看不到这一行
+                                       //echo GetEmpDepAllNameByUserId($CUSERLOGIN->getUserId(),$CUSERLOGIN->getUserType())." ".GetEmpNameByUserId($CUSERLOGIN->getUserId())." (".$CUSERLOGIN->getUserName().")";
+                                       echo GetEmpNameByUserId($CUSERLOGIN->getUserId()) . " (" . $CUSERLOGIN->getUserName() . ")";
+                                       ?>
+                                   </strong>
+                               </span>
+                                <span class="text-muted text-xs block">
+                                    <?php echo GetEmpDepAllNameByUserId($CUSERLOGIN->getUserId(), $CUSERLOGIN->getUserType()); ?>
+                                </span>
+                                <span class="text-muted text-xs block">
+                                    <?php
+                                    if ($CUSERLOGIN->getUserType() == '9' || $CUSERLOGIN->getUserType() == '10') echo "<a class=\"J_menuItem\" data-index=\"sys/sysFunction.php\" href=\"sys/sysFunction.php\">菜单设定</a>";
+                                    ?>
+                                </span>
+
+
+                    </div>
+                </li>
+                <!--登录的用户信息-------------结束 -->
+
+
+                <!--导航菜单-------------开始-->
+                <?php echo $menuStr; ?>
+                <!--导航菜单-----------------------结束-->
+
+
+            </ul>
+        </div>
+    </nav>
+    <!--左侧导航结束-->
+    <!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i>
+                    </a>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+
+                    <?php if ($scheduletotalNumb > 0) echo $scheduletotalStr; ?>
+
+
+                    <li class="hidden-xs">
+                        <a onclick="layer.open({type: 2,title: '建议反馈', content: 'sys/sysFeedback_add.php'});" href='javascript:'><i class=" fa fa-edit"></i>建议反馈</a>
+                    </li>
+                    <li class="hidden-xs">
+                        <a onclick="layer.open({type: 2,title: '密码修改', content: 'changePwd.php'});" href='javascript:'><i class=" fa fa-edit"></i>密码修改</a>
+                    </li>
+                    <li class="hidden-xs">
+                        <a href="#" onclick="logOut()"><i class="fa  fa-sign-out"></i> 退出</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="row content-tabs">
+            <button class="roll-nav roll-left J_tabLeft">
+                <i class="fa fa-backward"></i>
+            </button>
+            <nav class="page-tabs J_menuTabs">
+                <div class="page-tabs-content">
+                    <a href="javascript:;" class="active J_menuTab" data-id="index_body.php">首页</a>
+                </div>
+            </nav>
+            <button class="roll-nav roll-right J_tabRight">
+                <i class="fa fa-forward"></i>
+            </button>
+            <div class="btn-group roll-nav roll-right  J_tabExit">
+                <button class="dropdown J_tabClose" data-toggle="dropdown">
+                    标签操作<span class="caret"></span>
+                </button>
+                <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                    <li class="J_tabShowActive"><a>定位当前标签</a></li>
+                    <li class="divider"></li>
+                    <li class="J_tabCloseAll"><a>关闭全部标签</a></li>
+                    <li class="J_tabCloseOther"><a>关闭其他标签</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row J_mainContent" id="content-main">
+            <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="index_body.php" frameborder="0" data-id="index_body.php" seamless></iframe>
+        </div>
+        <div class="footer">
+            <div id="orderid" style="display: none;"></div>
+            <div id="ordernumb" class="pull-left"></div>
+            <audio src="data/orderTipsMp3/new_line_n.mp3" controls="controls" id="lineMp3" hidden>
+                Your browser does not support the audio element.
+            </audio>
+            <audio src="data/orderTipsMp3/new_ztc_n.mp3" controls="controls" id="ztcMp3" hidden>
+                Your browser does not support the audio element.
+            </audio>
+            <audio src="data/orderTipsMp3/new_car_n.mp3" controls="controls" id="carMp3" hidden>
+                Your browser does not support the audio element.
+            </audio>
+            <audio src="data/orderTipsMp3/new_czk_n.mp3" controls="controls" id="czkMp3" hidden>
+                Your browser does not support the audio element.
+            </audio>
+            <audio src="data/orderTipsMp3/new_hyk_n.mp3" controls="controls" id="hykMp3" hidden>
+                Your browser does not support the audio element.
+            </audio>
+            <audio src="data/orderTipsMp3/new_cwap_n.mp3" controls="controls" id="cwapMp3" hidden>
+                Your browser does not support the audio element.
+            </audio>
+            <div class="pull-right">
+                <span id="nowtime"> </span> &copy; <?php echo $cfg_softname . " " . $cfg_version; ?>
+            </div>
+        </div>
+    </div>
+    <!--右侧部分结束-->
+</div>
+<script src="ui/js/jquery.min.js"></script>
+<script src="ui/js/bootstrap.min.js"></script>
+<script src="ui/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="ui/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="ui/js/plugins/layer/layer.min.js"></script>
+<script src="ui/js/hplus.min.js"></script>
+<script type="text/javascript" src="ui/js/contabs.min.js"></script>
+<script src="ui/js/plugins/pace/pace.min.js"></script>
+<script src="ui/js/jquery.cookie.js"></script>
+<script language=javascript>
+    function times() {
+        var d = new initArray("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");
+        var enabled = 0;
+        today = new Date();
+        var day;
+        var date;
+        if (today.getDay() == 0) day = "星期日"
+        if (today.getDay() == 1) day = "星期一"
+        if (today.getDay() == 2) day = "星期二"
+        if (today.getDay() == 3) day = "星期三"
+        if (today.getDay() == 4) day = "星期四"
+        if (today.getDay() == 5) day = "星期五"
+        if (today.getDay() == 6) day = "星期六"
+        var today = new Date();
+        hour = today.getHours();
+        minute = today.getMinutes();
+        second = today.getSeconds();
+        nowtime.innerHTML = "" + today.getUTCFullYear() + "年" + number_length((today.getMonth() + 1 ), 2) + "月" + number_length(today.getDate(), 2) + "日 &nbsp;" + day + "&nbsp;" + number_length(hour, 2) + ":" + number_length(minute, 2) + ":" + number_length(second, 2) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        //160601不显示详细时间
+        //nowtime.innerHTML = "" + today.getUTCFullYear() + "年" + number_length((today.getMonth() + 1 ), 2) + "月" + number_length(today.getDate(), 2) + "日 &nbsp;" + day
+        setTimeout("times()", 800);
+    }
+
+    //数字长度补充
+    function number_length(N, L) {
+        N = N + '';
+        M_len = L - N.length;
+
+        for (i = 0; i < M_len; i++) {
+            N = "0" + N;
+        }
+        return N;
+    }
+
+    function initArray() {
+        this.length = initArray.arguments.length
+        for (var i = 0; i < this.length; i++)
+            this[i + 1] = initArray.arguments[i]
+    }
+
+
+    var lastShowDirName = $.cookie('lastShowDirName');//获取COOK中最后展开的面板
+    if (lastShowDirName) {
+        //如果有COOK，则展开
+        $('#' + lastShowDirName).addClass('active');
+        ;
+    } else {
+        //如果没有COOK，则默认打开第一个COOK
+        <?php if ($defaultShowDir != "") {
+        echo "$('#" . $defaultShowDir . "').addClass('active');";
+    }
+        ?>
+    }
+    $("li").click(function () {
+        $.cookie('lastShowDirName', this.id, {expires: 7}); // 存储一个带7天期限的 cookie
+        // console.log(this.id);
+    })
+</script>
+<!--右下角自动隐藏提示框 显示提示-->
+<script src="ui/js/plugins/toastr/toastr.min.js"></script>
+<link href="ui/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<script>
+    $(function () {
+        intervalName = setInterval(handle, 120*1000);//定时器句柄
+        function handle() {
+            //如果值不一样,则代表了改变
+            $.ajax({
+                type: "get",
+                url: "order/getNewOrder.do.php",
+                data: {},
+                dataType: 'json',
+                success: function (result) {
+                    var orderid = $("#orderid").html();
+                    if (orderid == "") {
+                        $("#orderid").html(result.orderid);
+                    } else {
+                        if (orderid != result.orderid) {
+                            if (result.ordertype == "ZTC") {
+                                var audioEle = $("#ztcMp3")[0];
+                                audioEle.play();	//播放
+                            }
+                            if (result.ordertype == "LYCP") {
+                                var audioEle = $("#lineMp3")[0];
+                                audioEle.play();	//播放
+                            }
+                            if (result.ordertype == "CAR") {
+                                var audioEle = $("#carMp3")[0];
+                                audioEle.play();	//播放
+                            }
+                            if (result.ordertype == "CZK") {
+                                var audioEle = $("#czkMp3")[0];
+                                audioEle.play();	//播放
+                            }
+                            if (result.ordertype == "HYK") {
+                                var audioEle = $("#hykMp3")[0];
+                                audioEle.play();	//播放
+                            }
+                            if (result.ordertype == "CWAP") {
+                                var audioEle = $("#cwapMp3")[0];
+                                audioEle.play();	//播放
+                            }
+                            $("#orderid").html(result.orderid);
+                            $("#ordernumb").html("订单编号:" + result.ordertype + result.ordernum);
+                        }
+                    }
+                }
+            });
+
+        }
+    });
+
+</script>
+</body>
+</html>

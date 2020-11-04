@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>选择乘车卡</title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+    <style>
+        .list-group-plus {
+            margin: 0;
+            background-color: #FFFFFF;
+            line-height: 25px;
+            color: #888;
+        }
+
+        .list-group-plus li a {
+            color: #000000;
+        }
+
+        .list-font-color-black {
+            color: #000000;
+        }
+
+        .list-group-item1 {
+            clear: both;
+            background-color: inherit;
+            display: block;
+            padding-bottom: 10px;
+            position: relative;
+            margin-left: 10px;
+            padding-right: 10px;
+            font-size: 14px;
+
+        }
+
+        .list-group-item-border {
+            border-bottom: 1px solid #e7eaec;
+        }
+    </style>
+
+</head>
+
+<body class="gray-bg" style="min-width: 800px">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+
+                    <!--工具框   开始-->
+                    <?php ////171102修改为不用激活判断if ($isjihuo_not_panduan == 1) {
+                        //激活时使用?>
+                     <!--   <div class="btn-group" id="Toolbar2">
+                            <input type="submit" id="jihuo" value="激活" class="btn  btn-primary">
+                        </div>-->
+                    <?php //} else {
+                        //线路预约时使用
+                        ?>
+                        <div class="btn-group" id="Toolbar2">
+                            <input type="submit" id="closepage" value="确定" class="btn  btn-primary">
+                        </div>
+
+                        <?php
+                    //} ?>
+                    <!--工具框   结束-->
+
+
+                    <div style="margin-top:10px "></div>
+
+                    <form id="form" class="form-horizontal">
+
+                        <?php echo $htmlcode; ?>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green"})
+    });
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.iframeAuto(index);
+</script>
+<!--表格-->
+<script type="text/javascript">
+    $('#closepage').click(function () {
+        //选择的乘车卡
+        var cckIDS = "";
+        $('input[name^="cck_"]:checked').each(function () {
+            cckIDS += this.value + ',';    //遍历被选中CheckBox元素的集合 得到Value值
+        });
+        console.log("cckids" + cckIDS);
+
+
+        //会员ID
+        var clientid = $('#clientid').val();
+        if (!clientid) {
+            alert("会员信息获取失败,请刷新页面重新选择");
+            return false;
+        }
+        if (cckIDS == "") {
+            alert("请选择乘车卡");
+            return false;
+        }
+        cckIDS = cckIDS.substring(0, cckIDS.length - 1);//去除最后多余 的逗号
+        var target = "<?php echo $target;?>";
+        parent.$("#orderlistztcid_" + target).val(cckIDS);
+        parent.$("#clientid_" + target).val(clientid);
+        parent.$("#clientidspan_" + target).html(clientid);
+        parent.layer.closeAll('iframe');
+    });
+    $('#jihuo').click(function () {
+        //选择的乘车卡
+        var cckIDS = "";
+        $('input[name^="cck_"]:checked').each(function () {
+            cckIDS += this.value + ',';    //遍历被选中CheckBox元素的集合 得到Value值
+        });
+        console.log("cckids" + cckIDS);
+
+
+        //会员ID
+        var clientid = $('#clientid').val();
+        if (!clientid) {
+            alert("会员信息获取失败,请刷新页面重新选择");
+            return false;
+        }
+        if (cckIDS == "") {
+            alert("请选择乘车卡");
+            return false;
+        }
+        cckIDS = cckIDS.substring(0, cckIDS.length - 1);//去除最后多余 的逗号
+        //var target = "<?php echo $target;?>";
+
+        $.ajax({
+            type: "post",
+            url: "orderZtc.jihuo.php",
+            data: {
+                cckids: cckIDS
+            },
+            dataType: 'html',
+            success: function (result) {
+                if (result == "操作成功") {
+                    layer.msg('操作成功', {
+                        shade: 0.5, //开启遮罩
+                        time: 2000 //20s后自动关闭
+                    }, function () {
+                        parent.layer.closeAll('iframe');
+                    });
+                } else {
+                    layer.msg(result, {
+                        time: 2000 //20s后自动关闭
+                    });
+                }
+            }
+        });
+
+
+      /*  parent.$("#orderlistztcid_" + target).val(cckIDS);
+        parent.$("#clientid_" + target).val(clientid);
+        parent.$("#clientidspan_" + target).html(clientid);
+        parent.layer.closeAll('iframe');*/
+    });
+</script>
+</body>
+</html>

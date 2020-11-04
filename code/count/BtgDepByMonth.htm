@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table-fixed-columns.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+    <style>
+        .ibox-content-plus {
+            background-color: #fff;
+            padding-left: 5px;
+            padding-right: 5px;
+            color: inherit;
+            border-color: #e7eaec;
+            -webkit-border-image: none;
+            -o-border-image: none;
+            border-image: none;
+            border-style: solid solid none;
+            border-width: 1px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<!--标题栏和 添加按钮            开始-->
+<div class="ibox-title" id="title">
+    <h5><?php
+        // echo $nowmonth." ";
+        echo $sysFunTitle
+        ?>
+
+       </h5><!--显示格式:订单笔数 订单总金额-->
+</div>
+<!--标题栏和 添加按钮   结束-->
+<div class="ibox-content-plus">
+    <!--工具框   开始-->
+
+    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+        <form name="form2" method="get" action="">
+            <div class="input-group">
+
+
+                <div class="pull-left ">
+                    <input name="keyword" type="text" placeholder="名称" class="form-control" value="<?php echo $keyword ?>">
+
+                </div>
+                <div class="pull-left ">
+                    <input type='text' class="form-control Wdate" value="<?php echo $nowmonth; ?>" name='nowmonth' size='14' readonly='readonly' onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM'})"/>
+                </div>
+
+                <div class="pull-left ">
+
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-white">
+                            搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--工具框   结束-->
+
+
+    <!--表格数据区------------开始-->
+    <div class="table-responsive">
+
+
+        <table
+                id="datalist22"
+                data-toggle="table"
+                data-classes="table table-hover table-condensed"
+                data-striped="true"
+                data-sort-order="desc"
+                data-mobile-responsive="true"
+                data-show-columns="true"
+        >
+            <thead>
+            <tr>
+                <th data-halign="center" data-align="left">名称</th>
+                <?php
+                $maxday = getMonthLastDay($nowmonth);//获取每月最大的天数
+                for ($i = 1; $i < $maxday + 1; $i++) {
+                    echo "<th data-halign=\"center\" data-align=\"center\">" . $i . "日</td>";
+                }
+
+                ?>
+                <th data-halign="center" data-align="left">合计</th>
+
+            </tr>
+            </thead>
+            {dwt:datalist}
+            <tr>
+                <td><div style="min-width: 120px">{dwt:field.dep_name/}</div></td>
+                <?php
+                for ($i = 1; $i < $maxday + 1; $i++) {
+
+
+                    $dateQuery = date("Y-m-d", strtotime($nowmonth . "-" . $i));
+                    $daymoney = getNumb($fields['depid'], $nowday = $dateQuery);
+
+
+
+                    echo "<td> ";
+                    
+                    //if($yj>0||$ej>0)echo $yj . "/" . $ej;
+
+                     echo   $daymoney;
+
+                    echo "</td>";
+                }
+
+
+                ?>
+                <td>
+
+                    <?php
+                   // $ordercount = ($fields["ordercount"]  );
+                    $totalmoney = ($fields["totalmoney"] / 100);
+
+
+
+
+                    echo  $totalmoney;
+                    ?>
+                </td>
+
+
+            </tr>
+            {/dwt:datalist}
+
+        </table>
+         {dwt:pagelist/}
+
+    </div>
+    <!--表格数据区------------结束-->
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-export.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/tableExport.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-fixed-columns.js"></script>
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+
+<!--表格-->
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<SCRIPT src="../ui/js/jquery.lazyload.plus.js" type=text/javascript></SCRIPT>
+<script type="text/javascript" charset="utf-8">
+
+    !function (F, E, D) {
+        !function () {
+            D("#datalist22").bootstrapTable({
+                showExport: true,//显示导出按钮
+                exportDataType: "basic",//导出类型    striped: !0,
+                showToggle: 0,
+                showColumns: 0,
+                iconSize: "outline",
+                toolbar: "#Toolbar,#Toolbar2",
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                  //排序方式
+                height: getHeight(),//高度自适应
+                fixedColumns: true,//列头固定
+                fixedNumber: 1,
+                icons: {refresh: "glyphicon-repeat", toggle: "glyphicon-list-alt", columns: "glyphicon-list"}
+            });
+            setTimeout(function () {
+                D("#datalist22").bootstrapTable('resetView');
+            }, 200);
+            /*自适应高度*/
+            $(window).resize(function () {
+                D("#datalist22").bootstrapTable('resetView', {
+                    height: getHeight()
+                });
+            });
+        }()
+    }(document, window, jQuery);
+
+
+    /*170305用于表格高度自适应 屏幕高度-标题高度-分页高度*/
+    function getHeight() {
+        var height=$(window).height() - $('#title').outerHeight(true) * 1.1- 55;
+//        console.log(height);
+        return  height;
+    }
+
+</script>
+
+</body>
+</html>

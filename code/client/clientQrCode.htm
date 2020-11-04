@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle ?> </h5> &nbsp;只列出了购买过直通车卡的会员
+                </div>
+                <div class="ibox-content icons-box">
+                    <!--工具框   开始-->
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+                                <div class="pull-left ">
+                                    <input name="keyword" type="text" placeholder="姓名/电话/卡号" class="form-control"
+                                           value="<?php echo $keyword ?>">
+                                </div>
+
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--工具框   结束-->
+                    <div class="bs-glyphicons">
+                        <ul class="bs-glyphicons-list">
+                            {dwt:datalist}
+                            <?php
+                            //生成二维码
+                            require_once('../include/qrcode.class.php');
+                            $qrpng_name = '..'.getUploadFileAdd($DEP_TOP_ID).'qr/' . $fields['id'] . $fields['senddate'] . '.png';
+                            if (!file_exists($qrpng_name)) {
+                                $params = array();
+                                $params['data'] = 'http://' . $_SERVER['SERVER_NAME'] . '/lyapp/ly_carcard_show.php?id=1&u=' . $fields['id'] . "&did={$DEP_TOP_ID}";//生成的连接
+                                $params['size'] = 6;
+                                $params['savename'] = $qrpng_name;//二维码存储地址
+                                $qrcode = new DwtQrcode;
+                                $eeeee = $qrcode->generate($params);
+                            }
+                            ?>
+                            <li style="height: 280px;width: 250px">
+                                    <span class="glyphicon-class" style="font-size: 16px; text-align: left">
+                                        <?php
+                                        if ($fields["realname"] != "") echo $fields["realname"]; else echo "无姓名 ";
+                                        if ($fields["mobilephone"] != "") echo " " . $fields["mobilephone"]; else echo "无电话 ";
+                                        echo "<br>乘车卡号：";
+                                        if ($fields["ordernum"] != "") echo $fields["ordernum"]; else echo "无 ";
+                                        echo "<br>实体卡号：";
+                                        if ($fields["cardcode"] != "") echo $fields["cardcode"]; else echo "无";
+                                        ?>
+
+                                    </span>
+                                <span class="glyphicon-class" style="font-size: 16px">
+                                    <img data-original="<?php echo $qrpng_name ?>" style="width: 200px;height: 200px">
+                                </span>
+
+                            </li>
+                            {/dwt:datalist}
+                        </ul>
+                    </div>
+                </div>
+
+                {dwt:pagelist/}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<SCRIPT src="../ui/js/jquery.lazyload.plus.js" type=text/javascript></SCRIPT>
+
+</body>
+</html>

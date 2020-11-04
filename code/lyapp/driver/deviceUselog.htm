@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1">
+    <title>车辆出行记录</title>
+    <link href="../../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../ui/css/style.min.css" rel="stylesheet">
+    <link href="../../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet" media="screen">
+    <style>
+        td {
+            padding-left: 5px;
+            line-height: 25px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="main">
+    <?php include("../index_heard.php"); ?>
+    <div class="widget1   text-center">
+        <div class="row">
+            <div class="col-xs-12 text-left lefttext">
+                车辆出行记录
+            </div>
+        </div>
+    </div>
+
+    <div class="tab" id="s-header">
+        <li class="<?php if ($sta== "1") echo " current " ?>  ">
+            <a href="?sta=1">未出行</a>
+        </li>
+        <li class="<?php if ($sta== "2") echo " current " ?>  ">
+            <a href="?sta=2"> 已出行</a>
+        </li>
+
+
+    </div>
+    <ul class="sortable-list  agile-list-dwt">
+        {dwt:datalist}
+        <li >
+
+            <table width="100%">
+                <tr>
+                    <td width="30%" align="right">订单类型:</td>
+                    <td width="70%" >
+                        <b>
+                            <?php
+                            $typeName = "旅游线路";
+                            $colname = "线路名称";
+                            if ($fields["orderCarDesc"] != "直通车线路" ) {
+                                $typeName= "车辆租赁";
+                                $colname = "车辆类型";
+                                $goodsname=$fields["goodsname"];
+                            }else{
+                                $query111 = "SELECT goodsname FROM
+                                                  #@__order_addon_lycp 
+                                                  INNER JOIN #@__goods ON #@__goods.id=#@__order_addon_lycp.goodsid
+                                                  where #@__order_addon_lycp.orderCarId='{$fields['orderCarId']}'";
+                                $rowOrder111 = $dsql->GetOne($query111);
+                                //dump($query111);
+                                if (isset($rowOrder111["goodsname"]) && $rowOrder111["goodsname"] != "") {
+                                    $goodsname=$rowOrder111["goodsname"];
+                                }
+
+                            }
+
+                            echo $typeName;//.$fields["id"];
+                            ?>
+                        </b>
+                    </td>
+                </tr>
+                <?php
+
+
+                if(strlen($goodsname)>40)$goodsname=cn_substr_utf8($goodsname,40)."...";
+                echo "
+                             <tr>
+                                <td  align=\"right\">$colname:</td>
+                                <td> 
+                                    <!--[{$fields["goodscode"]}]--> {$goodsname} 
+                                </td>
+                            </tr>";
+
+                ?>
+                <tr>
+                    <td  align="right">车牌号:</td>
+                    <td>[{dwt:field.devicecode/}] {dwt:field.devicename/}</td>
+                </tr>
+                <tr>
+                    <td  align="right">人员:</td>
+                    <td><?php
+
+                        $driver_realanme=$fields["driver_realanme"];
+                        $guide_realname=$fields["guide_realname"];
+                        if($driver_realanme!="")echo " 司机:{$fields["driver_realanme"]}";
+                        if($guide_realname!="")echo " 乘务:{$fields["guide_realname"]}";
+
+
+                        ?></td>
+                </tr>
+<?php if ($fields["orderCarDesc"] != "直通车线路" ) {?>
+                <tr>
+                    <td  align="right">订单号:</td>
+                    <td>
+                        <?php
+                        echo "".($fields["ordernum"]);
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td  align="right">联系人:</td>
+                    <td>
+                        <?php
+                        echo "".($fields["realname"]);
+                        echo " ".($fields["tel"]);
+                        ?>
+                    </td>
+                </tr>
+             <?php }   ?>
+                <tr>
+                    <td  align="right">发车日期:</td>
+                    <td>
+                        <?php
+                        echo GetDateNoYearMk($fields["start_date"]);
+                        /* if(!$lineid>0){
+                             //echo "<br>还车日期:".GetDateNoYearMk($fields["end_date"]);
+                         }else{
+                             echo GetDateNoYearMk($fields["start_date"]);
+                         }*/
+                        ?>
+                    </td>
+                </tr>
+
+
+
+
+            </table>
+
+
+            <div class="clearfix"></div>
+
+        </li>
+        {/dwt:datalist}
+    </ul>
+    {dwt:pagelist listitem="infos,index,end,pre,next" listsize="5"/}
+    <?php include("../index_foot.php"); ?>
+</div>
+
+<script src="/ui/js/jquery.min.js"></script>
+<script src="/ui/js/bootstrap.min.js"></script>
+<script src="/lyapp/js/main.js"></script>
+<script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+<script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+<script src="/lyapp/js/quickButton.js"></script>
+<script src="/ui/js/plugins/layer/layer.min.js"></script>
+
+</body>
+</html>

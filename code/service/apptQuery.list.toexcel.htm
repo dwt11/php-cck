@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo "导出预约线路详情"//$sysFunTitle?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins" id="tabaledata">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5>预约线路详情</h5>
+                    <span class="badge badge-warning">大于60岁</span>
+
+                    <span class="badge badge-success">大于70</span>
+
+
+                    <span class="badge badge-danger">大于80岁</span>
+
+
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+                <div style="display: none">
+                    <input type="text" id="appttime" value="<?php echo $appttime; ?>">
+                    <input type="text" id="lineid" value="<?php echo $lineid; ?>">
+                </div>
+                <div class="ibox-content">
+
+
+                    <!--表格数据区------------开始-->
+                    <?php
+                    $car_group_i = 0;
+                    foreach ($info as $key => $addon_lyapp_array) {
+                        $car_group_i++;
+                        $deviceid = $key;
+                        $devicename = $drivername = $driverid = $guidename = $guideid = "";
+                        if ($deviceid != "") {
+                            //获取车牌号
+                            $arcQuery55 = "SELECT devicename  FROM #@__device  WHERE  id='$deviceid' ";
+                            $arcRow55 = $dsql->GetOne($arcQuery55);
+                            if ($arcRow55) {
+                                $devicename = $arcRow55["devicename"];
+                            }
+
+                            //获取司机和乘务
+                            $sql66 = "SELECT driverid,guideid FROM  `#@__device_automobile_uselog`  WHERE `deviceid` ='$deviceid' AND lineid='$lineid' AND start_date='$appttime' ";
+                            $arcRow56 = $dsql->GetOne($sql66);
+                            if ($arcRow56) {
+                                $driverid = $arcRow56["driverid"];
+                                $drivername = GetEmpNameById($driverid) . " " . GetEmpPhoneById($driverid);
+                                $guideid = $arcRow56["guideid"];
+                                $guidename = GetEmpNameById($guideid) . " " . GetEmpPhoneById($driverid);
+                            }
+                        } else {
+                            //dump($key);
+                            //dump($addon_lyapp_array);
+                            asort($addon_lyapp_array);
+                            //如果没有司机,则把组内按值再排序 一下,主要是实现一个clientid的子预约记录都在一起
+                        }
+
+                        $ren_number = count($addon_lyapp_array);
+
+
+                        //这个暂时不用了,随后如果有需要 将此按钮放到最外围,点击后清空 线路和发车时间的,所有车辆记录
+
+
+                        /* */
+
+
+                        echo " <table id='datalist{$car_group_i}' data-toggle='table' data-classes='table table-hover table-condensed' data-striped='true' data-sort-order='desc' data-mobile-responsive='true' >
+                                    <thead>
+                                            <tr>
+                                                <th colspan='5' data-halign='center' data-align='center'>
+                                                    {$title_info}
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th   data-halign='center' data-align='center'>
+                                                人数：{$ren_number}
+                                                </th>
+                                                <th   data-halign='center' data-align='center'>
+                                                    车号：
+                                                    <span id='devicename_{$car_group_i}'>{$devicename}</span>
+                                                    
+                                                    ";
+
+                        echo "                        </th>
+                                                <th colspan='2' data-halign='center' data-align='center'>
+                                                    司机：
+                                                   <span id='drivername_{$car_group_i}'>{$drivername}</span>
+                                        
+                                                   
+                                                    
+                                                </th>
+                                                <th   data-halign='center' data-align='center'>
+                                                    乘务：
+                                                             <span id='guidename_{$car_group_i}'>{$guidename}</span>
+                                                
+                                                            
+                                                  
+                                                </th>
+                                                   
+                                                
+                                            </tr>
+                                            <tr>
+                                                 
+                                                <th data-halign='center' data-align='center'>座位号</th>
+                                                <th data-halign='center' data-align='center'>姓名</th>
+                                                <th data-halign='center' data-align='center'>电话</th>
+                                                <th data-halign='center' data-align='center'>身份证</th>
+                                                <th data-halign='center' data-align='left'>备注</th> 
+                                            </tr>
+                                            </thead>
+                            ";
+
+
+                        foreach ($addon_lyapp_array as $row_info) {
+
+
+                           // dump($row_info);
+                            $name = $row_info["realname"];
+                            $clientid = $row_info["clientid"];
+                            $tel = $row_info["tel"];
+                            $idcard = $row_info["idcard"];
+                            $iscc = $row_info["iscc"];//是否乘车
+
+                            $age = GetIDcardAge($idcard);
+                            //dump($age);
+
+                            $tr_bg = "";//默认背景为空
+                            if ($age >= 60) $tr_bg = "class='badge-warning'";
+                            if ($age >= 70) $tr_bg = "class='badge-success'";
+                            if ($age >= 80) $tr_bg = "class='badge-danger'";
+
+
+                            $seatNumber = $row_info["seatNumber"];
+                            if ($seatNumber > 0) $seatNumber = GetIntAddZero($seatNumber, 2);
+
+
+                            $id = $row_info["id"];
+
+                            $tjsite = $row_info["tjsite"];
+                            if ($tjsite != "") $tjsite = "上车站点:$tjsite<br>";
+
+                            $desc = $row_info["desc"];
+                            if ($desc != "") $desc = "上车站点:$desc<br>";
+
+                            $info = $row_info["info"];
+                            if ($info != "") $info = "操作员备注:[{$row_info["infodate"]}] [{$row_info["infooperatorid"]}] $info";
+
+                            $url = "";
+                            if ($row_info["appttime"] > time()) $url = $roleCheck->RoleCheckToLink("service/apptQuery_info.php?id=" . $row_info['id'], "确认信息", "", true);
+
+                            echo "                        
+                                            <tr>
+                                                 
+                                                <td>";
+                            echo "{$seatNumber}";
+                            if ($deviceid != ""&&$iscc=="0"){
+                                echo "<span class=\"label label-danger pull-right  \"   >未检票</span>";
+                            }
+                            if ($deviceid != ""&&$iscc=="1"){
+                                echo "<span class=\"label label-primary pull-right  \"   >已检票</span>";
+                            }
+
+
+
+
+                            $rentype = "";
+
+                            if ($row_info["orderlistztcid"] > 0) {
+                                $rentype = "直通车卡";
+                                //$rentype = GetZtcCardCode($fields["orderlistztcid"]);
+                            } else {
+                                $rentype = "<b>其他人</b>";
+                            }
+                            echo "</td>
+                                                <td>{$name}[{$rentype}]</td>
+                                                <td>{$tel}</td>
+                                                <td $tr_bg>'{$idcard} [{$age}]</td>
+                                                <td><div style='max-width: 300px'>  {$tjsite}{$desc}{$info}</td>
+                                                 
+                                            </tr>
+                                ";
+                        }
+                        // dump($deviceid);
+
+
+                        echo "</table><br><br><br>";
+                    }
+
+                    ?>
+
+
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-export.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/tableExport.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script src="apptQuery.js"></script>
+<script type="text/javascript" charset="utf-8">
+
+
+    <?php
+    for ($cargrouiiiii = 1; $cargrouiiiii <= $car_group_i; $cargrouiiiii++) {
+        echo "
+     !function (F, E, D) {
+        !function () {
+            D(\"#datalist$cargrouiiiii\").bootstrapTable({
+                showExport: true,//显示导出按钮
+                exportDataType: \"basic\",//导出类型    striped: !0,
+                showToggle: 0,
+                showColumns: 0,
+                iconSize: \"outline\",
+                toolbar: \"#Toolbar$cargrouiiiii\",
+                icons: {refresh: \"glyphicon-repeat\", toggle: \"glyphicon-list-alt\", columns: \"glyphicon-list\"}
+            });
+        }()
+    }(document, window, jQuery);
+   
+    ";
+    }
+    ?>
+
+
+</script>
+
+
+</body>
+</html>

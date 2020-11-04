@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo "金币明细"//$sysFunTitle?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body>
+<!--标题栏和 添加按钮            开始-->
+<div class="ibox-title">
+    <h5><?php echo "金币明细"//$sysFunTitle?></h5>
+
+    <div class="ibox-tools">
+        <?php
+        $usertype = $GLOBALS['CUSERLOGIN']->getUserType();
+        if ($usertype == 9 || $usertype == 10) {
+            //公司管理员才显示 总额
+            $str = getJBall();
+            echo "系统金币总额：$str";
+        }
+
+
+        ?>
+    </div>
+</div>
+<!--标题栏和 添加按钮   结束-->
+
+
+<div class="ibox-content">
+
+    <!--工具框   开始-->
+    <div class="btn-group" id="Toolbar">
+        <?php
+
+        //公司管理员才显示 添加金币
+        if (
+            $GLOBALS['CUSERLOGIN']->getUserType() == 9
+            || (
+                DEBUG_LEVEL &&
+                $GLOBALS['CUSERLOGIN']->getUserType() == 10
+                //超级管理员在  调试模式下可添加
+            )
+        ) {
+
+            echo $roleCheck->RoleCheckToLink("clientdata/jb_add.php", "金币增加", "btn btn-white", "", "glyphicon  glyphicon-plus");
+        }
+        echo $roleCheck->RoleCheckToLink("clientdata/jb_sub.php", "金币扣除", "btn btn-white", "", "glyphicon  glyphicon-minus");
+        ?>
+    </div>
+    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+        <form name="form2" method="get" action="">
+            <div class="input-group">
+                <div class="pull-left input-group" style="margin-right:5px">
+                    <a href="?" class="btn btn-white<?php if ($desc == '') echo " active" ?>"> 全部 </a>
+                    <a href="?desc=充值" class="btn btn-white<?php if ($desc == '充值') echo " active" ?>"> 充值 </a>
+                    <a href="?desc=提现" class="btn btn-white<?php if ($desc == '提现') echo " active" ?>"> 提现 </a>
+                    <a href="?desc=返利" class="btn btn-white <?php if ($desc == '返利') echo " active" ?> "> 返利 </a>
+                    <a href="?desc=消费" class="btn btn-white <?php if ($desc == '消费') echo " active" ?> "> 消费 </a>
+                    <a href="?desc=手工" class="btn btn-white <?php if ($desc == '手工') echo " active" ?> "> 手工 </a>
+                    <a href="?desc=转账" class="btn btn-white <?php if ($desc == '转账') echo " active" ?> "> 转账 </a>
+                    <input type="hidden" value="<?php echo $desc; ?>" name="desc">
+                </div>
+
+
+                <div class="pull-left" style="width: 130px">
+                    <?php //$nowtime = GetDateMk(time()); ?>
+                    <input type="text" name="startdate" id='startdate' class="form-control  Wdate" size="14"
+                           placeholder="开始日期" value="<?php echo $startdate; ?>"
+                           onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+                </div>
+
+                <div class="pull-left" style="width: 130px">
+                    <?php //$nowtime = GetDateMk(time()); ?>
+                    <input type="text" name="enddate" id='enddate' class="form-control  Wdate" size="14"
+                           placeholder="结束日期" value="<?php echo $enddate; ?>"
+                           onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+                </div>
+                <div class="pull-left ">
+                    <input name="keyword" type="text" placeholder="手机/姓名/变动说明/备注" class="form-control" value="<?php echo $keyword ?>">
+                </div>
+                <div class="pull-left ">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-white">
+                            搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--工具框   结束-->
+
+
+    <!--表格数据区------------开始-->
+    <div class="table-responsive">
+        <table id="datalist">
+            <thead>
+            <tr>
+                <th data-halign="center" data-align="center">序号</th>
+                <th data-halign="center" data-align="left">用户名称</th>
+                <th data-halign="center" data-align="center">金币变动</th>
+                <th data-halign="center" data-align="center">余额</th>
+                <th data-halign="center" data-align="left">变动说明</th>
+                <th data-halign="center" data-align="center">操作时间</th>
+                <th data-halign="center" data-align="center">操作员</th>
+                <th data-halign="center" data-align="center">操作</th>
+
+            </tr>
+            </thead>
+            <?php $totalMoney = 0; ?>
+            {dwt:datalist}
+            <?php
+            $jbnum100 = $fields["jbnum"];
+            $yenum100 = $fields["yenum"];
+            $jbnum = $jbnum100 / 100;
+            $yenum = $yenum100 / 100;
+
+            $totalMoney += $jbnum;
+
+            ?>
+            <tr>
+                <td>{dwt:field.autoindex /}</td>
+                <td>
+                    <?php if ($fields["realname"] == "" && $fields["mobilephone"] == "") {
+                        echo "微信名称：" . $fields["nickname"];
+                    } else {
+                        echo $fields["realname"] . "<br>" . $fields["mobilephone"];
+                    }
+                    echo GetClientStatus($fields["clientid"]);
+                    ?>
+                </td>
+
+                <td><?php echo $jbnum; ?></td>
+                <td><?php echo $yenum; ?></td>
+                <td>
+
+                    {dwt:field.desc /}
+                    <?php
+                    $orderid = $fields["orderid"];
+                    if ($orderid > 0) {
+                        $ordertype = GetOrderOneInfo($fields["orderid"], "ordertype");
+                        //$ordernum=GetOrderOneInfo($fields["orderid"], "ordernum");
+                        //$orderclient=getOneCLientRealName(GetOrderOneInfo($fields["orderid"], "clientid"));
+                        //echo " 订单号:$ordertype{$ordernum} 姓名:$orderclient";
+                        echo " {$ordertype}订单";
+                    }
+
+
+                    if ($fields['desc'] == '金币充值') echo "<br>充值订单号:" . $fields['jbordercode'];
+                    if ($fields["info"] != "") echo "<br>备注：" . $fields["info"] . "</b>"; ?>
+
+
+                </td>
+                <td>
+                    <div style="min-width: 70px"></div>
+                    {dwt:field.createtime function="GetDateTimeMk(@me)" /}
+
+                </td>
+                <td><?php echo GetEmpNameByUserId($fields['operatorid']); ?></td>
+                <td>
+                    <?php
+                    $iscx = false;//是否可以撤消 假可以 真不可以
+                    //查询是否撤消过,如撤消过  就不可以再撤消
+                    $query1 = "SELECT #@__clientdata_jblog.id FROM #@__clientdata_jblog   where #@__clientdata_jblog.isdel=0 AND #@__clientdata_jblog.`desc` LIKE '操作错误金币撤消%'  and info LIKE '%" . $fields['id'] . "'";
+                    $row1 = $dsql->GetOne($query1);
+                    if (isset($row1["id"]) && $row1["id"] != "") {
+                        $iscx = true;
+                    }
+
+
+                    //不是撤消的 LYADMIN 手工充值的 数量大于0,才可以撤消
+                    if (
+                        !$iscx
+                        && $GLOBALS['CUSERLOGIN']->getUserType() == 9
+                        && $fields['desc'] == "管理员手工充值"
+                        && abs($jbnum) > 0
+                    ) {
+                        echo $roleCheck->RoleCheckToLink("clientdata/jb_rest.php?id=" . $fields['id'], "金币撤消", "", true);
+                    } else {
+                        echo " <span style='color: #666666;text-decoration:line-through;'>金币撤消</span> ";
+                    }
+                    //echo $roleCheck->RoleCheckToLink("clientdata/jb_del.php?id=" . $fields['id']);
+                    ?>
+
+                </td>
+            </tr>
+            {/dwt:datalist}
+
+            <tr>
+                <td></td>
+                <td>
+                    合计
+                </td>
+
+                <td><?php echo (int)($totalMoney) ?></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+
+            </tr>
+
+        </table>
+        {dwt:pagelist/}
+
+
+    </div>
+    <!--表格数据区------------结束-->
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table-2.js"></script>
+<!--表格-->
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+</body>
+</html>

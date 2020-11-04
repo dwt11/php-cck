@@ -1,0 +1,26 @@
+{dwt:arclist orderby="pubdate"}
+
+
+{dwt:php}
+
+
+$data_str .= "<li><a href="[field:arcurl/]"><img src="[field:litpic/]" alt="[field:fulltitle/]"></a><h3><a href="[field:arcurl/]">[field:fulltitle/]</a></h3><p></p></li>";
+{/dwt:php}
+
+{/dwt:arclist}
+
+
+
+{dwt:php}
+
+
+echo $data_str ;
+{/dwt:php}
+
+<?php
+//dump($data_array);
+if (!empty($data_array)) {
+    $jsondata = json_encode($data_array);
+    echo $jsondata;
+}
+?>

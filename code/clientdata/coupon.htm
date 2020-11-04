@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body>
+<!--标题栏和 添加按钮            开始-->
+<div class="ibox-title">
+    <h5><?php echo $sysFunTitle ?></h5>
+
+    <div class="ibox-tools">
+        <?php
+        $usertype = $GLOBALS['CUSERLOGIN']->getUserType();
+        if ($usertype == 9 || $usertype == 10) {
+            //公司管理员才显示 总额
+            $str = getJBall();
+            echo "未使用总额：$str";
+        }
+
+
+        ?>
+    </div>
+</div>
+<!--标题栏和 添加按钮   结束-->
+
+
+<div class="ibox-content">
+
+    <!--工具框   开始-->
+    <div class="btn-group" id="Toolbar">
+
+    </div>
+    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+        <form name="form2" method="get" action="">
+            <div class="input-group">
+                <div class="pull-left input-group" style="margin-right:5px">
+                    <a href="?" class="btn btn-white<?php if ($isuse == '') echo " active" ?>"> 全部 </a>
+                    <a href="?isuse=1" class="btn btn-white<?php if ($isuse == '1') echo " active" ?>"> 已使用 </a>
+                    <a href="?isuse=0" class="btn btn-white<?php if ($isuse == '0') echo " active" ?>"> 未使用 </a>
+
+                    <input type="hidden" value="<?php echo $isuse; ?>" name="isuse">
+                </div>
+
+
+                <div class="pull-left" style="width: 130px">
+                    <?php //$nowtime = GetDateMk(time()); ?>
+                    <input type="text" name="startdate" id='startdate' class="form-control  Wdate" size="14"
+                           placeholder="开始日期" value="<?php echo $startdate; ?>"
+                           onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+                </div>
+
+                <div class="pull-left" style="width: 130px">
+                    <?php //$nowtime = GetDateMk(time()); ?>
+                    <input type="text" name="enddate" id='enddate' class="form-control  Wdate" size="14"
+                           placeholder="结束日期" value="<?php echo $enddate; ?>"
+                           onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+                </div>
+                <div class="pull-left ">
+                    <input name="keyword" type="text" placeholder="手机/姓名" class="form-control" value="<?php echo $keyword ?>">
+                </div>
+                <div class="pull-left ">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-white">
+                            搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--工具框   结束-->
+
+
+    <!--表格数据区------------开始-->
+    <div class="table-responsive">
+        <table id="datalist">
+            <thead>
+            <tr>
+                <th data-halign="center" data-align="center">序号</th>
+                <th data-halign="center" data-align="left">用户名称</th>
+                <th data-halign="center" data-align="center">优惠券金币数量</th>
+                <th data-halign="center" data-align="center">添加日期</th>
+                <th data-halign="center" data-align="center">使用信息</th>
+
+            </tr>
+            </thead>
+            <?php $totalMoney = 0; ?>
+            {dwt:datalist}
+            <?php
+            $jbnum100 = $fields["jbnum"];
+            $jbnum = $jbnum100 / 100;
+
+            $totalMoney += $jbnum100;
+
+            ?>
+            <tr>
+                <td>{dwt:field.autoindex /}</td>
+                <td>
+                    <?php
+
+                    echo $fields["realname"] . " " . $fields["mobilephone"];
+                    echo "<br>微信名称：" . $fields["nickname"];
+
+
+                    echo GetClientStatus($fields["clientid"]);
+                    ?>
+                </td>
+
+                <td><?php echo $jbnum; ?></td>
+                <td>
+                    <div style="min-width: 70px"></div>
+                    {dwt:field.createtime function="GetDateTimeMk(@me)" /}
+
+                </td>
+
+                <td><?php
+                    if ($fields['isuse'] == 1) {
+                        echo GetDateTimeMk($fields['usetime']);
+                        echo "<BR>" . GetOrderOneInfo($fields["useOrderId"], "ordernum");
+                    } else {
+                        echo "未使用";
+                    }
+
+
+                    ?></td>
+
+            </tr>
+            {/dwt:datalist}
+
+            <tr>
+                <td></td>
+                <td>
+                    合计
+                </td>
+
+                <td><?php echo (float)($totalMoney / 100) ?></td>
+                <td></td>
+                <td></td>
+
+
+            </tr>
+
+        </table>
+        {dwt:pagelist/}
+
+
+    </div>
+    <!--表格数据区------------结束-->
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table-2.js"></script>
+<!--表格-->
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+</body>
+</html>

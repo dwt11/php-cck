@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $title ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+
+<!--标题栏和 添加按钮            开始-->
+<div class="ibox-title">
+    <h5><?php echo $title ?></h5>
+</div>
+<!--标题栏和 添加按钮   结束-->
+
+
+<div class="ibox-content">
+    <!--表格数据区------------开始-->
+    <div class="btn-group" id="Toolbar" style="margin-right:5px;">
+        <?php
+        echo $roleCheck->RoleCheckToLink("goods/goods_add.php?typeid=" . $typeid, "", "btn btn-white", "", "glyphicon glyphicon-plus");
+        ?>
+    </div>
+
+
+    <div class="btn-group" id="Toolbar2">
+        <form name='form3' action='' method='get'>
+            <div class="input-group">
+                <div class="pull-left">
+                    <input type='text' name='keyword' value='{dwt:global.keyword/}' class='form-control' placeholder="编号/商品名称"/>
+                    <input type='hidden' name='typeid' value='1'  />
+                </div>
+                <div class="pull-left">
+                    <div class="input-group-btn">
+                        <button type="submit" name="imageField" class="btn btn-outline  btn-default">搜索</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="table-responsive">
+        <table id="datalist">
+            <thead>
+            <tr>
+                <th class="text-left">商品名称</th>
+                <th class="text-center">价格</th>
+                <th class="text-center">总销量</th>
+                <th class="text-center">消费后的会员类型</th>
+                <th class="text-center">会员类型有效期</th>
+                <th class="text-center">添加时间</th>
+                <th class="text-center">当前状态</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {dwt:datalist}
+            <tr>
+                <td class="text-left">
+                    <?php $photo = $fields["litpic"];
+                    if ($photo == "") $photo = "/images/arcNoPic.jpg";
+                    ?>
+                    <img data-original="<?php echo $photo; ?>" width="80" height="80" style='float:left; margin-right: 5px'/>
+                    {dwt:field.goodscode/}
+                    <br><?php echo GetRedKeyWord($fields['goodsname'], $keyword); ?>
+                    {dwt:field.flag function='IsCommend(@me)'/}
+
+                </td>
+                <td>
+                    <?php
+                    $price = $fields["price"] / 100;
+                    echo $price;
+                    ?>
+
+                </td>
+                <td><?php echo GetOrderNumb($fields["id"], $addtable); ?></td>
+                <td>{dwt:field.clientRank/}</td>
+                <td>{dwt:field.rankLenth/}月</td>
+                <td>{dwt:field.senddate function="GetDateMk(@me)"/}</td>
+                <td><?php echo GetDisplayStatus($fields["id"],$channeltypeid); ?></td>
+                <td>
+                    <?php
+                    //直通车卡不可下架
+                    if ($fields["isOnlyAdminDisplay"] == "1") {
+                        echo "<a onclick=\"layer.confirm('前后台都显示?', {icon: 3, title: '提示'}, function (index) {location.href = 'goods.do.php?&dopost=UpGoodsOnlyAdmin&id={$fields['id']}';layer.close(index);});\"  href='javascript:' data-toggle='tooltip' data-placement='top' title='前后台显示' > 前后台显示 </a>";
+                    } else {
+                        echo "<a onclick=\"layer.confirm('只后台显示?', {icon: 3, title: '提示'}, function (index) {location.href = 'goods.do.php?&dopost=UpGoodsOnlyAdmin&id={$fields['id']}&isOnlyAdminDisplay=1';layer.close(index);});\"  href='javascript:' data-toggle='tooltip' data-placement='top' title='只后台显示' > 只后台显示 </a>";
+                    }
+
+                    if ($fields["id"] != "1") {
+                        if ($fields["status"] == "0") {
+                            echo "<a onclick=\"layer.confirm('确认下架?', {icon: 3, title: '提示'}, function (index) {location.href = 'goods.stop.php?id={$fields['id']}&status=1';layer.close(index);});\"  href='javascript:' data-toggle='tooltip' data-placement='top' title='下架' > 下架 </a>";
+                        } else {
+                            echo "<a onclick=\"layer.confirm('确认上架?', {icon: 3, title: '提示'}, function (index) {location.href = 'goods.stop.php?id={$fields['id']}';layer.close(index);});\"  href='javascript:' data-toggle='tooltip' data-placement='top' title='上架' > 上架 </a>";
+                        }
+                    }
+                    echo $roleCheck->RoleCheckToLink("goods/goods_edit.php?id=" . $fields['id']);
+
+                    //直通车卡和陪同卡,不可以删除
+                    if ($fields["id"] != "1" && $fields["id"] != "184") echo $roleCheck->RoleCheckToLink("goods/goods_del.php?id=" . $fields['id'] . "&dopost=delGoods");
+                    echo "<br>";
+
+                    if ($fields["isOnlyAdminDisplay"] != "1"&&$fields["status"] == "0")echo "<a onclick=\"layer.open({type: 2,title: '二维码', content: 'goods.qr.php?goodsname={$fields['goodsname']}&id={$fields['id']}'});\"  href='javascript:' data-toggle='tooltip' data-placement='top' title='二维码' > 二维码 </a>";
+                    echo "<a href='/lyapp/goods/goods_view.php?id={$fields['id']}' target='_blank'>预览</a> ";
+                    if ($fields["flag"] == "h") {
+                        echo $roleCheck->RoleCheckToLink("goods/goods_tt.php?id=" . $fields['id'], "取消头条");
+                    } else {
+                        echo $roleCheck->RoleCheckToLink("goods/goods_tt.php?id=" . $fields['id'] . "&flag=h", "头条");
+                    }
+
+                    $benefit_num = 0;
+                    $questr = "SELECT count(id) AS dd        FROM #@__goods_benefit        WHERE goodsid='{$fields['id']}' AND isdel=0";
+                    // dump($questr);
+                    $rowbenefit = $dsql->GetOne($questr);
+                    if ($rowbenefit) $benefit_num = $rowbenefit["dd"];
+                    echo "<br>";
+                    echo $roleCheck->RoleCheckToLink("goods/goods_benefitadd.php?id=" . $fields['id'] . "&goodsid=" . $fields['id'], "优惠添加", "", true);
+                    echo $roleCheck->RoleCheckToLink("goods/goods_benefit.php?id=" . $fields['id'] . "&goodsid=" . $fields['id'], "优惠管理", "", true);
+
+                    if ($benefit_num > 0) echo "({$benefit_num}条)";
+
+
+                    ?>
+                </td>
+            </tr>
+
+
+            {/dwt:datalist}
+            </tbody>
+        </table>
+        {dwt:pagelist/}
+    </div>
+    <!--表格数据区------------结束-->
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table-2.js"></script>
+<!--表格-->
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<SCRIPT src="../ui/js/jquery.lazyload.plus.js" type=text/javascript></SCRIPT>
+</body>
+</html>

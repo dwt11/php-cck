@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>会员成长值明细</title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body>
+                <div class="ibox-title">
+                    <h5><?php echo "会员成长值明细"//$sysFunTitle?></h5>
+                </div>
+                <div class="ibox-content">
+                    <!--工具框   开始-->
+                    <div class="btn-group" id="Toolbar" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+                                <div class="pull-left ">
+                                    <input name="realname" type="text" placeholder="用户姓名" class="form-control" id="realname" value="<?php echo $realname?>"/>
+                                </div>
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--工具框   结束-->
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist">
+                            <thead>
+                            <tr>
+                                <th data-halign="center" data-align="center">序号</th>
+                                <th data-halign="center" data-align="left">用户名称</th>
+                                <th data-halign="center" data-align="center">变动值</th>
+                                <th data-halign="center" data-align="left">变动说明</th>
+                                <th data-halign="center" data-align="center">操作时间</th>
+                            </tr>
+                            </thead>
+                            {dwt:datalist}
+                            <tr>
+                                <td>{dwt:field.autoindex /}</td>
+                                <td>{dwt:field.realname/}</td>
+
+                                <td>{dwt:field.scoresnum /}</td>
+                                <td>{dwt:field.desc /}</td>
+                                <td>{dwt:field.createtime function='GetDateTimeMk(@me)' /}</td>
+                            </tr>
+                            {/dwt:datalist}
+
+                        </table>
+                        {dwt:pagelist/}
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table-2.js"></script>
+<!--表格-->
+
+</body>
+</html>

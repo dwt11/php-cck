@@ -1,0 +1,5 @@
+单页文档调用标签
+>>dede>>
+{dwt:likespage row=''/}
+>>dede>>
+row = '' 调用条数

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle ?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content">
+                    <div class="alert alert-warning alert-dismissable">
+                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                        修改此页内容有风险，请小心操作！ <br>
+                        灰色字的为系统内置，您是不能对它进行删除修改操作的，但可以添加或修改它的元素。<br>
+                        <b>子内容值</b>用于数据表保存,修改此值后,会引起在对应的功能中,数据字典名称显示错误,请谨慎修改。
+                    </div>
+
+
+                    <!--工具框   开始-->
+                    <div class="btn-group" id="Toolbar">
+
+                        <?php if (empty($egroup)) {//类别组显示添加和全部更新?>
+                            <a href="javascript:addType();" class="btn btn-white" data-toggle='tooltip' data-placement='top' title='添加类别组'><i class='glyphicon glyphicon-plus' aria-hidden='true'></i></a>
+                            <a href="sysStepSelect.php?dopost=upallcache" id="ClearLog" class="btn btn-white" data-toggle='tooltip' data-placement='top' title='更新所有缓存'><i class='glyphicon glyphicon-refresh' aria-hidden='true'></i></a>
+                        <?php } else { ?>
+                            <a href="javascript:DelSel();" class="btn btn-white" data-toggle='tooltip' data-placement='top' title='删除选中'><i class='glyphicon glyphicon-minus' aria-hidden='true'></i></a>
+                        <?php } ?>
+
+                        <div class="pull-left" style="padding-left: 5px">
+                            <select name="egroup1" id="egroup1" class='form-control' onChange="ChangePage(this)">
+                                <?php echo $egroupOptionS; ?>
+                            </select>
+                        </div>
+
+                    </div>
+                    <!--工具框   结束-->
+
+
+                    <!--表格数据区------------开始-->
+                    <?php if (empty($egroup)) {//类别组显示
+                        ?>
+                        <table data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true">
+                            <thead>
+                            <tr>
+                                <th data-halign="center" data-align="center">编号</th>
+                                <th data-halign="center" data-align="center">所包含的级数</th>
+                                <th data-halign="center" data-align="center">英文组名<br>
+                                                                             (用于程序读取取，必须唯一)
+                                </th>
+                                <th data-halign="center" data-align="center">显示组名<br>
+                                                                             (用于表单显示)
+                                </th>
+                                <th data-halign="center" data-align="center">系统内置</th>
+                                <th data-halign="center" data-align="center">备注</th>
+                                <th data-halign="center" data-align="center">操作</th>
+                            </tr>
+                            </thead>
+                            {dwt:datalist}
+                            <tr>
+                                <td> {dwt:field.id /}</td>
+                                <td> 级数</td>
+                                <td><strong>{dwt:field.egroup /}</strong></td>
+                                <td align="left">{dwt:field.itemname /}</td>
+                                <td> {dwt:field.issystem function="@me==1 ? '是' : '否'" /}</td>
+                                <td align="left">{dwt:field.description /}</td>
+                                <td>
+                                    <a href='sysStepSelect.php?dopost=upallcache&egroup={dwt:field.egroup /}'>更新缓存</a>
+                                    <a href='sysStepSelect.php?egroup={dwt:field.egroup /}'>查看子内容</a>
+                                    <?php
+                                    echo "<a onclick=\"ViewType(" . $fields["id"] . ")\" href=\"javascript:;\">预览 </a>";
+                                    //if($fields["issystem"]==0)
+                                    echo "<a onclick=\"EditType(" . $fields["id"] . ")\" href=\"javascript:;\">修改 </a>";
+                                    if ($fields["issystem"] == 0) echo "<a onclick=\"DelType(" . $fields["id"] . ")\" href=\"javascript:;\">删除 </a>"; else echo "删除";
+                                    ?>
+                                </td>
+                            </tr>
+                            {/dwt:datalist}
+
+                        </table>
+
+                    <?php } ?>
+
+                    <?php if (!empty($egroup)) {//子内容显示
+                        ?>
+
+                        <div class="table-responsive">
+                            <table id="datalist11" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                                <thead>
+                                <tr>
+                                    <th data-halign="center" data-align="center">
+                                        <input name='selAllBut' id='selAllBut' type='checkbox' class="i-checks"/>
+                                    </th>
+                                    <th data-halign="center" data-align="center">编号</th>
+                                    <th data-halign="center" data-align="center">组别</th>
+                                    <th data-halign="center" data-align="center">所属组名</th>
+                                    <th data-halign="center" data-align="center">子内容名称(用于表单显示)</th>
+                                    <th data-halign="center" data-align="center">子内容值</th>
+                                    <th data-halign="center" data-align="center">组内排序</th>
+                                    <th data-halign="center" data-align="center">操作</th>
+                                </tr>
+                                </thead>
+                                <form action='sysStepSelect.php' name='upenumf' method='post' id="upenumf">
+                                    <input type='hidden' name='dopost' value='upenum'/>
+                                    <INPUT TYPE="hidden" NAME="aid" value=""/>
+                                    <input type='hidden' name='ename' value=''/>
+                                    <input type='hidden' name='evalue' value=''/>
+                                    <input type='hidden' name='disorder' value=''/>
+                                </form>
+                                {dwt:datalist}
+                                <tr>
+                                    <td><input name='ids' type='checkbox' class="i-checks" value='{dwt:field.id/}'/>
+                                    </td>
+                                    <td>{dwt:field.id /}</td>
+                                    <td><strong>1级</strong></td>
+                                    <td>{dwt:field.egroup /}</td>
+                                    <td>
+                                        <input type='text' class="form-control" id='ename{dwt:field.id/}' value='{dwt:field.ename /}'/>
+                                    </td>
+                                    <td>
+                                        <input type='text' class="form-control" id='evalue{dwt:field.id/}' value='{dwt:field.evalue /}'/>
+                                    </td>
+                                    <td>
+                                        <input type='number' class="form-control" id='disorder{dwt:field.id/}' value='{dwt:field.disorder /}'/>
+                                    </td>
+                                    <td>
+                                        <a href='javascript:updateItem({dwt:field.id/});'>保存</a>
+                                        <a href='javascript:isdel("sysStepSelect_del.php?dopost=delenum&id={dwt:field.id/}");'>删除</a>
+                                    </td>
+                                </tr>
+
+                                <?php
+                                //获取子内容
+                                LogicListAllSun($fields['egroup'], $fields['evalue'], "-");
+                                ?>
+
+
+                                {/dwt:datalist}
+
+
+                            </table>
+                            {dwt:pagelist/}
+                        </div>
+                        <div class="text-center"><a href='javascript:saveAll();' class="btn btn-primary ">保存全部</a></div>
+                    <?php } ?>
+
+
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <!--选项-->
+                    <?php if (!empty($egroup)) {//子内容显示
+                        ?>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5 class="panel-title">
+                                    子内容添加
+                                </h5>
+                            </div>
+                            <div class="panel-collapse collapse in">
+                                <div class="panel-body">
+
+                                    <form action='sysStepSelect.php' method='post' class="form-horizontal">
+                                        <INPUT TYPE="hidden" NAME="dopost" value="addenum_save"/>
+                                        <INPUT TYPE="hidden" NAME="issign" value="<?php echo $arr['issign']; ?>"/>
+                                        <INPUT TYPE="hidden" NAME="egroup" value="<?php echo $arr['egroup']; ?>"/>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">类别组名称:</label>
+
+                                            <div class="col-sm-2">
+                                                <input type="text" class="form-control" name="" value="<?php echo $selgroup; ?>" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">上级内容:</label>
+
+                                            <div class="col-sm-2">
+                                                <select name='reevalue' class="form-control m-b" onChange="ChangePage2(this)">
+                                                    <?php echo $childOptionS; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">子内容名称:</label>
+
+                                            <div class="col-sm-2">
+                                                <input type="text" class="form-control" name="ename" value="">
+                                                <span class="help-block m-b-none">用半角逗号","分开可以一次添加多个子内容。</span>
+
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            <div class="col-sm-4 col-sm-offset-2">
+                                                <button class="btn btn-primary" type="submit">保存内容</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    <!--选项-->
+
+
+                    </form>
+
+
+                </div>
+                <!--表格数据区------------结束-->
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",})
+        //是否全选
+        $("input[name='selAllBut']").on('ifChecked', function (event) {
+            $("input[name='ids']").iCheck('check');
+        });
+        $("input[name='selAllBut']").on('ifUnchecked', function (event) {
+            $("input[name='ids']").iCheck('uncheck');
+        });
+    });
+
+</script>
+
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<SCRIPT LANGUAGE="JavaScript">
+    /*表格配置,,此段不能删除 如果删除 多选 按钮不起作用*/
+    !function (e, t, o) {
+        "use strict";
+        !function () {
+            o("#datalist11").bootstrapTable({});
+
+        }()
+    }(document, window, jQuery);
+
+    //单条更新子类目
+    function updateItem(aid) {
+        var upenumf = document.getElementById('upenumf');
+        upenumf.ename.value = $('#ename' + aid).val();
+        upenumf.evalue.value = $('#evalue' + aid).val();
+        upenumf.disorder.value = $('#disorder' + aid).val();
+        upenumf.aid.value = aid;
+        upenumf.submit();
+    }
+
+
+    //编辑单个主类别
+    function EditType(id) {
+        //var id = GetSelType();
+        /*160415注销，没有直接空引用的地方了，原来旧的版本有
+         if (id == 0) {
+         alert("必须选择一个类别！");
+         return false;
+         }*/
+        layer.open({
+            type: 2,
+            title: '修改类别组',
+            //shadeClose: true,
+            //shade: 0.8,
+            //area: ['20%', '55%'],
+            content: 'sysStepSelect.php?dopost=edit&id=' + id//iframe的url
+            //content: '1.htm'//iframe的url
+        });
+        //layer.iframeAuto(index);//?????160109弹出层自适应高度有问题随后再处理
+
+    }
+    //浏览单个 主类别
+    function addType() {
+        var index = layer.open({
+            type: 2,
+            title: '添加类别组',
+            //shadeClose: true,
+            //shade: 0.8,
+            //area: ['20%'],
+            content: 'sysStepSelect.php?dopost=addnew' //iframe的url
+        });
+    }
+
+
+    //浏览单个 主类别
+    function ViewType(id) {
+        //var id = GetSelType();
+        if (id == 0) {
+            alert("必须选择一个类别！");
+            return false;
+        }
+        var index = layer.open({
+            type: 2,
+            title: '预览类别组',
+            //shadeClose: true,
+            //shade: 0.8,
+            area: ['20%'],
+            content: 'sysStepSelect.php?dopost=view&id=' + id//iframe的url
+        });
+    }
+
+
+    //删除单个主类别
+    function DelType(id) {
+        if (window.confirm("你确实要删除这个类别组吗？") == false) return false;
+        //var id = GetSelType();
+        if (id == 0) {
+            alert("必须选择一个类别！");
+            return false;
+        }
+        location.href = 'sysStepSelect_del.php?dopost=del&id=' + id;
+    }
+
+    //选择组别后跳转页面(选择顶级)
+    function ChangePage(sobj) {
+        var ntxt = sobj.options[sobj.selectedIndex].text;
+        if (sobj.options[sobj.selectedIndex].value == 0) {
+            location.href = 'sysStepSelect.php';
+        }
+        else {
+            var ns = ntxt.split('|');
+            location.href = 'sysStepSelect.php?egroup=' + ns[0];
+        }
+    }
+
+    //删除checkbox多选的子内容
+    function DelSel() {
+        if (window.confirm("你确实要删除这些吗？")) document.form1.submit();
+    }
+    function DelSel() {
+        var nid = getCheckboxItem('ids');
+        if (nid == "") {
+            layer.alert('请选择要删除的数据', {icon: 6});
+            return;
+        }
+        layer.confirm('您确定要删除此内容吗？', {icon: 3, title: '提示'}, function (index) {
+            location.href = "sysStepSelect_del.php?dopost=delenumAllSel&ids=" + nid;
+        });
+    }
+
+    function saveAll() {
+        var F = document.getElementsByName("ids");
+        var str="";
+        var allids="";
+        for (i = 0; i < F.length; i++) {
+            console.log(F[i].value);
+
+            var aid= F[i].value;
+            str+="&ename"+aid+"="+encodeURIComponent($('#ename' + aid).val());
+            str+="&evalue"+aid+"="+encodeURIComponent($('#evalue' + aid).val());
+            str+="&disorder"+aid+"="+encodeURIComponent($('#disorder' + aid).val());
+
+            if (allids == "") {
+                allids = F[i].value
+            } else {
+                allids = allids + "," + F[i].value
+            }
+        }
+
+        var url="sysStepSelect.php?dopost=saveall&"+"allids="+allids+str;
+        console.log(url);
+        location.href = url;
+
+    }
+    //选择子内容后 跳转
+    function ChangePage2(sobj) {
+        var nv = sobj.options[sobj.selectedIndex].value;
+        if (sobj.options[sobj.selectedIndex].value == 0) {
+            location.href = 'sysStepSelect.php?egroup=<?php echo $egroup; ?>';
+        }
+        else {
+            location.href = 'sysStepSelect.php?egroup=<?php echo $egroup; ?>&reevalue=' + nv;
+        }
+    }
+
+</SCRIPT>
+
+</body>
+</html>
+
+

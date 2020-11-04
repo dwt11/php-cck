@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle ?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content">
+
+                    <!--工具框   开始-->
+                    <form name="form2" method="get" action="" class="form-horizontal">
+                        <div class="form-group">
+
+
+                            <div class="col-sm-5">
+                                <label class="col-sm-4 control-label">状态:</label>
+                                <div class="col-sm-5">
+                                    <label class="checkbox-inline i-checks">
+                                        <input name='useguideid' id='useguideid_1' type='radio' value="0" <?php if ($useguideid == "0") echo "checked"; ?> class='i-checks' data-toggle='tooltip' data-placement='top' title='全部'/>全部&nbsp
+                                    </label>
+                                    <label class="checkbox-inline i-checks">
+                                        <input name='useguideid' id='useguideid_2' type='radio' value="1" <?php if ($useguideid == "1") echo "checked"; ?> class='i-checks' data-toggle='tooltip' data-placement='top' title='未安排'/>未安排 &nbsp&nbsp
+                                    </label>
+                                    <label class="checkbox-inline i-checks">
+                                        <input name='useguideid' id='useguideid_3' type='radio' value="2" <?php if ($useguideid == "2") echo "checked"; ?> class='i-checks' data-toggle='tooltip' data-placement='top' title='已安排'/>已安排 &nbsp
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-sm-4 control-label">使用日期:</label>
+                                <div class="col-sm-8">
+                                    <?php
+                                    $startdate_1 = "";
+                                    if ($startdate != "") {
+                                        $startdate_1 = $startdate;
+                                    }
+
+                                    ?>
+                                    <div class="pull-left" style="width: 110px">
+                                        <input type="text"
+                                               name="startdate"
+                                               id='startdate'
+                                               class="form-control Wdate "
+                                               value="<?php echo $startdate_1 ?>"
+                                               size="12"
+                                               placeholder="使用日期"
+                                               onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"
+                                        />
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <label class="col-sm-4 control-label">使用类型:</label>
+                                <div class="col-sm-5">
+                                    <label class="checkbox-inline i-checks">
+                                        <input name='orderLY' id='orderLY_1' type='radio' value="" <?php if ($orderLY == "") echo "checked"; ?> class='i-checks' data-toggle='tooltip' data-placement='top' title='全部'/>全部&nbsp
+                                    </label>
+                                    <label class="checkbox-inline i-checks">
+                                        <input name='orderLY' id='orderLY_2' type='radio' value="会员租赁" <?php if ($orderLY == "会员租赁") echo "checked"; ?> class='i-checks' data-toggle='tooltip' data-placement='top' title='会员租赁'/>会员租赁
+                                    </label>
+                                    <label class="checkbox-inline i-checks">
+                                        <input name='orderLY' id='orderLY_3' type='radio' value="直通车线路" <?php if ($orderLY == "直通车线路") echo "checked"; ?> class='i-checks' data-toggle='tooltip' data-placement='top' title='直通车线路'/>直通车线路
+                                    </label>
+
+
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-sm-4 control-label">车牌号:</label>
+                                <div class="col-sm-5">
+                                    <input style="width: 150px" name="k_device_name" type="text" placeholder="车牌号"
+                                           class="form-control" value="<?php echo $k_device_name ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <label class="col-sm-4 control-label">司机:</label>
+                                <div class="col-sm-5">
+                                    <input style="width: 150px" name="k_driver_realanme" type="text" placeholder="姓名"
+                                           class="form-control" value="<?php echo $k_driver_realanme ?>">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-sm-4 control-label">乘务:</label>
+                                <div class="col-sm-5">
+                                    <input style="width: 150px" name="k_guide_realname" type="text" placeholder="姓名"
+                                           class="form-control" value="<?php echo $k_guide_realname ?>">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <label class="col-sm-4 control-label"></label>
+                                <button type="submit" class="btn btn-primary ">
+                                    搜索
+                                </button>
+                                <a href="#" class="btn  btn-white " onClick="window.location.href ='deviceUseForGuide.php'">
+                                    重置
+                                </a>
+                            </div>
+                            <div class="col-sm-3">
+
+                            </div>
+                        </div>
+
+
+                    </form>
+
+                    <!--工具框   结束-->
+
+
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th class="text-center" data-align="left">订单号/联系人</th>
+                                <th class="text-center" data-align="left">车型名称/来源/旅游线路</th>
+                                <th class="text-center" data-align="left">车牌号</th>
+                                <th class="text-center" data-align="left">提车(使用)日期/还车日期</th>
+                                <th class="text-center" data-align="left">司机</th>
+                                <th class="text-center" data-align="left">乘务</th>
+                                <th class="text-center" data-align="left">操作员</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {dwt:datalist}
+                            <tr>
+                                <td>
+                                    <?php
+                                    echo "订单号:CAR" . ($fields["ordernum"]);
+                                    echo "<br>姓名:" . ($fields["realname"]);
+                                    echo "<br>电话:" . ($fields["tel"]);
+
+                                    ?>
+                                </td>
+                                <td>
+
+
+                                    车型名称:[{dwt:field.goodscode/}]{dwt:field.goodsname/}
+                                    <br>车辆来源(备注):{dwt:field.orderCarDesc/}
+                                    <?php
+                                    //如果是直通车线路  则获取线路的名称
+                                    if ($fields["orderCarDesc"] == "直通车线路") {
+                                        //获取旅游线路预约订单中 对应的旅游产品名称
+                                        //根据模型 获取订单的附加 表
+                                        $query111 = "SELECT goodsname FROM
+                                                  #@__order_addon_lycp 
+                                                  INNER JOIN #@__goods ON #@__goods.id=#@__order_addon_lycp.goodsid
+                                                  where #@__order_addon_lycp.orderCarId='{$fields['orderCarId']}'";
+                                        $rowOrder111 = $dsql->GetOne($query111);
+                                        //dump($query111);
+                                        if (isset($rowOrder111["goodsname"]) && $rowOrder111["goodsname"] != "") {
+                                            echo "<br>旅游线路名称:" . $rowOrder111["goodsname"];
+                                        }
+                                    } ?>
+                                </td>
+
+                                <td>
+                                    {dwt:field.devicecode/}
+                                    <br><?php echo GetRedKeyWord($fields['devicename'], $k_device_name); ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    echo "提车日期:" . GetDateNoYearMk($fields["start_date"]);
+                                    echo "<br>还车日期:" . GetDateNoYearMk($fields["end_date"]);
+
+                                    ?>
+
+                                </td>
+
+                                <td>
+                                    <?php
+                                    echo "{$fields["driver_realanme"]}";
+                                    ?>
+                                </td>
+                                <td>
+                                    <div style="min-width: 130px;max-width: 130px"></div>
+                                    <?php
+                                    $guidename = $fields["guide_realname"];
+                                    $uselogid = $fields['id'];
+                                    $guideid = $fields['guideid'];
+
+
+                                    echo " <span id='guidename_{$uselogid}'>{$guidename}</span>
+                                                  <input id='guideid_{$uselogid}' name='guideid_{$uselogid}' value='$guideid' type='hidden'>
+                                         ";
+                                    echo "<br><input id='device_automobile_uselog_id_{$uselogid}' name='device_automobile_uselog_id_{$uselogid}' value='$uselogid' type='hidden'>
+                                                  <a href=\"javascript:guideid_select({$uselogid});\" class='btn  btn-primary btn-xs' data-toggle='tooltip' data-placement='top' title='选择乘务'>
+                                                        选择乘务
+                                                    </a>";
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    echo GetEmpNameByUserId($fields['operatorid'])
+                                    ?>
+                                </td>
+
+                            </tr>
+                            {/dwt:datalist}
+                            </tbody>
+                        </table>
+                        {dwt:pagelist/}
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<SCRIPT src="../ui/js/jquery.lazyload.plus.js" type=text/javascript></SCRIPT>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green"})
+
+    });
+
+
+    //选择乘务
+    function guideid_select(uselogid) {
+        layer.open({
+            type: 2,
+            title: '选择乘务',
+            content: '../emp/emp.select.radio.php?targetname=guideid_' + uselogid + '&no_emp_dep=19'
+        });
+    }
+    //保存乘务信息
+    function guideInfo_save(uselogid) {
+
+        var device_automobile_uselog_id = $('#device_automobile_uselog_id_' + uselogid).val();
+        if (!device_automobile_uselog_id) {
+            layer.alert('未获得数据,请重新打开此页面', {icon: 6});
+            return;
+        }
+        var guideid = $('#guideid_' + uselogid).val();
+        if (!guideid) guideid = "";
+        //$("#carInfo_save_" + uselogid).hide();
+
+        $.ajax({
+            type: "post",
+            url: "deviceUseForGuide.php",
+            data: {
+                device_automobile_uselog_id: device_automobile_uselog_id,
+                guideid: guideid,
+                dopost: "guideInfo_save"
+            },
+            dataType: 'html',
+            success: function (result) {
+                /*console.log(result);
+                layer.msg(result, {
+                    shade: 0.5, //开启遮罩 , //0.1透明度的白色背景
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function () {
+                    window.location.href = "";
+                });*/
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest);
+                console.log(textStatus);
+                console.log(errorThrown);
+                layer.msg("保存失败,请刷新当前页面重试", {
+                    shade: 0.5, //开启遮罩 , //0.1透明度的白色背景
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function () {
+
+                });
+            }
+        });
+    }
+
+
+    $(function () {
+        var vars_value = {};
+        //$("input[name^='ordercarInfo_save_']").hide();
+        intervalName = setInterval(handle, 1000);//定时器句柄
+        function handle() {
+            // IE浏览器此处判断没什么意义，但为了统一，且提取公共代码而这样处理。
+            //如果值不一样,则代表了改变
+
+
+            //乘务值改变
+            $("input[name^='guideid_']").each(
+                function () {
+                    var e_name = $(this).attr("id");//表单名称
+                    var tmpvalue = vars_value[e_name];//临时的值
+                    if (!tmpvalue) tmpvalue = "";
+                    //console.log("tmpvalue " + tmpvalue);
+                    var nowvalue = $(this).val();
+                    if (nowvalue != tmpvalue) {
+                        /*页面首次打开tmpvalue都为空*/
+                        vars_value[e_name] = nowvalue;//利用表单名称 保存当前的设备ID
+                        //console.log(vars_value.e_name);
+                        var e_name_array = e_name.split("_");
+                        var uselogid = e_name_array[1];
+
+                        // $("#carInfo_save_" + uselogid).show();
+                        $.ajax({
+                            type: "get",
+                            url: "/emp/emp.inc.do.php",
+                            data: {
+                                emp_id: nowvalue,
+                                dopost: "GetOneEmpInfo"
+                            },
+                            dataType: 'json',
+                            success: function (result) {
+                                if (nowvalue != tmpvalue && tmpvalue != "") guideInfo_save(uselogid);/*临时什值不为空,并且值改变了,才保存新值*/
+                                $("#guidename_" + uselogid).html(result.emp_realname + " " + result.emp_mobilephone);
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                $("#guidename_" + uselogid).html("");//如果清空了车辆或出错,则把车牌号清空
+                            }
+                        });
+                    }
+                }
+            )
+
+
+        }
+    });
+
+
+</script>
+</body>
+</html>

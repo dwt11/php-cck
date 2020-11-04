@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1">
+    <title>直通车乘车卡</title>
+    <link href="/ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/ui/css/style.min.css" rel="stylesheet">
+    <link href="/ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div class="main">
+    <?php include("../index_heard.php"); ?>
+    <div class="widget1   text-center">
+        <div class="row">
+            <div class="col-xs-12 text-left lefttext">
+                直通车乘车卡
+            </div>
+
+        </div>
+    </div>
+
+    <ul class="sortable-list  agile-list-dwt">
+        {dwt:datalist}
+        <li>
+            <?php echo "<B>" . GetZtcCardCode($fields['orderListId']) . "</B> "; ?>
+            <div class="pull-right">
+                <?php
+                $createtime = $fields['createtime'];
+                $goodsid = $fields['goodsid'];
+                $idcard = $fields['idcard'];
+
+
+                $cardcode = $fields["cardcode"];
+                $name = $fields["name"];
+                $tel = $fields["tel"];
+                $idpic = $fields["idpic"];
+
+
+                $orderisuseStr = $orderisuse = GetZtcCardTimeIsBool($createtime, $goodsid);
+                if ($orderisuseStr == "到期") $orderisuseStr = "<span class='text-danger'>$orderisuseStr</span>";
+                echo '有效期至：' . $orderisuseStr;
+
+                if ($createtime < 1483199999) {
+                    $rankcutofftime = 1483199999;// "2017-12-31";//如果是2016-12-31前的订单 则订单到期日是2017-12-31
+                } else {
+                    $rankcutofftime = strtotime("+{$fields["rankLenth"]} month", $createtime);
+                }
+                $rankcutofftime_before_1month = strtotime("- 1 month", $rankcutofftime);
+
+                $isXuFei = Get_ztc_IDCard_IsXufei($idcard, $createtime);
+                //到期30天前+未续费 提示续费
+                if (time() > $rankcutofftime_before_1month && $isXuFei == "未续费") {
+                    if ($rankcutofftime > time()) {
+                        //未超期的续费,新的订单时间为下一个周期起始时间
+                        echo "<a href='/lyapp/order/ztc_add.php?did=17&isxf=1&goodsid={$goodsid}&idcard_o={$idcard}&cardcode_o={$cardcode}&name_o={$name}&tel_o={$tel}&idpic_o={$idpic}&orderCreateTime_o={$createtime}'  class='btn btn-primary btn-xs'>续费</a>";
+                    } else {
+                        //超期了的,使用当前日期做为起始日期
+                        echo "<a href='/lyapp/order/ztc_add.php?did=17&isxf=1&goodsid={$goodsid}&idcard_o={$idcard}&cardcode_o={$cardcode}&name_o={$name}&tel_o={$tel}&idpic_o={$idpic}'  class='btn btn-primary btn-xs'>续费</a>";
+                    }
+
+                }
+                ?>
+            </div>
+            <div class="clearfix"></div>
+
+            姓名:<?php echo $name; ?>
+
+            <div class="pull-right">
+                身份证:<?php echo GetPhoneCode($idcard); ?>
+            </div>
+
+            <?php if ($orderisuse != "到期") { ?>
+
+                <div class="clearfix"></div>
+
+                <div style=" padding-top: 2px;padding-bottom: 2px">
+                    <?php
+
+                    $photo = $idpic;
+                    if ($photo == "") $photo = "/images/arcNoPic.jpg";
+                    ?>
+                    <a href="javascript:;" onClick="showpic('<?php echo $photo; ?>')">
+                        <img src="<?php echo $photo; ?>" data-original="<?php echo $qrpng_name; ?>" width="120" height="120">
+                    </a>
+                    <div class="pull-right">
+                        <?php
+
+                        /*//171102修改为不用激活判断
+                        $isjihuo = "<br>
+                                     <b>请到就近的售卡点,激活此卡;
+                                     <br>我们将为您提供更好的专属服务
+                                     <br><a onclick='msg_from_arc(\"9\",\"售卡点地址\")' href='#'>售卡点地址</a>
+                                     </b>";
+                         $query = "SELECT orderListId,createtime FROM #@__ztc_jihuo   WHERE orderListId='{$fields['orderListId']}' ";
+                         $row = $dsql->GetOne($query);
+                         if (isset($row["orderListId"]) && $row["orderListId"] > 0) {
+                             //$isjihuo = "已激活" . GetDateMk($row["createtime"]);
+                             $isjihuo = "";
+                         }
+
+                         echo $isjihuo;*/
+
+
+                        /* //生成二维码
+                         require_once('../../include/qrcode.class.php');
+                         $qrpng_name = "../.." . getUploadFileAdd($DEP_TOP_ID) . "qrztccardcheckin/{$fields['orderListId']}.png";
+                         if (!file_exists($qrpng_name)) {
+                             $params = array();
+                             $params['data'] = "http://" . $_SERVER['SERVER_NAME'] . "/lyapp/QRztccardChickin.php?did=$DEP_TOP_ID";//生成的连接
+                             $params['size'] = 6;
+                             $params['savename'] = $qrpng_name;//二维码存储地址
+                             $qrcode = new DwtQrcode;
+                             $eeeee = $qrcode->generate($params);
+                         }*/
+
+
+                        ?>
+                        <!--  <a href="javascript:;" onClick="showpic('<?php /*echo $ewphoto; */ ?>')">
+                            <img src="<?php /*echo $qrpng_name; */ ?>" data-original="<?php /*echo $qrpng_name; */ ?>" width="120" height="120" style='margin-right: 5px'>
+                        </a>
+-->
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class='hr-line-dashed' style="margin: 0; padding: 0;margin-top: 5px;margin-bottom:  5px"></div>
+                <span class="text-warning font-bold"> <?php echo GetPhoneCode($tel); ?></span>
+                <div class="pull-right small">
+                    <?php
+                    //照片相关
+                    $photoButton = false;
+                    $str = "";
+                    if ($idpic == "") {
+                        $photoButton = true;
+                        $str = "请上传照片 ";
+                    }
+
+
+                    if ($goodsid == 142 || $goodsid == 143) {
+                        //除了商品1 直通车 其他的 都要需要审核才能使用
+                        $idpic_desc = $fields["idpic_desc"];
+                        $issh = strpos($idpic_desc, "审核通过");//判断 是否包含审核通过字样
+                        //dump($issh);
+                        if ($issh === false) {
+                            //没有审核
+                            if ($idpic_desc == "") $str = "未审核,请联系工作人员审核";
+                            if ($idpic_desc != "") {
+                                $str = "请重新上传认证照片.审核不通过原因($idpic_desc)";
+                                $photoButton = true;
+                            }
+
+                        }
+                    }
+
+                    if ($str != "") echo " <span class='text-danger'>$str</span>";
+                    if ($photoButton) echo "<a href='ztcCard_uploadidpic.php?orderlistid=" . $fields['orderListId'] . "' class='btn btn-primary btn-xs'>上传照片</a>
+                                            ";
+
+
+                    //是否编辑信息
+                    if ($fields["editdate"] == "") {
+                        //判断此卡是否预约过车辆,预约过,不能编辑
+                        $query22 = "SELECT id FROM #@__order_addon_lycp where orderlistztcid=" . $fields['orderListId'];
+                        $row22 = $dsql->GetOne($query22);
+                        if (!isset($row22['id'])) {
+                            echo ' <a href="ztcCard_edit.php?orderlistid=' . $fields['orderListId'] . '" class=\'btn btn-primary btn-xs\' >编辑</a>  ';
+                        }
+                    }
+
+                    ?>
+
+
+                </div>
+            <?php } ?>
+            <div class="clearfix"></div>
+
+
+            <?php
+            $query11 = "SELECT o.id,cl.realname,o.createtime
+                    FROM #@__ztc_share o
+                    LEFT JOIN #@__client   cl on cl.id=o.clientid_n
+                    WHERE o.isdel=0 and o.orderListId='" . $fields['orderListId'] . "' and clientid_o='$CLIENTID'      ";
+            //dump($query11);
+            $dsql->SetQuery($query11);
+            $dsql->Execute('share');
+            while ($row11 = $dsql->GetArray('share')) {
+
+                echo "<div id='share" . $row11["id"] . "'>
+                    <div class='hr-line-dashed' style='margin: 0; padding: 0;margin-top: 5px;margin-bottom:  5px'></div>
+                    <div class='pull-right'>
+                   <span onclick='delShare(" . $row11["id"] . ")'  class='btn btn-primary btn-xs'>                    删除共享</span>
+                    </div>
+                    此卡被您的好友[<b>" . $row11["realname"] . "</b>]与" . GetDateMk($row11["createtime"]) . "共享
+                        </div>";
+            } ?>
+            <div class='clearfix'></div>
+
+        </li>
+
+
+        {/dwt:datalist}
+    </ul>
+    <?php include("../index_foot.php"); ?>
+</div>
+<script src="/ui/js/jquery.min.js"></script>
+<script src="/ui/js/bootstrap.min.js"></script>
+<script src="/lyapp/js/main.js"></script>
+<script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+<script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+<script src="/lyapp/js/quickButton.js"></script>
+<script src="/ui/js/plugins/layer/layer.min.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    function showpic(url) {
+        layer.open({
+            type: 1,
+            title: false, //不显示标题栏
+            closeBtn: true,
+            area: '260px',
+            offset: '30px',
+            shade: 0.8,
+            id: 'LAY_layuipro', //设定一个id，防止重复弹出
+            resize: false,
+            btnAlign: 'c',
+            moveType: 1, //拖拽模式，0或者1
+            content: '<div style="padding: 4%; line-height: 22px; font-size: 14px; background-color: #393D49; color: #fff; " class="text-center"><div style="margin: 2%;"> <img src="' + url + '" style="max-width: 100%; "> </div></div>'
+        });
+    }
+
+    function delShare(orderListId) {
+        $.ajax({
+            type: "get",
+            url: "ztc_share_del.php?id=" + orderListId,
+            data: {},
+            dataType: 'html',
+            success: function (result) {
+                layer.msg('删除成功', {
+                    time: 1000, //20s后自动关闭
+                });
+                $("#share" + orderListId).hide();
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

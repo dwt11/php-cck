@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg" style="min-width: 800px">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="btn-group" id="Toolbar2">
+                        <input type="submit" id="closepage" value="确定" class="btn btn-outline  btn-default">
+                        <input type="hidden" id="inputid" value="<?php echo $inputid;?>">
+                    </div>
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th align="center" data-halign="center" data-align="center"></th>
+                                <th align="center" data-halign="center" data-align="center">序号</th>
+                                <th align="center" data-halign="center" data-align="left">名称</th>
+                                <th align="center" data-halign="center" data-align="left">功能目录</th>
+                                <th align="center" data-halign="center" data-align="left">功能地址</th>
+                                <th align="center" data-halign="center" data-align="center">销售价格/优惠价格</th>
+                                <th align="center" data-halign="center" data-align="center">计费单位</th>
+                            </tr>
+                            </thead>
+                            {dwt:datalist}
+                            <tr>
+                                <td>
+                                    <label class="checkbox-inline   i-checks"><input name='id' id='id' type='radio' value="{dwt:field.id/}"/></label>
+                                </td>
+                                <td>
+                                    {dwt:field.autoindex/}
+                                </td>
+                                <td>
+                                    {dwt:field.name/} {dwt:field.flag function='flag(@me)'/}
+                                    <input id="name{dwt:field.id/}" value="{dwt:field.name/}" type="hidden">
+                                </td>
+                                <td>
+                                    {dwt:field.dir/}
+                                </td>
+                                <td>
+                                    {dwt:field.urladd/}
+                                    <input id="urladd{dwt:field.id/}" value="{dwt:field.urladd/}" type="hidden">
+                                </td>
+                                <td>
+                                    {dwt:field.salePrice/}/{dwt:field.nowPrice/}
+                                    <input id="nowPrice{dwt:field.id/}" value="{dwt:field.nowPrice/}" type="hidden">
+                                </td>
+
+                                <td>
+                                    {dwt:field.unit/}
+                                    <input id="unit{dwt:field.id/}" value="{dwt:field.unit/}" type="hidden">
+                                </td>
+                            </tr>
+                            {/dwt:datalist}
+                        </table>
+                        {dwt:pagelist/}
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<script type="text/javascript" src="goodsOrder.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green"})
+    });
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.iframeAuto(index);
+</script>
+<!--表格-->
+<script type="text/javascript">
+    $('#closepage').click(function () {
+        var goodsid = $('input:radio[name=id]:checked').val();
+        console.log(goodsid);
+        var urladd = $('#urladd' + goodsid).val();
+        var name = $('#name' + goodsid).val();
+        var unit = $('#unit' + goodsid).val();
+        var nowPrice = $('#nowPrice' + goodsid).val();
+        var inputid = $('#inputid').val();
+
+        parent.$("#urladd" + inputid).val(urladd);
+        parent.$("#_goodsInfo" + inputid).html(name + ' ' + urladd);
+        parent.$("#_chargeunit" + inputid).html(unit);
+        parent.$("#unit" + inputid).val(unit);
+        parent.$("#nowPrice" + inputid).val(nowPrice);
+        parent.layer.closeAll('iframe');
+    })
+</script>
+</body>
+</html>

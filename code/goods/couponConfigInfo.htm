@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle ?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content">
+
+
+                    <!--表格数据区------------开始-->
+
+
+                    <form action="" method="post" name="form1" class="form-horizontal">
+                        <input type="hidden" name="dopost" value="save">
+
+
+                        <?php
+                        $query = "SELECT * FROM `#@__goods_coupon`";
+                        //dump($query);
+                        $row = $dsql->GetOne($query);
+                        $jbnum_max_100 = $row["jbnum_max"] ;
+                        $jbnum_max = $jbnum_max_100 / 100;
+                        $jbnum_min_100 = $row["jbnum_min"]  ;
+                        $jbnum_min = $jbnum_min_100 / 100;
+                        ?>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">最高金额(元)：</label>
+                            <div class="col-sm-2">
+                                <input type='text' name='jbnum_max' id='jbnum_max' value='<?php echo $jbnum_max ?>' class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">最低金额(元)：</label>
+                            <div class="col-sm-2">
+                                <input type='text' name='jbnum_min' id='jbnum_min' value='<?php echo $jbnum_min ?>' class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">是否启用：</label>
+                            <div class="col-sm-2">
+
+                                <?php
+                                $c1 = $c2 = "";
+                                $row['isuse'] == '1' ? $c1 = " checked" : $c2 = " checked";
+                                echo "<label class=\"checkbox-inline i-checks\"><input type='radio' id=\"RadioGroup1_0\" name='isuse' value='1'$c1>是</label> ";
+                                echo "<label class=\"checkbox-inline i-checks\"><input type='radio' id=\"RadioGroup1_1\"  name='isuse' value='0'$c2>否</label> ";
+                                ?>
+
+                            </div>
+                        </div>
+
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2 ">
+                                <button class="btn btn-primary" type="submit">保存内容</button>
+                            </div>
+                        </div>
+
+
+                    </form>
+
+
+                    <?php
+                    set_time_limit(0);
+                    $jbnum_100_array=array();
+                    for ($car_i = 1; $car_i <= 5000; $car_i++) {
+                        //sleep(1);
+                        $jbnum_100_array[]=CreateRandNum($jbnum_max_100,$jbnum_min_100,$jbnum_100_array);
+                    }
+                    //dump(CreateRandNum($jbnum_max_100,$jbnum_min_100,$jbnum_100_array));
+                    $jbnum_all_100=array_sum($jbnum_100_array);
+                    $jbnum_all=$jbnum_all_100/100;
+                    $jbnum_pj=$jbnum_all_100/5000/100;
+                    $jbnum_max=max($jbnum_100_array)/100;
+                    $jbnum_min=min($jbnum_100_array)/100;
+                    // dump($jbnum_100_array);
+                    ?>
+                    <!--表格数据区------------开始-->
+                    以下是每5000人得到的红包金额模拟数据,
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th class="text-center" data-align="center">总额</th>
+                                <th class="text-center" data-align="center">最高</th>
+                                <th class="text-center" data-align="center">最低</th>
+                                <th class="text-center" data-align="center">平均</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+
+                                <td><?php echo number_format($jbnum_all,2);?></td>
+                                <td><?php echo number_format($jbnum_max,2);?></td>
+                                <td><?php echo number_format($jbnum_min,2);?></td>
+
+                                <td><?php echo number_format($jbnum_pj,2);?></td>
+
+
+
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script src="../ui/js/jquery.min.js"></script>
+    <script src="../ui/js/bootstrap.min.js"></script>
+    <script src="../ui/js/content.min.js"></script>
+
+    <script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",})
+        });
+    </script>
+
+    <!--表格-->
+    <script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <!--表格-->
+    <script language="javascript">
+
+    </script>
+</body>
+</html>

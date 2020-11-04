@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $title ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body >
+
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $title ?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content">
+                    <!--表格数据区------------开始-->
+                    <div class="btn-group" id="Toolbar" style="margin-right:5px;">
+                        <?php
+                        if ($typeid > 0) echo $roleCheck->RoleCheckToLink("device/device_add.php?typeid=$typeid", "", "btn btn-white", "", "glyphicon glyphicon-plus");
+                        ?>
+                    </div>
+
+
+                    <div class="btn-group" id="Toolbar2">
+                        <form name='form3' action='device.php' method='get'>
+
+                            <div class="input-group">
+                                <div class="pull-left">
+                                    <input type='text' name='keyword' value='' class='form-control' placeholder='内部编号/车牌号码'   data-toggle='tooltip' data-placement='bottom'  data-html="true"  title="<p align='left'>内部编号/车牌号码</p>"/>
+                                </div>
+                                <div class="pull-left">
+                                    <div class="input-group-btn">
+                                        <button type="submit" name="imageField" class="btn btn-outline  btn-default">搜索</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <div class="table-responsive">
+                        <table id="datalist">
+                            <thead>
+                            <tr>
+                                <th class="text-center">内部编号</th>
+                                <th class="text-center">分类</th>
+                                <th class="text-center">车牌号</th>
+                                <th class="text-center">状态</th>
+                                <th class="text-center">添加时间</th>
+                                <th class="text-center">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {dwt:datalist}
+                            <tr>
+
+                                <td class="text-center">{dwt:field.devicecode/}</td>
+                                <td class="text-center">
+                                    <a href="?typeid={dwt:field.typeid '/}">{dwt:field.typeid function='GetDeviceTypeName(@me)'/}</a>
+                                </td>
+                                <td class="text-left">
+                                    <?php echo GetRedKeyWord($fields['devicename'], $keyword); ?>
+                                </td>
+                                <td class="text-center">{dwt:field.state/}</td>
+                                <td class="text-center">{dwt:field.senddate function="GetDateMk(@me)"/}</td>
+
+                                <td class="text-center">
+                                    <?php
+
+                                    echo $roleCheck->RoleCheckToLink("device/device_edit.php?id=" . $fields['id']);
+                                    echo $roleCheck->RoleCheckToLink("device/device_del.php?id=" . $fields['id']);
+                                    ?>
+                                </td>
+                            </tr>
+                            {/dwt:datalist}
+                            </tbody>
+                        </table>
+                        {dwt:pagelist/}
+                    </div>
+                    <!--表格数据区------------结束-->
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table-2.js"></script>
+<!--表格-->
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<SCRIPT src="../ui/js/jquery.lazyload.plus.js" type=text/javascript></SCRIPT>
+</body>
+</html>

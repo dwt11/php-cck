@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <!--标题栏开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle ?></h5>
+                </div>
+                <!--标题栏结束-->
+                <div class="ibox-content">
+                    <!--工具框   开始-->
+                    <div class="btn-group" id="Toolbar">
+                        <?php echo $roleCheck->RoleCheckToLink("emp/emp_add.php", "", "btn btn-white", "", "glyphicon glyphicon-plus"); ?>
+                    </div>
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="emp.php">
+                            <div class="input-group">
+                                <div class="pull-left">
+                                    <?php
+                                    $depOptions = GetDepOptionListRole($emp_dep);
+                                    //dump($emp_dep);
+                                    echo "<select  style='max-width: 260px'   class='form-control' name='emp_dep' id='emp_dep'  >\r\n";
+                                    echo "
+                                    <option value='0'>请选择部门...</option>
+                                                                                          \r\n";
+                                    echo $depOptions;
+                                    echo "</select>";
+                                    ?>
+
+
+                                </div>
+                                <div class="pull-left">
+                                    <select name='orderby' class="form-control">
+                                        <option value='id'>排序...</option>
+                                        <option value='logintime' <?php if ($orderby == "logintime") echo "selected=\"selected\""; ?>>登录日期</option>
+                                        <option value='loginnumb' <?php if ($orderby == "loginnumb") echo "selected=\"selected\""; ?>>登录次数</option>
+                                    </select>
+
+
+                                </div>
+                                <div class="pull-left ">
+                                    <input name="keyword" type="text" placeholder="编号/姓名/登录名" class="form-control" value="<?php echo $keyword ?>">
+                                </div>
+
+
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!--工具框   结束-->
+
+
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist" data-striped="true">
+                            <thead>
+                            <tr>
+                                <th data-halign="center" data-align="center">员工编号</th>
+                                <th data-halign="center" data-align="center" data-sortable="true">姓名</th>
+                                <th data-halign="center" data-align="left">部门</th>
+                                <th data-halign="center" data-align="center" data-sortable="true">性别</th>
+                                <th data-halign="center" data-align="center">手机</th>
+                                <th data-halign="center" data-align="left">住址</th>
+                                <th data-halign="center" data-align="left" data-sortable="true">登录名</th>
+                                <th data-halign="center" data-align="left">所属用户组</th>
+                                <th data-halign="center" data-align="center" data-sortable="true">登录次数</th>
+                                <th data-halign="center" data-align="center">最后登录IP</th>
+                                <th data-halign="center" data-align="center" data-sortable="true">最后登录日期</th>
+                                <th data-halign="center" data-align="center" data-sortable="true">当前状态</th>
+                                <th data-halign="center" data-align="center">操作</th>
+                            </tr>
+                            </thead>
+                            {dwt:datalist}
+                            <tr>
+                                <td><?php echo GetIntAddZero($fields['emp_code']); ?></td>
+                                <td> {dwt:field.emp_realname/}</td>
+                                <td>
+                                    <div style="min-width: 100px;"></div> <?php echo GetEmpDepAllNameByEmpId($fields['emp_id']); ?>
+                                </td>
+                                <td>{dwt:field.emp_sex/}</td>
+                                <td>{dwt:field.emp_mobilephone/}</td>
+                                <td>{dwt:field.emp_add/}</td>
+                                <td>{dwt:field.userName/}</td>
+                                <td>{dwt:field.usertype function="GetUserTypeNames(@me)"/}</td>
+                                <td>{dwt:field.loginnumb/}</td>
+                                <td>{dwt:field.loginip/}</td>
+                                <td>{dwt:field.logintime function="GetDateTimeMk(@me)" /}　</td>
+                                <td>{dwt:field.emp_ste/}</td>
+                                <td>
+                                    <div style="min-width: 170px"></div>
+                                    <a onclick="layer.open({type: 2,title: '员工详细信息', content: 'emp.inc.do.php?dopost=empview&id={dwt:field.emp_id/}'});" href="javascript:">详细信息</a>
+                                    <?php
+                                    echo $roleCheck->RoleCheckToLink("emp/emp_edit.php?emp_id=" . $fields['emp_id']);
+                                    echo $roleCheck->RoleCheckToLink("emp/emp_del.php?emp_id=" . $fields['emp_id']);
+                                    ?>
+                                    <br>
+
+                                    <?php
+
+                                    if ($fields['adminid'] != "") {
+                                        echo $roleCheck->RoleCheckToLink("emp/emp_user_role_view.php?id=" . $fields['adminid']);
+                                        echo $roleCheck->RoleCheckToLink("emp/emp_user_edit.php?id=" . $fields['adminid']);
+
+                                    } else {
+                                        echo $roleCheck->RoleCheckToLink("emp/emp_user_add.php?emp_id=" . $fields['emp_id']);
+                                    }
+
+
+                                    echo "<br>";
+                                    $tipstr="前台会员微信绑定";
+
+                                    if($fields["clientid"]>0){
+                                        $tipstr="前台绑定信息查看";
+                                    }
+                                    echo $roleCheck->RoleCheckToLink("emp/emp_updateClient.php?emp_id=" . $fields['emp_id'],$tipstr);
+
+
+                                    //echo "<a href='emp_user_del.php?id=".$fields['adminid']."&userName=".$fields['userName']."'>删除登录信息</a> ";else echo "<span style='color:#ccc'>删除登录信息</span>";
+
+                                    ?>
+                                </td>
+                            </tr>
+                            {/dwt:datalist}
+                        </table>
+
+
+                        {dwt:pagelist/}
+
+
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php  echo $sysFunTitle?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $nowmonth." ".$sysFunTitle?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+                <div class="ibox-content">
+                    <!--工具框   开始-->
+
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+
+
+
+                                <div class="pull-left ">
+                                    <a  class="btn btn-white" href='<?php echo getMonthUrl($startdate,-1)?>'>上一月</a>
+                                </div>
+                                    <div class="pull-left ">
+                                        <a class="btn btn-white"  href='<?php echo getMonthUrl($startdate,1)?>'>下一月</a>
+                                </div>
+
+
+                                <div class="pull-left ">
+
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            查看
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--工具框   结束-->
+
+
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+
+
+                        <table id="datalist22" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th data-halign="center" data-align="center">月份</th>
+                                <th data-halign="center" data-align="right">增加</th>
+                                <th data-halign="center" data-align="right" >减少</th>
+                                <th data-halign="center" data-align="right"  >合计</th>
+                            </tr>
+                            </thead>
+
+                            {dwt:datalist}
+                            <tr>
+                                <td>{dwt:field.nowmonth /}</td>
+                                <td>
+                                <?php
+                                $addjb=$fields["addjb"]/100;
+                                $total_addjb+=$addjb;
+
+                                echo number_format($addjb,2);
+                                ?>
+                                </td>
+                                <td>
+                                <?php
+                                $subjb=$fields["subjb"]/100;
+                                $total_subjb+=$subjb;
+
+                                echo number_format($subjb,2);
+                                ?>
+                                </td>
+                                <td>
+                                <?php
+                                $total=$fields["total"]/100;
+                                $total_total+=$total;
+
+                                echo number_format($total,2);
+                                ?>
+                                </td>
+                            </tr>
+                            {/dwt:datalist}
+
+
+                            <tr>
+                                <td>合计 </td>
+                                <td>
+                                    <?php
+                                    echo number_format($total_addjb,2);
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    echo number_format($total_subjb,2);
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    echo number_format($total_total,2);
+                                    ?>
+                                </td>
+
+                            </tr>
+
+                        </table>
+                        {dwt:pagelist/}
+
+
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-export.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/tableExport.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        $("img").lazyload({
+            event: "sporty"
+        });
+    });
+    $(window).bind("load", function () {
+        var timeout = setTimeout(function () {
+            $("img").trigger("sporty")
+        }, 5000);//页面加载完成后再加载. 页面加载完成 5 秒后, 指定区域内的图片会自动进行加载
+    });
+
+    !function (F, E, D) {
+        !function () {
+            D("#datalist22").bootstrapTable({
+                showExport: true,//显示导出按钮
+                exportDataType: "basic",//导出类型    striped: !0,
+                showToggle: 0,
+                showColumns:0,
+                iconSize: "outline",
+                toolbar: "#Toolbar,#Toolbar2",
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc" ,                  //排序方式
+                icons: {refresh: "glyphicon-repeat", toggle: "glyphicon-list-alt", columns: "glyphicon-list"}
+            })
+        }()
+    }(document, window, jQuery);
+
+</script>
+
+</body>
+</html>

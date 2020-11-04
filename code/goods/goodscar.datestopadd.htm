@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $title ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+     <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../ui/css/plugins/kitjsdate/datepicker.css">
+
+</head>
+
+<body class="gray-bg" style="min-width: 600px;min-height: 500px;background-color: #FFFFFF">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <button type="button" class="btn btn-primary btn-xs" onclick="refresh()">刷新当前页面</button>
+    <br>
+
+
+    <form name="form1" id="form1" action="" method="post" class="form-horizontal" target="_parent">
+        <input type="hidden" value="save" name="dopost" id="dopost">
+        <input type="hidden" value="<?php echo $goodsid; ?>" name="goodsid" id="goodsid">
+
+
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table data-toggle="table" data-classes="table table-hover table-condensed"
+                               data-striped="true" data-sort-order="desc"
+                               data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th class="text-center">
+                                    停用日期
+
+                                </th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class='text-center'>
+                                    <div class='form-group'>
+                                        <div class='col-sm-12'>
+                                            <input type="text" id="stopdate" name="stopdate" value="" style="*zoom:1;">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+        <div class="table-responsive"><br>
+
+
+            <div class="text-center">
+                <button class="btn btn-primary" type="submit">保存当前页内容</button>
+            </div>
+
+
+        </div>
+    </form>
+
+
+</div>
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+
+<script src="../ui/js/plugins/kitjsdate/kit.js"></script>
+<script src="../ui/js/plugins/kitjsdate/array.js"></script>
+<script src="../ui/js/plugins/kitjsdate/date.js"></script>
+<script src="../ui/js/plugins/kitjsdate/dom.js"></script>
+<script src="../ui/js/plugins/kitjsdate/selector.js"></script>
+<!--widget-->
+<script src="../ui/js/plugins/kitjsdate/datepicker.js"></script>
+<script src="../ui/js/plugins/kitjsdate/datepicker-n-months.js"></script>
+
+<!--表格-->
+<script type="text/javascript" charset="utf-8">
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.iframeAuto(index);
+
+
+
+
+    $kit.$(function () {
+        //输入框点击后下拉显示
+        $kit.ev({
+            el: '#stopdate',
+            ev: 'focus',
+            fn: function (e) {
+                var d, ipt = e.target;
+                d = e.target[$kit.ui.DatePicker.defaultConfig.kitWidgetName];
+                if (d) {
+                    d.show();
+                } else {
+                    d = new $kit.ui.DatePicker.NMonths({
+                        date: $kit.date.dateNow(),//初始日期
+                        dateFormat: 'yyyy-mm-dd', //接受和输出的日期格式
+                        weekViewFormat: 'daysMin',//daysMin是几,  daysShort周几 days星期几
+                        nMonths: 2, //配置显示多少个月的日历
+                        canMultipleChoose: true,//能否多选
+                        dateStringSeparator: ',',//多选时候输出分隔符
+
+                        setStartDate:$kit.date.dateNow(),//这个设定了不能用
+                    });
+                    d.init();
+                    d.adhere($kit.el('#stopdate'));
+                    d.show();
+                }
+            }
+        });
+        //点击页面其他 地方隐藏
+        $kit.ev({
+            el: document,
+            ev: 'click',
+            fn: function (e) {
+                var input = $kit.el('#stopdate');
+                d = input[$kit.ui.DatePicker.defaultConfig.kitWidgetName];
+                if (d && !$kit.contains(d.picker, e.target) && input != e.target) {
+                    d.hide();
+                }
+            }
+        });
+    })
+
+
+
+    function refresh() {
+        location.reload();
+    }
+</script>
+
+</body>
+</html>

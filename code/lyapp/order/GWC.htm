@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1">
+    <title>购物车</title>
+    <link href="/ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/ui/css/animate.min.css" rel="stylesheet">
+    <link href="/ui/css/style.min.css" rel="stylesheet">
+    <link href="/ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/lyapp/css/style.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div class="main">
+    <?php include("../index_heard.php"); ?>
+    <ul class="sortable-list agile-list-GWC">
+        {dwt:datalist}
+        <li>
+            <!--<div class="GWCtitle">
+                <label class=" i-checks GWCcheckbox">
+                    <input name='checkall' id='checkall' type='checkbox' value='ztc'/>
+                </label>
+                旅游商品
+                <div class="pull-right">
+                    已支付
+                </div>
+            </div>-->
+
+            <div class="clearfix"></div>
+
+            <div class="GWCgoodsinfo ">
+                <label class="i-checks  GWCcheckbox GWCgoodscb ">
+                    <input name='checkall' id='checkall' type='checkbox' value='ztc'/>
+                </label>
+                <div>
+                    <?php echo getGoodsInfo($fields["goodsid"]);?>
+                    <br><span class="text-muted"><?php echo GetGoodBenefitInfoPrice($fields["goodsid"],$CLIENTID);                    ?></span>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+
+
+            <div class="clearfix"></div>
+
+
+            <?php echo getGwcList($fields["id"]);?>
+
+
+            <div class="clearfix"></div>
+
+        </li>
+<!--        <li >
+            订单号：<?php /*echo strtoupper(str_replace("order","",$fields["ordertype"]));*/?>{dwt:field.ordernum/}
+            <div class="pull-right">
+                <?php
+/*                if ($fields['sta'] != 1) echo "<span class='text-warning' style='font-weight: bold'>未支付</span>";
+                if ($fields['sta'] == 1) echo "已支付";
+                */?>
+            </div>
+            <div class="clearfix"></div>
+
+
+            <p style=" padding-top: 2px;padding-bottom: 2px" class="small">
+                <?php /*echo getOrderGoodsList($fields["id"]);*/?>
+            </p>
+            <div class="clearfix"></div>
+
+
+            <div class="pull-right">
+                共<?php /*echo GetOrderListNum($fields["id"]);*/?>件商品
+                <?php
+/*                if ($fields['sta'] == 1) {
+                    $paynum=(int)$fields["paynum"];
+                    $jfnum=(int)$fields["jfnum"];
+                    $jbnum=(int)$fields["jbnum"];
+                    echo "实付款:￥{$paynum}";
+                    if ($jbnum > 0) echo "&nbsp;积分:{$jbnum}&nbsp;";
+                    if ($jfnum > 0) echo "金币:{$jfnum}";
+                }
+                */?>
+            </div>
+            <p></p>
+
+
+            <div class="clearfix"></div>
+
+
+            <div class='hr-line-dashed' style="margin: 0; padding: 0;margin-top: 5px;margin-bottom:  5px"></div>
+            <div class="pull-right">
+                <?php
+/*                if ($fields['sta'] != 1) {
+                    echo "                        <span onclick='del(" . $fields["id"] . ")'  class='btn btn-primary btn-xs'>删除</span> ";
+                    echo "<a href='order_show_url.php?orderid=" . $fields["id"] . "' class='btn btn-primary btn-xs'>详情</a>";
+                }
+                //未支付的订单，用户自己可以删除，未支付订单 显示 为红色                删除后 订单的金币+积分+现金 回滚160919
+                if ($fields['sta'] == 1) {
+                    //echo "<a href='ly_my_order_show.php?orderid=".$fields["id"]."' class='btn btn-primary btn-xs'>电子凭证</a>";
+                    echo "<a href='order_show_url.php?orderid=" . $fields["id"] . "' class='btn btn-primary btn-xs'>详情</a>";
+                }
+                */?>
+            </div>
+            <?php
+/*            echo '订购日期：' .GetDateNoYearMk($fields['createtime']);
+            */?>
+            <div class="clearfix"></div>
+
+        </li>
+-->
+
+        {/dwt:datalist}
+    </ul>
+
+
+
+
+    <div class="clearfix" style="margin-bottom: 120px"></div>
+
+    <div class="bodyButtomTab">
+        <div class="form-group" id="error" style="display: none">
+            <span id="error_str" class="text-danger"></span>
+        </div>
+        <div class="pull-right">
+            <button class="btn btn-plus btn-lg btn-success" id="GWC_button" type="button" onclick='goGWC("line_save_GWC.php?paytype=1101",1)'>结算</button>
+        </div>
+        <div class="pull-left p-lg" style="padding: 10px">
+            <label class="checkbox-inline   i-checks">
+                <input name='checkall' id='checkall' type='checkbox' value='ztc'/> 全选
+            </label>
+            <button class="btn btn-xs btn-white" disabled id="GWC_button" type="button" onclick='goGWC("line_save_GWC.php?paytype=1101",1)'>删除</button>
+
+        </div>
+    </div>
+</div>
+<script src="/ui/js/jquery.min.js"></script>
+<script src="/ui/js/bootstrap.min.js"></script>
+<script src="/ui/js/plugins/iCheck/icheck.min.js"></script>
+<script src="/lyapp/js/main.js"></script>
+<script src="/lyapp/js/weixinHideOptionMenu.js"></script>
+<script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+<script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+<script src="/ui/js/plugins/layer/layer.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green"})
+    });
+</script>
+
+</body>
+</html>

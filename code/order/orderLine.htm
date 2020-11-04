@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo "订单管理"//$sysFunTitle?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo "订单管理"//$sysFunTitle?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content">
+
+                    <!--工具框   开始-->
+                    <div class="btn-group">
+                        <?php echo $roleCheck->RoleCheckToLink("order/orderLine_add.php", "添加订单", "btn btn-white", "", "glyphicon glyphicon-plus");
+
+
+
+                        echo "<a
+                                href=\"orderLine.addquick0.php\"
+                                data-toggle='tooltip'
+                                data-placement='top'
+                                title='快速创建订单'
+                                class=\"btn btn-white\">
+                                    <i class='glyphicon  glyphicon-forward' aria-hidden='true'></i>
+                                </a>";
+
+                        ?>
+                    </div>
+                    <div class="btn-group" style="margin-left: 5px">
+
+                        <form name="form2" method="get" action="">
+                            <div class="pull-left btn-group" style="margin-right:5px">
+                                <a href="?" class="btn btn-white<?php if ($sta == '') echo " active" ?>"> 全部 </a>
+                                <a href="?sta=1" class="btn btn-white<?php if ($sta == '1') echo " active" ?>"> 成功支付 </a>
+                                <a href="?sta=0" class="btn btn-white<?php if ($sta == '0') echo " active" ?>"> 未支付 </a>
+                                <a href="?sta=2" class="btn btn-white <?php if ($sta == '2') echo " active" ?> "> 异常支付 </a>
+                                 <a href="?sta=bftk" class="btn btn-white <?php if ($sta == 'bftk') echo " active"?> "> 部分退款 </a>   <input type="hidden" value="<?php echo $sta; ?>" name="sta">
+                            </div>
+                            <div class="input-group">
+
+
+                                <div class="pull-left" style="width: 130px">
+                                    <?php
+                                    $startdate_1 = "";
+                                    if ($startdate != "") {
+                                        $startdate_1 = $startdate;
+                                    }
+
+                                    ?>
+                                    <input type="text" name="startdate" id='startdate' class="form-control Wdate"
+                                           value="<?php echo $startdate_1 ?>" size="12" placeholder="开始日期"
+                                           onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+                                </div>
+
+                                <div class="pull-left" style="width: 130px">
+
+                                    <?php
+                                    $enddate_1 = "";
+                                    if ($enddate != "") {
+                                        $enddate_1 = $enddate;
+                                    }
+
+                                    ?>
+
+
+                                    <input type="text" name="enddate" id='enddate' class="form-control Wdate "
+                                           value="<?php echo $enddate_1 ?>" placeholder="结束日期"
+                                           onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+                                </div>
+
+
+                                <div class="pull-left ">
+                                    <select class='form-control' name='paytype' id='paytype'>
+                                        <option value="" selected>支付方式</option>
+                                        <option value="微信"
+                                            <?php if ($paytype == '微信') echo "selected" ?>>微信
+                                        </option>
+                                        <option value="现金"
+                                            <?php if ($paytype == '现金') echo "selected" ?>>现金
+                                        </option>
+
+                                    </select>
+                                </div>
+
+                                <div class="pull-left ">
+                                    <input name="keyword" type="text" placeholder="手机/姓名/订单号/卡号" class="form-control"
+                                           value="<?php echo $keyword ?>">
+                                </div>
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--工具框   结束-->
+
+
+                    <div style="margin-top:10px "></div>
+                    {dwt:datalist}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row ">
+                                <div class="col-md-3  ">{dwt:field.createtime function='GetDateMk(@me)' /}
+                                                        订单号:LYCP<?php echo GetRedKeyWord($fields['ordernum'], $keyword); ?>
+                                </div>
+                                <div class="col-md-4">
+                                    <?php
+                                    echo GetRedKeyWord($fields['realname'], $keyword);
+                                    echo " " . GetRedKeyWord($fields['mobilephone'], $keyword);
+                                    ?>
+                                </div>
+                                <div class="col-md-2  ">
+                                    <?php echo "操作员:" . GetEmpNameByUserId($fields['operatorid']); ?>
+                                </div>
+                                <div class="col-md-1 text-right">
+
+                                </div>
+
+                                <div class="col-md-2 text-right">
+                                    <?php
+                                    echo "<a onclick=\"layer.open({type: 2,title: '订单详情', content: 'order.show.php?orderid=" . $fields['id']."'});\"  href='javascript:' data-toggle='tooltip' data-placement='top' title='订单详情' > 订单详情 </a> ";
+
+//                                    echo $roleCheck->RoleCheckToLink("order/order.show.php?orderid=" . $fields['id'], "订单详情", "", true);
+                                    //echo $roleCheck->RoleCheckToLink("order/order_del.php?orderid=" . $fields['id']);
+                                    ?>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+<!--子订单信息-->
+                        <div class="panel-body " style="padding:0; margin: 0">
+                            <?php $listnumb = getOrderList($fields['id'], 0, "", 1); ?>
+
+                            <table class="table table-bordered   table-hover " style="min-width: 700px;margin: 0">
+                                <tr>
+
+                                    <td rowspan="<?php echo $listnumb ?>" style="width:200px">
+                                        <?php echo getOrderGoodsList($fields['id']);?>
+                                    </td>
+
+                                    <?php echo getOrderList($fields['id'], 0, $keyword); ?>
+                                    <td rowspan="<?php echo $listnumb ?>" style="width:300px">
+                                        <?php
+
+                                        $desc = "无";
+                                        if ($fields["desc"] != "") {
+                                            $desc = $fields["desc"];
+                                        }
+                                        echo "订单备注:$desc";
+
+
+                                        ?>
+                                    </td>
+                                    <td rowspan="<?php echo $listnumb ?>" style="width:300px">
+                                        <?php
+                                        $str = "";
+                                        //dump($fields["isdel"]);
+                                        if ($fields["sta"] == 0) {
+                                            $str = " <b>未支付</b>";
+                                        } else if ($fields["sta"] == 1) {
+                                            $str = " 成功支付";
+                                            if($fields["isdel"] == 4)$str = "成功支付-<b>部分退款</b>";
+                                        }  else {
+                                            $str = " <b>异常支付</b>";
+                                        }
+                                        echo $str;
+
+                                        $jbnum = $fields['jbnum']/100;
+                                        $jfnum = $fields['jfnum']/100;
+                                        $paynum = $fields['paynum']/100;
+                                        $total = $fields['total']/100;
+                                        if ($fields["sta"] == 1) {
+                                            $paynumb_all += $paynum;
+                                        }
+                                        $jbnum_all += $jbnum;
+                                        $jfnum_all += $jfnum;
+                                        $total_all += $total;
+
+                                        if ($fields['paytype'] != ""&&$fields['paynum']>0) echo "<br>支付方式:" . $fields['paytype'];
+                                        echo "<br>总额:" . $total;
+
+                                        //if($fields["sta"]==0)echo " 未支付现金:".$paynum;
+                                        if ($fields["sta"] == 1) echo "<br> RMB:" . $paynum;
+                                        if ($jbnum > 0) echo "<br>金币:" . $jbnum . " ";
+                                        if ($jfnum > 0) echo "<br>积分:" . $jfnum . " ";
+
+
+                                        ?>
+                                    </td>
+                                </tr>
+                                <?php
+                                 echo getOrderList($fields['id'], 1, $keyword);
+                                ?>
+                            </table>
+
+
+                        </div>
+
+
+                        <div class="panel-footer">
+                            <div class="row ">
+                                <div class="col-md-8  ">
+                                    <?php if($fields["benefitInfo"]!=""){?>
+
+                                    优惠信息:<?php echo $fields["benefitInfo"];?>
+                                    <?php }?>
+                                </div>
+
+                                <div class="col-md-4  text-right">
+
+                                <?php
+                                $orderstate=GetOrderState($fields["id"]);
+                                if ( $orderstate== "正常"&&$fields["isdel"]=="0") {
+                                    if ($fields["sta"] == 1) {
+                                        if($total>0){
+                                            //如果总价大于0,才可部分退款
+                                            echo $roleCheck->RoleCheckToLink("order/orderZtc_returnBF.php?orderid=" . $fields['id'], "部分退款", "", true, "", "", "");
+                                        }
+                                        $confirmInfo = "再次确认,操作完成后会进行以下操作:<br>会将送给上级的金币和积分扣除;<br>会将送给自己的金币和积分扣除;<br>会将所获得的会员类型删除;<br>会将用户支付的现金自动充值到金币中";
+                                        echo $roleCheck->RoleCheckToLink("order/orderLine_return.php?orderid=" . $fields['id'], "退款", "", "", "", true, $confirmInfo);
+
+                                    }
+                                    if ($fields["sta"] != 1) {
+                                        $confirmInfo = "再次确认,操作完成后会进行以下操作:<br>会将用户订单中使用的金币或积分恢复";
+                                        echo $roleCheck->RoleCheckToLink("order/orderLine_cancel.php?orderid=" . $fields['id'], "删除", "", "", "", true, $confirmInfo);
+                                    }
+                                }else{
+                                    echo "订单不能退款";
+                                }
+                                ?>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    {/dwt:datalist}
+
+
+                    <div class="table-responsive">
+                        {dwt:pagelist/}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<SCRIPT src="../ui/js/jquery.lazyload.plus.js" type=text/javascript></SCRIPT>
+</body>
+</html>

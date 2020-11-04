@@ -1,0 +1,77 @@
+{dwt:datalist}
+
+<?php
+
+
+$id = $fields["goodsid"];
+$goodsname = $fields["goodsname"];
+//$desc = strip_tags($fields["desc"]);
+//if (strlen($desc) > 200) $desc = cn_substr_utf8($desc, 199) . "...";
+$price100 = $fields["price"];
+$jfnum100 = $fields["jfnum"];
+$price = $price100 / 100;
+$jfnum = $jfnum100 / 100;
+$jbnum = $price - $jfnum;
+$pubdate = GetDateNoYearMk($fields["pubdate"]);
+
+$photo = $fields["litpic"];
+if ($photo == "") $photo = "/images/arcNoPic.jpg";
+$ordernumb = GetOrderNumb($id, "x_goods_addon_lycp");
+
+$benprice = GetGoodBenefitInfoPrice($id, $CLIENTID);
+
+
+$data_str = "
+                    <li>
+                        <div class='list-item'>
+                                <a href='/lyapp/goods/goods_view.php?id=$id' title='$goodsname'>
+                                <img class='pic' style='height: 75px;width: 100px' src=\"$photo\"   data-original='$photo' >
+                                </a>
+                            
+                            <div class='d'>
+                                <a href='/lyapp/goods/goods_view.php?id=$id' title='$goodsname'>
+                                    <h3 class='d-title'>$goodsname</h3>
+                                </a>
+                                <p class='d-price'>
+                                <span class='h'>";
+if ($benprice != "") $data_str .= "
+                                    直通车卡:{$benprice}
+                                ";
+$data_str .= "&nbsp</span>
+                    </p>
+                                <div class='d-main'>
+                                    <p class='d-price'>
+                                     非会员:";
+
+
+if ($jbnum > 0) $data_str .= "<span class='font-num'>金币$jbnum </span>";
+if ($jfnum > 0) $data_str .= "<span class='font-num'>积分$jfnum </span>";
+
+$data_str .= "
+                                    
+                                    
+                                     
+                                    </p>
+                                    <p class='d-num'></p>
+                                    <p class='d-area'><span class='font-num'>$ordernumb</span>人预约</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                ";
+
+$data_array[] = $data_str;
+?>
+
+
+{/dwt:datalist}
+
+
+<?php
+//dump($data_array);
+if (!empty($data_array)) {
+    $jsondata = json_encode($data_array);
+    echo $jsondata;
+}
+?>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>选择商品</title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg" style="min-width: 800px">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="btn-group" id="Toolbar2">
+                        <input type="submit" id="closepage" value="确定" class="btn  btn-primary">
+                    </div>
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+                                <div class="pull-left">
+                                    <select name='typeid' class='form-control'>
+                                        <?php echo $optionarr ?>
+                                    </select>
+                                </div>
+                                <div class="pull-left ">
+                                    <input name="keyword" type="text" placeholder="编号/名称" class="form-control" value="<?php echo $keyword ?>">
+                                    <input name="targetname" type="hidden" value="<?php echo $targetname ?>">
+                                </div>
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th align="center" data-halign="center" data-align="center"></th>
+                                <th class="text-center">图片</th>
+                                <th class="text-center">编号</th>
+                                <th class="text-center">分类</th>
+                                <th class="text-center">商品名称/价格</th>
+                                <th data-halign="center" data-align="center">添加时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {dwt:datalist}
+                            <tr>
+                                <td class="text-center">
+                                    <label class="checkbox-inline i-checks"><input name='id' id='id' type='radio' value="{dwt:field.id/}"/></label>
+                                </td>
+                                <td class="text-center">
+                                    <?php $photo = $fields["litpic"];
+                                    if ($photo == "") $photo = "/images/arcNoPic.jpg";
+                                    ?>
+                                    <img data-original="<?php echo $photo; ?>" width="80" height="80"/>
+                                </td>
+                                <td class="text-center">{dwt:field.goodscode/}</td>
+                                <td class="text-center">
+                                    <a href="?typeid={dwt:field.typeid '/}">{dwt:field.typeid function='GetGoodsTypeName(@me)'/}</a>
+                                </td>
+                                <td class="text-left">
+
+                                    <?php echo GetRedKeyWord($fields['goodsname'], $keyword);
+
+                                    $price100 = $fields["price"];
+                                    $price = $price100 / 100;
+
+
+
+
+                                    $listtemp=$channeltype="";
+                                    $query = "SELECT channeltype FROM  `#@__goods_type`      WHERE id='$typeid' ";
+                                    $goodRow = $dsql->GetOne($query);
+                                    //dump($query);
+                                    if (is_array($goodRow)) {
+                                        $channeltype= $goodRow['channeltype'];
+                                    }
+
+                                    //如果车辆，则显示金币价格，其他的直接显示 金额
+                                    if ($channeltype == 3) {
+                                        $questr = "SELECT jfnum FROM #@__goods_addon_car WHERE goodsid={$fields["id"]}";
+                                        //dump($questr);
+                                        $row170321 = $dsql->GetOne($questr);
+                                        if (isset($row170321['jfnum'])) {
+
+
+                                            $jfnum100 = $fields["jfnum"];
+                                            $jfnum = $jfnum100 / 100;
+                                            $jbnum = $price - $jfnum;
+                                            if ($jfnum <= 0) $jfnum = 0;
+                                            if ($jbnum <= 0) $jbnum = 0;
+                                            echo "<br>非会员 金币<span id='jbnum_basic' class='font-num text-danger'>$jbnum </span>";
+
+                                            echo "积分<span id='jfnum_basic' class='font-num text-danger'>$jfnum </span>";
+                                        }
+                                        $benprice = GetGoodBenefitInfoPrice($fields["id"]);
+                                        if ($benprice != "") echo "   <br>直通车卡:$benprice";
+
+                                    } else {
+                                        echo "<br>{$price}元";
+                                    }
+                                    ?>
+                                </td>
+
+                                <td>
+                                    <?php
+                                    echo GetDateMk($fields['senddate']);
+                                    ?>
+                                </td>
+                            </tr>
+                            {/dwt:datalist}
+                            </tbody>
+                        </table>
+                        {dwt:pagelist/}
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<SCRIPT src="../ui/js/jquery.lazyload.plus.js" type=text/javascript></SCRIPT>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green"})
+    });
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.iframeAuto(index);
+</script>
+<!--表格-->
+<script type="text/javascript">
+    var targetname = '<?php echo $targetname?>';
+    if (targetname == "") targetname = "goodsid";
+    $('#closepage').click(function () {
+        var goodsid = $('input:radio[name=id]:checked').val();
+        if (!goodsid) {
+            alert("请选择商品");
+            return false;
+        }
+        parent.$("#" + targetname).val(goodsid);
+        parent.layer.closeAll('iframe');
+    })
+
+
+</script>
+</body>
+</html>

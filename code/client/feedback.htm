@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body >
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle ?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+                <div class="ibox-content">
+                    <!--工具框   开始-->
+                    <div class="btn-group" id="Toolbar">
+                        <a href="javascript:DelSel();" id="DelSel" class="btn btn-white" data-toggle='tooltip'
+                           data-placement='top' title='删除选中'><i class='glyphicon glyphicon-minus'
+                                                                aria-hidden='true'></i></a>
+                    </div>
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+                                <div class="pull-left ">
+                                    <input name="realname" type="text" placeholder="用户姓名" class="form-control"
+                                           id="realname" value="<?php echo $realname ?>"/>
+                                </div>
+                                <div class="pull-left ">
+                                    <input name="mobilephone" type="text" placeholder="手机号" class="form-control"
+                                           id="mobilephone" value="<?php echo $mobilephone ?>"/>
+                                </div>
+                                <div class="pull-left">
+                                    <select name="complete" id="complete" class='form-control'>
+                                        <option
+                                            <?php if ($complete == "") echo " selected" ?> selected>是否处理
+                                        </option>
+                                        <option value="1"
+                                            <?php if ($complete == 1) echo " selected" ?>>已处理
+                                        </option>
+                                        <option value="2"
+                                            <?php if ($complete == 2) echo " selected" ?>>未处理
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--工具框   结束-->
+
+
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist">
+                            <thead>
+                            <tr>
+                                <th align="center" data-halign="center" data-align="center">
+                                    <input name='selAllBut' id='selAllBut' type='checkbox' class="i-checks"/></th>
+                                <th align="center" data-halign="center" data-align="center">联系方式</th>
+                                <th align="center" data-halign="center" data-align="center">微信信息</th>
+
+                                <th align="center" data-halign="center" data-align="left">建议时间/内容</th>
+<!--                                <th align="center" data-halign="center" data-align="center">用户IP</th>
+-->
+                                <th align="center" data-halign="center" data-align="left">处理时间/内容</th>
+                                <th align="center" data-halign="center" data-align="center">处理</th>
+                            </tr>
+                            </thead>
+                            {dwt:datalist}
+                            <tr>
+                                <td>
+                                    <input name='logs' type='checkbox' class="i-checks" id="logs"
+                                           value='{dwt:field.id/}'/>
+                                </td>
+                                <td>
+                                    {dwt:field.realname/}<br>
+                                    {dwt:field.mobilephone/}
+                                </td>
+                                <td>{dwt:field.nickname/}<br>
+
+                                    <?php $photo = $fields["photo"];
+                                    if ($photo == "") $photo = "/images/zw.jpg";
+                                    ?>
+                                    <img src="<?php echo $photo; ?>" width="80" height="80"/></a></td>
+
+
+                                <td>
+                                    {dwt:field.dtime function="GetDateTimeMk(@me)" /}
+                                    <br>
+                                    {dwt:field.body/}
+                                </td>
+                               <!-- <td>
+                                    {dwt:field.cip/}
+                                </td>-->
+
+                                <td>
+                                    {dwt:field.completeTime function="GetDateTimeMk(@me)" /}
+                                <br>
+                                    {dwt:field.completeBody/}
+                                </td>
+                                <td>
+                                    <a onclick="layer.open({type: 2,title: '处理', content: 'feedback_reply.php?id={dwt:field.id/}'});"
+                                       href='javascript:'>处理</a>
+                                </td>
+                            </tr>
+                            {/dwt:datalist}
+                        </table>
+                        {dwt:pagelist/}
+
+
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",})
+
+        //是否全选
+        $("input[name='selAllBut']").on('ifChecked', function (event) {
+            $("input[name='logs']").iCheck('check');
+        });
+        $("input[name='selAllBut']").on('ifUnchecked', function (event) {
+            $("input[name='logs']").iCheck('uncheck');
+        });
+    });
+
+</script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table-2.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+
+<script language="javascript">
+    function DelSel() {
+        var nid = getCheckboxItem('logs');
+        if (nid == "") {
+            layer.alert('请选择要删除的数据', {icon: 6});
+            return;
+        }
+        location.href = "feedback_del.php?dopost=del&ids=" + nid;
+    }
+</script>
+</body>
+</html>
+
+

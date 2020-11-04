@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content">
+
+
+                    <!--工具框   开始-->
+                    <div class="btn-group" id="Toolbar">
+
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+                                <div class="pull-left">
+                                    <?php
+                                        if ($GLOBAMOREDEP && $GLOBALS['NOWLOGINUSERTOPDEPID'] == 0) {
+                                    //150610添加
+                                    //判断dwt_emp_dep_plus是否存在,如果存在,则按顶级部门来查询显示不同的权限组
+                                    //dump($GLOBALS['CUSERLOGIN']->getUserType());
+                                                                   if (!$GLOBAMOREDEP) {
+                                                                   //???????????????这里要取 部门管理员登录后的顶级部门ID
+                                                                   //$depid=;
+                                                                   echo "<input type=\"hidden\" name=\"depid\" value=\"$depid\"/>";
+                                                                   } else {
+                                                                   $depOptions = GetDepOptionListRole($depid);
+                                                                   //dump($emp_dep);
+                                                                   echo "<select class='form-control' name='depid' id='depid'>\r\n";
+                                                                                                                              echo "
+                                    <option value='0'>请选择部门...</option>
+                                                                                                                              \r\n";
+                                                                                                                              echo $depOptions;
+                                                                                                                              echo "</select>";
+                                            }
+                                                                   } ?>
+
+
+                                </div>
+                                <!--<div class="pull-left ">
+                                    <input name="phone" type="text" id="cip" placeholder="手机号" class="form-control" value="<?php /*echo $phone*/?>"/>
+                                </div>-->
+                                <div class="pull-left">
+                                    <select name="dtime" id="dtime" class='form-control'>
+                                        <option value="0" <?php if($dtime==0) echo " selected"?> selected>选择时间段</option>
+                                        <option value="7" <?php if($dtime==7) echo " selected"?>>一周内</option>
+                                        <option value="15" <?php if($dtime==15) echo " selected"?>>15天内</option>
+                                        <option value="30" <?php if($dtime==30) echo " selected"?>>30天以内</option>
+                                        <option value="60" <?php if($dtime==60) echo " selected"?>>60天以内</option>
+                                    </select>
+                                </div>
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--工具框   结束-->
+
+
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th align="center" data-halign="center" data-align="center">序号</th>
+                                <th align="center" data-halign="center" data-align="left">会员姓名</th>
+                                <th align="center" data-halign="center" data-align="left">消息标题</th>
+                                <th align="center" data-halign="center" data-align="left">发送内容</th>
+                                <th align="center" data-halign="center" data-align="left">发送时间</th>
+
+                            </tr>
+                            </thead>
+                            {dwt:datalist}
+                            <tr>
+                                <td>
+                                    {dwt:field.autoindex/}
+                                </td>
+                                <td>
+                                    {dwt:field.clientid function="getOneCLientRealName(@me)"/}
+                                </td>
+                                <td>
+                                    {dwt:field.type/}
+                                </td>
+                                <td>
+                                    <div style="max-width: 200px; word-break:break-all;">
+                                    {dwt:field.body/}</div>
+                                </td>
+
+                                <td>{dwt:field.senddate function="GetDateTimeMk(@me)" /}　</td>
+
+
+
+                            </tr>
+                            {/dwt:datalist}
+                        </table>
+                        {dwt:pagelist/}
+
+
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+
+</body>
+</html>
+
+

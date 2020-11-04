@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content">
+
+
+                    <!--工具框   开始-->
+                    <div class="btn-group" id="Toolbar">
+                        <?php
+                     echo $roleCheck->RoleCheckToLink("sys/sysgoods_add.php","","btn btn-white","","glyphicon glyphicon-plus");
+                                      ?>
+                    </div>
+
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+
+                                <div class="pull-left">
+
+                                    <select name='dir' class='form-control'>
+                                        <option value=''>选择功能目录...</option>
+                                        {dwt:global.optiondir /}
+                                    </select>
+                                </div>
+
+
+                                <div class="pull-left ">
+                                    <select name='flag' class='form-control'>
+                                        <option value=''>功能标志...</option>
+                                        {dwt:global.optionflag /}
+                                    </select>
+
+                                </div>
+                                <div class="pull-left ">
+                                    <input name="keyword" type="text" id="keyword" placeholder="文件地址/名称" class="form-control" value="<?php echo $keyword?>"/>
+                                </div>
+
+
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <!--工具框   结束-->
+
+
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th align="center" data-halign="center" data-align="center">序号</th>
+                                <th align="center" data-halign="center" data-align="left">名称</th>
+                                <th align="center" data-halign="center" data-align="left">功能目录</th>
+                                <th align="center" data-halign="center" data-align="left">功能地址</th>
+                                <th align="center" data-halign="center" data-align="center">销售价格</th>
+                                <th align="center" data-halign="center" data-align="center">优惠价格</th>
+                                <th align="center" data-halign="center" data-align="center">计费单位</th>
+                                <th align="center" data-halign="center" data-align="center">是否基础功能</th>
+                                <th align="center" data-halign="center" data-align="center">更新日期</th>
+                                <th align="center" data-halign="center" data-align="center">操作</th>
+                            </tr>
+                            </thead>
+                            {dwt:datalist}
+                            <tr>
+                                <td>
+                                    {dwt:field.autoindex/}
+                                </td>
+                                <td>
+                                    {dwt:field.name/} {dwt:field.flag function='flag(@me)'/}
+                                </td>
+                                <td>
+                                    {dwt:field.dir/}
+                                </td>
+                                <td>
+                                    {dwt:field.urladd/}
+                                </td>
+                                <td>
+                                    {dwt:field.salePrice/}
+                                </td>
+                                <td>
+                                    {dwt:field.nowPrice/}
+                                </td>
+                                <td>
+                                    {dwt:field.unit/}
+                                </td>
+                                <td>
+                                    {dwt:field.isbasic/}
+                                </td>
+
+                                <td>
+                                    {dwt:field.updateDate function="GetDateMk(@me)" /}　
+
+                                </td>
+
+
+                                <td>
+
+                                    <?php
+                                              echo  $roleCheck->RoleCheckToLink("sys/sysgoods_edit.php?id=".$fields['id']);
+                                            echo $roleCheck->RoleCheckToLink("sys/sysgoods_del.php?id=".$fields['id']);
+                                    echo getUseDep($fields['urladd']);
+
+
+                                            ?>
+
+
+
+
+                                </td>
+                            </tr>
+                            {/dwt:datalist}
+                        </table>
+                        {dwt:pagelist/}
+
+
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+
+</body>
+</html>
+
+

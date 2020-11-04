@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table-fixed-columns.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+    <style>
+        .ibox-content-plus {
+            background-color: #fff;
+            padding-left: 5px;
+            padding-right: 5px;
+            color: inherit;
+            border-color: #e7eaec;
+            -webkit-border-image: none;
+            -o-border-image: none;
+            border-image: none;
+            border-style: solid solid none;
+            border-width: 1px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<!--标题栏和 添加按钮            开始-->
+<div class="ibox-title" id="title">
+    <h5><?php
+        // echo $nowday." ";
+        echo $sysFunTitle
+        ?></h5>
+</div>
+<!--标题栏和 添加按钮   结束-->
+<div class="ibox-content-plus">
+    <!--工具框   开始-->
+
+    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+        <form name="form2" method="get" action="">
+            <div class="input-group">
+
+
+                <div class="pull-left ">
+                    <input type='text' class="form-control  Wdate" value="<?php echo $day_s; ?>" name='day_s' id='day_s' size='14' readonly='readonly'
+                           onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'day_d\')}'})"
+                    />
+                </div>
+                <div class="pull-left ">
+                    到
+                </div>
+                <div class="pull-left ">
+                    <input type='text' class="form-control  Wdate" value="<?php echo $day_d; ?>" name='day_d' id='day_d' size='14' readonly='readonly'
+                           onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'day_s\')}'})"
+                    />
+                </div>
+
+                <div class="pull-left ">
+
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-white">
+                            查看
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--工具框   结束-->
+
+
+    <!--表格数据区------------开始-->
+    <div class="table-responsive">
+
+
+        <table
+                id="datalist22"
+                data-toggle="table"
+                data-classes="table table-hover table-condensed"
+                data-striped="true"
+                data-sort-order="desc"
+                data-mobile-responsive="true"
+                data-show-columns="true"
+        >
+            <thead>
+            <tr>
+                <th rowspan="3" data-halign="center" data-align="center">日期</th>
+                <th colspan="10" data-halign="center" data-align="right">收入</th>
+                <th colspan="2" data-halign="center" data-align="right">支出</th>
+                <th rowspan="3" data-halign="center" data-align="right" class="success">合计</th>
+                <th colspan="6" data-halign="center" data-align="right">金币增加</th>
+                <th colspan="4" data-halign="center" data-align="right">金币减少</th>
+                <th rowspan="3" data-halign="center" data-align="right" class="success">金币合计</th>
+                <th colspan="5" data-halign="center" data-align="right">积分增加</th>
+                <th colspan="4" data-halign="center" data-align="right">积分减少</th>
+                <th rowspan="3" data-halign="center" data-align="right" class="success">积分合计</th>
+            </tr>
+            <tr>
+                <th colspan="2" data-halign="center" data-align="right">会员卡</th>
+                <th colspan="2" data-halign="center" data-align="right">合伙人</th>
+                <th colspan="2" data-halign="center" data-align="right">旅游线路</th>
+                <th colspan="2" data-halign="center" data-align="right">车辆租赁</th>
+                <th rowspan="2" data-halign="center" data-align="right">金币在线充值</th>
+                <th rowspan="2" data-halign="center" data-align="right">充值卡</th>
+                <th rowspan="2" data-halign="center" data-align="right">
+                    订单删除
+                    <i class='glyphicon glyphicon-question-sign' aria-hidden='true' data-toggle='tooltip' data-placement='top' data-html="true"
+                       title="<p align='left'>2017年03月13日前的一期数据：订单删除时间为订单创建日期，与实际不符。<br>该日期以后的二期数据，删除时间与实际相符。<br>此处统计的不包含挂失后补卡的直通车订单</p>">
+                    </i>
+                </th>
+                <th rowspan="2" data-halign="center" data-align="right">提现付款</th>
+                <th rowspan="2" data-halign="center" data-align="right">二级</th>
+                <th rowspan="2" data-halign="center" data-align="right">三级</th>
+                <th rowspan="2" data-halign="center" data-align="right">金币充值</th>
+                <th rowspan="2" data-halign="center" data-align="right">
+                    手工添加
+                    <!-- <i class='glyphicon glyphicon-question-sign' aria-hidden='true' data-toggle='tooltip' data-placement='top' data-html="true"
+                        title="<p align='left'>手工<br>在线</p>"></i>-->
+
+                </th>
+                <th rowspan="2" data-halign="center" data-align="right">充值卡</th>
+                <th rowspan="2" data-halign="center" data-align="right">
+                    其他
+                    <i class='glyphicon glyphicon-question-sign' aria-hidden='true' data-toggle='tooltip' data-placement='top' data-html="true"
+                       title="<p align='left'>提现审核不通过<br>购买多件赠送<br>操作撤消<br>订单删除恢复</p>">
+                    </i>
+
+                </th>
+                <th rowspan="2" data-halign="center" data-align="right">旅游线路</th>
+                <th rowspan="2" data-halign="center" data-align="right">车辆租赁</th>
+                <th rowspan="2" data-halign="center" data-align="right">手工扣除</th>
+                <th rowspan="2" data-halign="center" data-align="right">其他
+                    <i class='glyphicon glyphicon-question-sign' aria-hidden='true' data-toggle='tooltip' data-placement='top' data-html="true"
+                       title="<p align='left'>提现申请<br>操作撤消<br>订单删除扣除<br>转为合伙人金币减少</p>">
+                    </i>
+                </th>
+                <th rowspan="2" data-halign="center" data-align="right">二级</th>
+                <th rowspan="2" data-halign="center" data-align="right">三级</th>
+                <th rowspan="2" data-halign="center" data-align="right">
+                    赠送
+                    <i class='glyphicon glyphicon-question-sign' aria-hidden='true' data-toggle='tooltip' data-placement='top' data-html="true"
+                       title="<p align='left'>会员充值<br>会员购买</p>">
+                    </i>
+                </th>
+                <th rowspan="2" data-halign="center" data-align="right">手工添加</th>
+                <th rowspan="2" data-halign="center" data-align="right">
+                    其他
+                    <i class='glyphicon glyphicon-question-sign' aria-hidden='true' data-toggle='tooltip' data-placement='top' data-html="true"
+                       title="<p align='left'>操作撤消<br>订单删除恢复<br>转为合伙人金币减少</p>">
+                    </i>
+                </th>
+                <th rowspan="2" data-halign="center" data-align="right">旅游线路</th>
+                <th rowspan="2" data-halign="center" data-align="right">车辆租赁</th>
+                <th rowspan="2" data-halign="center" data-align="right">手工扣除</th>
+                <th rowspan="2" data-halign="center" data-align="right">
+                    其他
+                    <i class='glyphicon glyphicon-question-sign' aria-hidden='true' data-toggle='tooltip' data-placement='top' data-html="true"
+                       title="<p align='left'>操作撤消<br>订单删除扣除<br>转为合伙人积分减少</p>">
+                    </i>
+                </th>
+            </tr>
+            <tr>
+                <th data-halign="center" data-align="right">现金</th>
+                <th data-halign="center" data-align="right">微信</th>
+                <th data-halign="center" data-align="right">现金</th>
+                <th data-halign="center" data-align="right">微信</th>
+                <th data-halign="center" data-align="right">现金</th>
+                <th data-halign="center" data-align="right">微信</th>
+                <th data-halign="center" data-align="right">现金</th>
+                <th data-halign="center" data-align="right">微信</th>
+            </tr>
+            </thead>
+
+            <?php
+            $day_s_int = strtotime($day_s);
+            $day_d_int = strtotime($day_d);
+
+
+            //收入
+            $xj_bs_total = $xj_num_total = $wx_bs_total = $wx_num_total = 0;//直通车
+            $xj_hyk_num_total = $wx_hyk_num_total = 0;//合伙人
+            $xj_lycp_num_total = $wx_lycp_num_total = 0;//旅游产品
+            $xj_car_num_total = $wx_car_num_total = 0;//车辆租赁
+            $xj_czk_num_total = 0;
+            $jb_bs_total = $jb_num_total = 0;//金币充值
+
+            //支出-提现付款
+            $tx_bs_total = $tx_num_total = 0;
+            $orderdel_num_total = 0;
+
+
+            //金币增加
+            $fljb2_bs_total = $fljb2_num_total = $fljb3_bs_total = $fljb3_num_total = 0;
+
+
+            //金币增加
+            $jb_zj_sgtj_num_total = $jb_zj_czk_num_total = $jb_zj_qt_num_total = 0;
+            //金币减少
+            $jb_js_lycp_num_total = $jb_js_car_num_total = $jb_js_sgtj_num_total = $jb_js_qt_num_total = 0;
+
+
+            //积分增加
+            $fljf2_num_total = $fljf3_num_total = 0;
+            //积分增加
+            $jf_zj_sgtj_num_total = $jf_zj_zs_num_total = $jf_zj_qt_num_total = 0;
+            //积分减少
+            $jf_js_lycp_num_total = $jf_js_car_num_total = $jf_js_sgtj_num_total = $jf_js_qt_num_total = 0;
+
+
+            for ($nowdateint = $day_s_int; $nowdateint <= $day_d_int; $nowdateint += 86400) {
+
+                $nowdate = GetDateMk($nowdateint);
+                //收入---直通车
+                $xj_bs = $xj_num = $wx_bs = $wx_num = "";
+                /*                        if (isset($report_array["收入"][$nowdate]["现金"]["orderZtc"]["笔数"])) {
+                                            $xj_bs = $report_array["收入"][$nowdate]["现金"]["orderZtc"]["笔数"];
+                                            $xj_bs_total += $xj_bs;
+                                        }*/
+                if (isset($report_array["收入"][$nowdate]["现金"]["orderZtc"]["金额"])) {
+
+                    $xj_num = +$report_array["收入"][$nowdate]["现金"]["orderZtc"]["金额"];
+                    $xj_num_total += $xj_num;
+                }
+                /*                        if (isset($report_array["收入"][$nowdate]["微信"]["orderZtc"]["笔数"])) {
+
+                                            $wx_bs = $report_array["收入"][$nowdate]["微信"]["orderZtc"]["笔数"];
+                                            $wx_bs_total += $wx_bs;
+                                        }*/
+                if (isset($report_array["收入"][$nowdate]["微信"]["orderZtc"]["金额"])) {
+                    $wx_num = +$report_array["收入"][$nowdate]["微信"]["orderZtc"]["金额"];
+                    $wx_num_total += $wx_num;
+                }
+
+                /*   if (isset($report_array["收入"][$nowdate]["模拟支付"]["orderZtc"]["金额"])) {
+                       $wx_num = +$report_array["收入"][$nowdate]["模拟支付"]["orderZtc"]["金额"];
+                       $wx_num_total += $wx_num;
+                   }*/
+
+
+                //收入---合伙人
+                $xj_hyk_num = $wx_hyk_num = "";
+                if (isset($report_array["收入"][$nowdate]["现金"]["orderHyk"]["金额"])) {
+
+                    $xj_hyk_num = +$report_array["收入"][$nowdate]["现金"]["orderHyk"]["金额"];
+                    $xj_hyk_num_total += $xj_hyk_num;
+                }
+                if (isset($report_array["收入"][$nowdate]["微信"]["orderHyk"]["金额"])) {
+
+                    $wx_hyk_num = +$report_array["收入"][$nowdate]["微信"]["orderHyk"]["金额"];
+                    $wx_hyk_num_total += $wx_hyk_num;
+                }
+
+                //收入---旅游线路
+                $xj_lycp_num = $wx_lycp_num = "";
+                if (isset($report_array["收入"][$nowdate]["现金"]["orderLycp"]["金额"])) {
+
+                    $xj_lycp_num = +$report_array["收入"][$nowdate]["现金"]["orderLycp"]["金额"];
+                    $xj_lycp_num_total += $xj_lycp_num;
+                }
+                if (isset($report_array["收入"][$nowdate]["微信"]["orderLycp"]["金额"])) {
+
+                    $wx_lycp_num = +$report_array["收入"][$nowdate]["微信"]["orderLycp"]["金额"];
+                    $wx_lycp_num_total += $wx_lycp_num;
+                }
+
+                //收入---车辆租赁
+                $xj_car_num = $wx_car_num = "";
+                if (isset($report_array["收入"][$nowdate]["现金"]["orderCar"]["金额"])) {
+
+                    $xj_car_num = +$report_array["收入"][$nowdate]["现金"]["orderCar"]["金额"];
+                    $xj_car_num_total += $xj_car_num;
+                }
+                if (isset($report_array["收入"][$nowdate]["微信"]["orderCar"]["金额"])) {
+
+                    $wx_car_num = +$report_array["收入"][$nowdate]["微信"]["orderCar"]["金额"];
+                    $wx_car_num_total += $wx_car_num;
+                }
+
+                //收入---充值卡
+                $xj_czk_num = "";
+                if (isset($report_array["收入"][$nowdate]["现金"]["orderCzk"]["金额"])) {
+
+                    $xj_czk_num = +$report_array["收入"][$nowdate]["现金"]["orderCzk"]["金额"];
+                    $xj_czk_num_total += $xj_czk_num;
+                }
+
+
+                //收入-金币充值 此变量 在金币增加上也使用了
+                $jb_bs = $jb_num = "";
+                if (isset($report_array["收入"][$nowdate]["金币充值"][""]["笔数"])) {
+                    $jb_bs = $report_array["收入"][$nowdate]["金币充值"][""]["笔数"];
+                    $jb_bs_total += $jb_bs;
+                }
+
+
+                if (isset($report_array["收入"][$nowdate]["金币充值"][""]["金额"])) {
+                    $jb_num = +$report_array["收入"][$nowdate]["金币充值"][""]["金额"];
+                    $jb_num_total += $jb_num;
+                }
+
+                //支出 -  支付成功的订单被删除
+                $orderdel_num = "";
+                if (isset($report_array["支出"][$nowdate]["订单删除"][""]["金额"])) {
+
+                    $orderdel_num = -$report_array["支出"][$nowdate]["订单删除"][""]["金额"];
+                    $orderdel_num_total += $orderdel_num;
+                }
+
+                //提现付款
+                $tx_bs = $tx_num = "";
+                if (isset($report_array["支出"][$nowdate]["提现付款"][""]["笔数"])) {
+                    $tx_bs = $report_array["支出"][$nowdate]["提现付款"][""]["笔数"];
+                    $tx_bs_total += $tx_bs;
+                }
+                if (isset($report_array["支出"][$nowdate]["提现付款"][""]["金额"])) {
+
+                    $tx_num = -$report_array["支出"][$nowdate]["提现付款"][""]["金额"];
+                    $tx_num_total += $tx_num;
+                }
+
+                //行收入合计
+                $rowhj_sr = $xj_num + $wx_num + $xj_hyk_num + $wx_hyk_num + $xj_lycp_num + $wx_lycp_num + $xj_car_num + $wx_car_num + $xj_czk_num + $jb_num + $orderdel_num + $tx_num;
+
+
+                //金币增加
+                $fljb2_bs = $fljb2_num = "";
+                if (isset($report_array["金币增加"][$nowdate]["二级金币"][""]["金额"])) {
+                    $fljb2_num = +$report_array["金币增加"][$nowdate]["二级金币"][""]["金额"];
+                    $fljb2_num_total += $fljb2_num;
+                }
+                $fljb3_bs = $fljb3_num = "";
+                if (isset($report_array["金币增加"][$nowdate]["三级金币"][""]["金额"])) {
+                    $fljb3_num = +$report_array["金币增加"][$nowdate]["三级金币"][""]["金额"];
+                    $fljb3_num_total += $fljb3_num;
+                }
+
+
+                $jb_zj_sgtj_num = "";
+                if (isset($report_array["金币增加"][$nowdate]["手工添加"][""]["金额"])) {
+                    $jb_zj_sgtj_num = +$report_array["金币增加"][$nowdate]["手工添加"][""]["金额"];
+                    $jb_zj_sgtj_num_total += $jb_zj_sgtj_num;
+                }
+
+                $jb_zj_czk_num = "";
+                if (isset($report_array["金币增加"][$nowdate]["充值卡添加"][""]["金额"])) {
+                    $jb_zj_czk_num = +$report_array["金币增加"][$nowdate]["充值卡添加"][""]["金额"];
+                    $jb_zj_czk_num_total += $jb_zj_czk_num;
+                }
+
+                $jb_zj_qt_num = "";
+                if (isset($report_array["金币增加"][$nowdate]["其他"][""]["金额"])) {
+                    $jb_zj_qt_num = +$report_array["金币增加"][$nowdate]["其他"][""]["金额"];
+                    $jb_zj_qt_num_total += $jb_zj_qt_num;
+                }
+
+
+                //金币减少-旅游线路
+                $jb_js_lycp_num = "";
+                if (isset($report_array["金币减少"][$nowdate]["消费"]["orderLycp"]["金额"])) {
+                    $jb_js_lycp_num = $report_array["金币减少"][$nowdate]["消费"]["orderLycp"]["金额"];
+                    $jb_js_lycp_num_total += $jb_js_lycp_num;
+                }
+
+                //金币减少-车辆租赁
+                $jb_js_car_num = "";
+                if (isset($report_array["金币减少"][$nowdate]["消费"]["orderCar"]["金额"])) {
+                    $jb_js_car_num = $report_array["金币减少"][$nowdate]["消费"]["orderCar"]["金额"];
+                    $jb_js_car_num_total += $jb_js_car_num;
+                }
+
+                //金币减少-手工
+                $jb_js_sgtj_num = "";
+                if (isset($report_array["金币减少"][$nowdate]["手工扣除"][""]["金额"])) {
+                    $jb_js_sgtj_num = $report_array["金币减少"][$nowdate]["手工扣除"][""]["金额"];
+                    $jb_js_sgtj_num_total += $jb_js_sgtj_num;
+                }
+
+                $jb_js_qt_num = "";
+                if (isset($report_array["金币减少"][$nowdate]["其他"][""]["金额"])) {
+                    $jb_js_qt_num = +$report_array["金币减少"][$nowdate]["其他"][""]["金额"];
+                    $jb_js_qt_num_total += $jb_js_qt_num;
+                }
+
+                //行金币合计
+                $rowhj_jb = $fljb2_num + $fljb3_num + $jb_num + $jb_zj_sgtj_num + $jb_zj_czk_num + $jb_zj_qt_num + $jb_js_lycp_num + $jb_js_car_num + $jb_js_sgtj_num + $jb_js_qt_num;
+
+
+                //积分增加
+                $fljf2_num = "";
+                if (isset($report_array["积分增加"][$nowdate]["二级积分"][""]["金额"])) {
+                    $fljf2_num = +$report_array["积分增加"][$nowdate]["二级积分"][""]["金额"];
+                    $fljf2_num_total += $fljf2_num;
+                }
+                $fljf3_num = "";
+                if (isset($report_array["积分增加"][$nowdate]["三级积分"][""]["金额"])) {
+                    $fljf3_num = +$report_array["积分增加"][$nowdate]["三级积分"][""]["金额"];
+                    $fljf3_num_total += $fljf3_num;
+                }
+
+
+                $jf_zj_sgtj_num = "";
+                if (isset($report_array["积分增加"][$nowdate]["手工添加"][""]["金额"])) {
+                    $jf_zj_sgtj_num = +$report_array["积分增加"][$nowdate]["手工添加"][""]["金额"];
+                    $jf_zj_sgtj_num_total += $jf_zj_sgtj_num;
+                }
+
+                $jf_zj_zs_num = "";
+                if (isset($report_array["积分增加"][$nowdate]["赠送"][""]["金额"])) {
+                    $jf_zj_zs_num = +$report_array["积分增加"][$nowdate]["赠送"][""]["金额"];
+                    $jf_zj_zs_num_total += $jf_zj_zs_num;
+                }
+                $jf_zj_qt_num = "";
+                if (isset($report_array["积分增加"][$nowdate]["其他"][""]["金额"])) {
+                    $jf_zj_qt_num = +$report_array["积分增加"][$nowdate]["其他"][""]["金额"];
+                    $jf_zj_qt_num_total += $jf_zj_qt_num;
+                }
+
+                //积分减少-旅游线路
+                $jf_js_lycp_num = "";
+                if (isset($report_array["积分减少"][$nowdate]["消费"]["orderLycp"]["金额"])) {
+                    $jf_js_lycp_num = $report_array["积分减少"][$nowdate]["消费"]["orderLycp"]["金额"];
+                    $jf_js_lycp_num_total += $jf_js_lycp_num;
+                }
+
+                //积分减少-车辆租赁
+                $jf_js_car_num = "";
+                if (isset($report_array["积分减少"][$nowdate]["消费"]["orderCar"]["金额"])) {
+                    $jf_js_car_num = $report_array["积分减少"][$nowdate]["消费"]["orderCar"]["金额"];
+                    $jf_js_car_num_total += $jf_js_car_num;
+                }
+
+                //积分减少
+                $jf_js_sgtj_num = "";
+                if (isset($report_array["积分减少"][$nowdate]["手工扣除"][""]["金额"])) {
+                    $jf_js_sgtj_num = $report_array["积分减少"][$nowdate]["手工扣除"][""]["金额"];
+                    $jf_js_sgtj_num_total += $jf_js_sgtj_num;
+                }
+
+                $jf_js_qt_num = "";
+                if (isset($report_array["积分减少"][$nowdate]["其他"][""]["金额"])) {
+                    $jf_js_qt_num = +$report_array["积分减少"][$nowdate]["其他"][""]["金额"];
+                    $jf_js_qt_num_total += $jf_js_qt_num;
+                }
+                //行积分合计
+                $rowhj_jf = $fljf2_num + $fljf3_num + $jf_zj_sgtj_num + $jf_zj_zs_num + $jf_zj_qt_num + $jf_js_lycp_num + $jf_js_car_num + $jf_js_sgtj_num + $jf_js_qt_num;
+
+
+                echo " 
+                                     <tr>
+                                        <td ><div style='width:80px'> $nowdate</div></td>
+                                        <td >$xj_num</td>
+                                        <td >$wx_num</td>
+                                        <td >$xj_hyk_num</td>
+                                        <td >$wx_hyk_num</td>
+                                        <td >$xj_lycp_num</td>
+                                        <td >$wx_lycp_num</td>
+                                        <td >$xj_car_num</td>
+                                        <td >$wx_car_num</td>
+                                       
+                                        
+                                        <td>$jb_num</td>
+                                        <td >$xj_czk_num</td>
+                                        <td>$orderdel_num</td>
+                                        <td>$tx_num</td>
+                                        <td>$rowhj_sr</td>
+                                        <td>$fljb2_num</td>
+                                        <td>$fljb3_num</td>
+                                        <td>$jb_num</td>
+                                        <td>$jb_zj_sgtj_num</td>
+                                        <td>$jb_zj_czk_num</td>
+                                        <td>$jb_zj_qt_num</td>
+                                        <td>$jb_js_lycp_num</td>
+                                        <td>$jb_js_car_num</td>
+                                        <td>$jb_js_sgtj_num</td>
+                                        <td>$jb_js_qt_num</td>
+                                        <td>$rowhj_jb</td>
+                                        <td>$fljf2_num</td>
+                                        <td>$fljf3_num</td>
+                                        <td>$jf_zj_zs_num</td>
+                                        <td>$jf_zj_sgtj_num</td>
+                                        <td>$jf_zj_qt_num</td>
+                                        <td>$jf_js_lycp_num</td>
+                                        <td>$jf_js_car_num</td>
+                                        <td>$jf_js_sgtj_num</td>
+                                        <td>$jf_js_qt_num</td>
+										<td>$rowhj_jf</td>
+                                     </tr>
+                                ";
+
+
+            }
+
+            //行收入合计
+            $rowhj_sr_total = $xj_num_total + $wx_num_total + $xj_hyk_num_total + $wx_hyk_num_total + $xj_lycp_num_total + $wx_lycp_num_total + $xj_car_num_total + $wx_car_num_total + $xj_czk_num_total + $jb_num_total + $orderdel_num_total + $tx_num_total;
+            $rowhj_sr_total = number_format($rowhj_sr_total, 2);
+
+            //行金币合计
+            $rowhj_jb_total = $fljb2_num_total + $fljb3_num_total + $jb_num_total + $jb_zj_sgtj_num_total + $jb_zj_czk_num_total + $jb_zj_qt_num_total + $jb_js_lycp_num_total + $jb_js_car_num_total + $jb_js_sgtj_num_total + $jb_js_qt_num_total;
+            $rowhj_jb_total = number_format($rowhj_jb_total, 2);
+
+            //列合计
+            //$xj_bs_total = number_format($xj_bs_total);
+            $xj_num_total = number_format($xj_num_total, 2);
+            //$wx_bs_total = number_format($wx_bs_total);
+            $wx_num_total = number_format($wx_num_total, 2);
+
+            $xj_hyk_num_total = number_format($xj_hyk_num_total, 2);
+            $wx_hyk_num_total = number_format($wx_hyk_num_total, 2);
+
+            $xj_lycp_num_total = number_format($xj_lycp_num_total, 2);
+            $wx_lycp_num_total = number_format($wx_lycp_num_total, 2);
+
+            $xj_car_num_total = number_format($xj_car_num_total, 2);
+            $wx_car_num_total = number_format($wx_car_num_total, 2);
+
+            $xj_czk_num_total = number_format($xj_czk_num_total, 2);
+
+            //$jb_bs_total = number_format($jb_bs_total);
+            $jb_num_total = number_format($jb_num_total, 2);
+            //$tx_bs_total = number_format($tx_bs_total);
+            $tx_num_total = number_format($tx_num_total, 2);
+            $orderdel_num_total = number_format($orderdel_num_total, 2);
+
+
+            //$fljb2_bs_total = number_format($fljb2_bs_total);
+            $fljb2_num_total = number_format($fljb2_num_total, 2);
+            //$fljb3_bs_total = number_format($fljb3_bs_total);
+            $fljb3_num_total = number_format($fljb3_num_total, 2);
+            $jb_zj_sgtj_num_total = number_format($jb_zj_sgtj_num_total, 2);
+            $jb_zj_qt_num_total = number_format($jb_zj_qt_num_total, 2);
+            $jb_js_lycp_num_total = number_format($jb_js_lycp_num_total, 2);
+            $jb_js_car_num_total = number_format($jb_js_car_num_total, 2);
+            $jb_js_sgtj_num_total = number_format($jb_js_sgtj_num_total, 2);
+            $jb_zj_czk_num_total = number_format($jb_zj_czk_num_total, 2);
+            $jb_js_qt_num_total = number_format($jb_js_qt_num_total, 2);
+
+
+            //行积分合计
+            $rowhj_jf_total = $fljf2_num_total + $fljf3_num_total + $jf_zj_sgtj_num_total + $jf_zj_zs_num_total + $jf_zj_qt_num_total + $jf_js_lycp_num_total + $jf_js_car_num_total + $jf_js_sgtj_num_total + $jf_js_qt_num_total;
+            $rowhj_jf_total = number_format($rowhj_jf_total, 2);
+
+
+            $fljf2_num_total = number_format($fljf2_num_total, 2);
+            //$fljb3_bs_total = number_format($fljb3_bs_total);
+            $fljf3_num_total = number_format($fljf3_num_total, 2);
+
+            $jf_zj_sgtj_num_total = number_format($jf_zj_sgtj_num_total, 2);
+            $jf_zj_zs_num_total = number_format($jf_zj_zs_num_total, 2);
+            $jf_zj_qt_num_total = number_format($jf_zj_qt_num_total, 2);
+            $jf_js_lycp_num_total = number_format($jf_js_lycp_num_total, 2);
+            $jf_js_car_num_total = number_format($jf_js_car_num_total, 2);
+            $jf_js_sgtj_num_total = number_format($jf_js_sgtj_num_total, 2);
+            $jf_js_qt_num_total = number_format($jf_js_qt_num_total, 2);
+
+
+            echo "
+                                                                <tr>
+                                        <td>合计</td>
+                                        <td >$xj_num_total</td>
+                                        <td >$wx_num_total</td>
+                                        <td >$xj_hyk_num_total</td>
+                                        <td >$wx_hyk_num_total</td>
+                                        <td >$xj_lycp_num_total</td>
+                                        <td >$wx_lycp_num_total</td>
+                                        <td >$xj_car_num_total</td>
+                                        <td >$wx_car_num_total</td>
+                                        
+                                        <td>$jb_num_total</td>
+                                        <td >$xj_czk_num_total</td>
+                                        <td>$orderdel_num_total</td>
+                                        <td>$tx_num_total</td>
+                                        <td>$rowhj_sr_total</td>
+                                        <td>$fljb2_num_total</td>
+                                        <td>$fljb3_num_total</td>
+                                         <td>$jb_num_total</td>
+                                       <td>$jb_zj_sgtj_num_total </td>
+                                        <td>$jb_zj_czk_num_total</td>
+                                        <td> $jb_zj_qt_num_total</td>
+                                        <td>$jb_js_lycp_num_total</td>
+                                        <td>$jb_js_car_num_total</td>
+                                        <td>$jb_js_sgtj_num_total</td>
+                                        <td>$jb_js_qt_num_total</td>
+                                        <td>$rowhj_jb_total</td>
+                                        <td>$fljf2_num_total</td>
+                                        <td>$fljf3_num_total</td>
+                                        <td>$jf_zj_zs_num_total</td>
+                                        <td>$jf_zj_sgtj_num_total</td>
+                                        <td>$jf_zj_qt_num_total</td>
+                                        <td>$jf_js_lycp_num_total</td>
+                                        <td>$jf_js_car_num_total</td>
+                                        <td>$jf_js_sgtj_num_total</td>
+                                        <td>$jf_js_qt_num_total</td>
+                                        <td>$rowhj_jf_total</td>
+
+                           
+                           ";
+
+
+            ?>
+
+        </table>
+    </div>
+    <!--表格数据区------------结束-->
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-export.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/tableExport.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-fixed-columns.js"></script>
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" charset="utf-8">
+
+    !function (F, E, D) {
+        !function () {
+            D("#datalist22").bootstrapTable({
+                showExport: true,//显示导出按钮
+                exportDataType: "basic",//导出类型    striped: !0,
+                showToggle: 0,
+                showColumns: 0,
+                iconSize: "outline",
+                toolbar: "#Toolbar,#Toolbar2",
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                  //排序方式
+                height: getHeight(),//高度自适应
+                fixedColumns: true,//列头固定
+                fixedNumber: 1,
+                icons: {refresh: "glyphicon-repeat", toggle: "glyphicon-list-alt", columns: "glyphicon-list"}
+            });
+            setTimeout(function () {
+                D("#datalist22").bootstrapTable('resetView');
+            }, 200);
+            /*自适应高度*/
+            $(window).resize(function () {
+                D("#datalist22").bootstrapTable('resetView', {
+                    height: getHeight()
+                });
+            });
+        }()
+    }(document, window, jQuery);
+
+
+    /*170305用于表格高度自适应 屏幕高度-标题高度*/
+    function getHeight() {
+        return $(window).height() - $('#title').outerHeight(true) * 1.1;
+    }
+
+</script>
+
+</body>
+</html>

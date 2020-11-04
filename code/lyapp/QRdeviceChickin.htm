@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1">
+    <title>乘车检票</title>
+    <link href="/ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/ui/css/animate.min.css" rel="stylesheet">
+    <link href="/ui/css/style.min.css" rel="stylesheet">
+    <link href="/lyapp/css/style.css" rel="stylesheet" media="screen">
+    <style>
+        .AbsoluteCenter {
+            width: 50%;
+            height: 50%;
+            overflow: auto;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+    </style>
+</head>
+<body class="userinfo AbsoluteCenter">
+<div class="main text-center">
+
+
+    <div>
+        <button class="btn btn-danger   dim btn-large-dim" onclick='window.location.href="driver/appQuery.php?deviceid=<?php echo $deviceid?>"'>司乘检票</button>
+
+    </div>
+    <br><br><br><br><br>
+    <div>
+        <button class="btn btn-warning dim btn-large-dim" onclick='window.location.href="service/checkIn.php?deviceid=<?php echo $deviceid?>"'>会员乘车</button>
+
+    </div>
+
+</div>
+
+</body>
+</html>

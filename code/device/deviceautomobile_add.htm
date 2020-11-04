@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $positionname; ?>添加</title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/chosen/chosen.css" rel="stylesheet">
+</head>
+
+<body>
+
+<!--标题栏和 添加按钮            开始-->
+<div class="ibox-title">
+    <h5><?php echo $positionname; ?>添加</h5>
+</div>
+<!--标题栏和 添加按钮   结束-->
+
+
+<div class="ibox-content">
+    <!--表格数据区------------开始-->
+    <form name="form1" id="form1" action="device_add.php?typeid=<?php echo $typeid ?>" method="post" class="form-horizontal" enctype="multipart/form-data">
+        <input type="hidden" name="dopost" value="save"/>
+        <input type="hidden" name="typeid" value="<?php echo $typeid ?>"/>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">内部编号:</label>
+            <div class="col-sm-2">
+                <input name="devicecode" type="text" id="devicecode" value="<?php echo $deviceCode; ?>" class="form-control">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">车牌号(名称):</label>
+            <div class="col-sm-2">
+                <input name="devicename" type="text" id="devicename" value="" class="form-control">
+            </div>
+        </div>
+
+
+        <?php $af->MakeFieldToForm(); ?>
+
+
+
+        <div class="clearfix" style="margin-bottom: 50px"></div>
+        <div class="bodyButtomTab">
+            <div class="col-xs-4 col-xs-offset-2 ">
+                <button class="btn btn-primary" type="submit">保存</button>
+
+            </div>
+        </div>
+    </form>
+    <!--表格数据区------------结束-->
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/toastr/toastr.min.js"></script>
+<link href="../ui/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--验证用-->
+<script src="../ui/js/plugins/validate/jquery.validate.min.js"></script>
+<!--验证用-->
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $(".i-checks").iCheck({
+            checkboxClass: "icheckbox_square-green",
+            radioClass: "iradio_square-green"
+        })
+        $("#form1").validate({
+            rules: {
+                devicename: {required: !0, isCarCode: !0},
+                devicecode: {required: !0}
+            },
+            messages: {
+                devicename: {required: "请填写车牌号", isCarCode: "车牌号格式不对"},
+                devicecode: {required: "请填写内部编号"}
+            }
+        })
+    });
+
+
+</script>
+</body>
+</html>

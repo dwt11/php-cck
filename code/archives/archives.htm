@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle . " " . $positionname; ?></h5>
+                </div>
+                <!--标题栏结束-->
+
+
+                <div class="ibox-content">
+
+                    <!--工具框   开始-->
+
+                    <div class="btn-group" id="Toolbar">
+                        <?php echo $roleCheck->RoleCheckToLink("archives/archives_add.php", "", "btn btn-white", "", "glyphicon glyphicon-plus"); ?>
+                    </div>
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="archives.php">
+                            <div class="input-group">
+
+                                <div class="pull-left">
+
+                                    <select name='typeid' class='form-control'>
+                                        <option value='0'>选择栏目...</option>
+                                        {dwt:global.optionarr /}
+                                    </select>
+                                </div>
+
+                                <!--                      <div class="pull-left">
+                                                                    <select name='orderby' class='form-control'>
+                                                                        <option value='id'>排序...</option>
+                                                                        <option value='senddate'
+                                                                        <?php if ($orderby == "senddate") echo "selected=\"selected\""; ?>>更新时间</option>
+                                                                        <option value='deptype'
+                                                                        <?php if ($orderby == "deptype") echo "selected=\"selected\""; ?>>权限</option>
+                                                                        <option value='click'
+                                                                        <?php if ($orderby == "click") echo "selected=\"selected\""; ?>>点击量</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="pull-left ">
+                                                                    <select name='flag' class='form-control'>
+                                                                        <option value=''>属性...</option>
+                                                                        {dwt:global.flagsArr /}
+                                                                    </select>
+
+                                                                </div>
+                                -->
+                                <div class="pull-left ">
+                                    <input name="keyword" type="text" id="keyword" placeholder="标题" class="form-control" value="<?php echo $keyword ?>"/>
+                                </div>
+
+
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!--工具框   结束-->
+
+
+                    <!--  内容列表   -->
+                    <div class="table-responsive">
+                        <table id="datalist" data-striped="true">
+                            <thead>
+                            <tr>
+                                <th data-halign="center" data-align="center">ID</th>
+                                <th data-halign="center" data-align="center">栏目</th>
+                                <th data-halign="center" data-align="left">标题</th>
+                                <th data-halign="center" data-align="center">更新时间</th>
+                                <th data-halign="center" data-align="center">点击</th>
+                                <th data-halign="center" data-align="center">状态</th>
+                                <th data-halign="center" data-align="center">权限</th>
+                                <th data-halign="center" data-align="center">发布人</th>
+                                <th data-halign="center" data-align="center">操作</th>
+                            </tr>
+                            </thead>
+                            <form name="form1">
+                                {dwt:datalist}
+                                <tr>
+                                    <td> {dwt:field.id/}</td>
+
+                                    <td>
+                                        <a href='archives.php?typeid={dwt:field.typeid/}'>{dwt:field.typeid function='GetArchiveTypeName(@me)'/}</a>
+                                    </td>
+                                    <td>
+                                        <span id="arc{dwt:field.id/}"> {dwt:field.title/} </span> {dwt:field.flag function='IsCommend(@me)'/}
+                                    </td>
+                                    <td>{dwt:field.senddate function='GetDateMk(@me)'/}</td>
+                                    <td>{dwt:field.click/}<?php //echo getFeedbackNumb($fields['id']); ?></td>
+                                    <td>{dwt:field.issend function="GetArcSend(@me)"/}</td>
+                                    <td>{dwt:field.deptype function="GetArcDepTypeName(@me)"/}</td>
+                                    <td>{dwt:field.userid function=GetEmpNameByUserId(@me)/}
+                                        <br> {dwt:field.userid function=GetEmpDepAllNameByUserId(@me)/}
+                                    </td>
+                                    <td>
+                                        <a href="../lyapp/archives/archives_view.php?aid={dwt:field.id/}" target="_blank">查看</a>
+                                        <?php
+                                        if($fields["flag"]=="h"){
+                                            echo $roleCheck->RoleCheckToLink("archives/archives_tt.php?id=" . $fields['id'],"取消头条");
+                                        }else{
+                                            echo $roleCheck->RoleCheckToLink("archives/archives_tt.php?id=" . $fields['id']."&flag=h","头条");
+                                        }
+                                        echo $roleCheck->RoleCheckToLink("archives/archives_edit.php?id=" . $fields['id']);
+                                        echo $roleCheck->RoleCheckToLink("archives/archives_del.php?dopost=delArchives&id=" . $fields['id']);
+                                        ?>
+                                    </td>
+                                </tr>
+                                {/dwt:datalist}
+                            </form>
+                        </table>
+                        {dwt:pagelist/}
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+
+</body>
+</html>

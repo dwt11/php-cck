@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $startdate . "到" . $enddate . " " . $sysFunTitle ?></h5>
+
+                    <div class="ibox-tools pull-left" >
+                        <?php $nowdate = "";
+                        if ($startdate == "") {
+                            $nowdate = date("Y-m-d", time());
+                        } else {
+                            $nowdate = $startdate;
+                        }
+
+                        ?>
+                        <a class="btn btn-primary btn-xs" href='<?php echo getMonthUrl($nowdate, -1) ?>'>上一月</a>
+                        <a class="btn btn-primary btn-xs" href='<?php echo getMonthUrl($nowdate, 1) ?>'>下一月</a>
+
+
+                        <span class="badge badge-warning">截止时间到</span>
+
+                        <span class="badge badge-success">操作员下架</span>
+
+
+                        <span class="badge badge-danger">人满下线</span>
+                    </div>
+
+                    <div class="ibox-tools pull-right">
+                        <a href="old.apptQuery.php" target="_blank"><b>旧数据</b></a>
+                    </div>
+
+
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content icons-box">
+                    <ul class="bs-glyphicons-plus">
+                        {dwt:datalist}
+                        <li>
+                            <span style="font-size: 16px;" class="text-center">
+                                            {dwt:field.appttime function="GetDateMk(@me)" /}
+                                             {dwt:field.appttime function="GetWeekFormDateStr(GetDateMk(@me))" /}
+                                    </span>
+                            <div class="clearfix"></div>
+                            <span class="text-left ">
+                                <?php
+                                //dump(GetDateMk($fields["appttime"]));
+                                echo getAppt($fields["appttime"]);
+                                ?>
+                            </span>
+                        </li>
+
+                        {/dwt:datalist}
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+
+
+</body>
+</html>

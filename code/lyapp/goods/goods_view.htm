@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1">
+    <title><?php echo $goodRow['goodsname']; ?></title>
+    <link href="../../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../../ui/css/style.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div class="main">
+    <?php include("../index_heard.php"); ?>
+    <div class="tm_div">
+        <div class="tm_pro">
+            <?php
+            $photo =  $goodRow["litpic"];
+            if ($photo == "") $photo = "/images/arcNoPic.jpg";
+            $goodscode = $goodRow["goodscode"];
+            $goodsname = $goodRow["goodsname"];
+            $price100 = $goodRow["price"];
+            $price = $price100/100;
+            echo "<img  src=\"$photo\"  data-original=\"$photo\"  >";
+            ?>
+        </div>
+    </div>
+    <ul class="list-group list-group-plus list-font-color-black">
+        <li class="list-group-item1 list-group-item-border">
+            <b><?php echo "【{$goodscode}】 $goodsname" ?></b>
+            <br><span class="text-danger"> ￥<?php echo $price; ?></span>
+            <div class="clearfix"></div>
+        </li>
+
+        <div style=" padding: 15px;background-color: #ffffff">
+            <?php echo ReplaceImgSrcToData_original($addRowAddtable['desc']); ?>
+        </div>
+    </ul>
+
+    <div class="clearfix" style="margin-bottom: 50px"></div>
+
+
+    <div class="bodyButtomTab">
+        <div class="pull-right">
+        <a href="../order/ztc_add.php?goodsid=<?php echo $id; ?>&did=<?php echo $DEPID?>" class="btn btn-plus btn-lg btn-primary">立即购买</a>
+        </div>
+    </div>
+
+</div>
+<script src="/ui/js/jquery.min.js"></script>
+<script src="/lyapp/js/main.js"></script>
+<script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+<script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+<script src="/lyapp/js/quickButton.js"></script>
+<script src="/ui/js/plugins/layer/layer.min.js"></script>
+<script>
+    $(function () {
+        //用于控制图片自适应宽度和高度 151106添加
+        var autocss = {"max-width": "100%", "height": "auto"};
+        $("img").css(autocss);
+    });
+</script>
+
+</body>
+</html>

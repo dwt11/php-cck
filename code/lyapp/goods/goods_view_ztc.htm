@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="referrer" content="no-referrer" />
+    <meta charset="<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1">
+    <title><?php echo $goodRow['goodsname']; ?></title>
+    <link href="../../ui/css/bootstrap.min.css?v=3.8" rel="stylesheet">
+    <link href="../../ui/css/font-awesome.min.css?v=3.8" rel="stylesheet">
+    <link href="../../ui/css/style.min.css?v=3.8" rel="stylesheet">
+    <link href="../css/style.css?v=3.8" rel="stylesheet" media="screen">
+    <link href="../css/index.css?v=3.8" rel="stylesheet" media="screen">
+</head>
+<body>
+<div class="main" style="padding-bottom: 80px">
+    <?php include("../index_heard.php"); ?>
+    <ul class="list-group  list-group-plus-top  list-font-color-black" >
+        <?php
+        $photo = $goodRow["litpic"];
+        if ($photo == "") $photo = "/images/arcNoPic.jpg";
+        $goodscode = $goodRow["goodscode"];
+        $goodsname = $goodRow["goodsname"];
+        $price100 = $goodRow["price"];
+        $price = $price100 / 100;
+        echo "<img src=\"$photo\"  data-original=\"$photo\">";
+        ?>
+        <li class="list-group-item1 " style="padding: 0;padding-top: 10px;padding-right: 10px;">
+            <span class="h3 font-bold"><?php echo "$goodsname" ?></span>
+            <span class=" pull-right"><span class="text-danger font-bold h3"> <?php echo $price; ?></span>元/年</span>
+            <div class="clearfix"></div>
+        </li>
+
+        <div style="padding-left: 5px;padding-right: 5px;background-color: #ffffff">
+            <?php echo ReplaceImgSrcToData_original($addRowAddtable['desc']); ?>
+        </div>
+    </ul>
+
+    <div class="list-group list-group-index">
+        <li class="list-group-item-index text-center list-group-item-border text-danger">
+            <i class="fa fa-gg"></i> 推荐线路
+
+        </li>
+        <ul class="rowlist">
+            <?php
+            $query3 = "SELECT #@__goods.id as goodsid,litpic,goodscode,goodsname,price,#@__line.gotime,#@__line.tmp FROM `#@__line` 
+              INNER JOIN #@__goods ON  #@__goods.id=#@__line.goodsid
+              INNER JOIN #@__goods_addon_lycp lycp on lycp.goodsid=#@__goods.id
+               WHERE #@__line.islock=1 AND #@__goods.`status`='0'  AND `isOnlyAdminDisplay`='0'     
+              AND (
+                        (
+                                UNIX_TIMESTAMP(now())< (#@__line.gotime-#@__line.beforHours*3600)
+                        )   
+                        
+                  )
+                GROUP BY goodsid
+                ORDER BY x_goods.flag DESC,#@__goods.weight ASC,  gotime ASC
+                LIMIT 0,6";
+            $dsql->SetQuery($query3);
+            //dump($query3);
+            $dsql->Execute("170127");
+            while ($row1 = $dsql->GetArray("170127")) {
+                $goodsid = $row1["goodsid"];
+
+                $goodsname = $row1["goodsname"];
+                if (strlen($goodsname) > 30) $goodsname = cn_substr_utf8($goodsname, 18) . "...";
+
+                $photo = $row1["litpic"];
+                if ($photo == "") $photo = "/images/arcNoPic.jpg";
+
+                $gotime = $row1["gotime"];
+                if ($row1["tmp"] == "临时") {
+                    //临时路线
+                    $gotime = date('m月d日', $gotime);
+                } else {
+                    $gotime = '每日 ' . date('H:i', $gotime);
+                }
+
+                echo "<li>
+                                    <a href=\"/lyapp/goods/goods_view.php?id=$goodsid\">
+                                    <img src=\"$photo\" data-original=\"$photo\" alt=\"$goodsname\" >
+                                    </a>
+                    
+                                    <h3><a href=\"/lyapp/goods/goods_view.php?id=$goodsid\">$goodsname</a></h3>
+                    
+                                    <p>$gotime 发车</p>
+                                </li>
+                    ";
+            }
+            ?>
+        </ul>
+
+    </div>
+    <div class="clearfix" ></div>
+
+
+    <div class="goodsViewButtomTab">
+
+
+        <a href="../order/ztc_add.php?goodsid=<?php echo $id; ?>&did=<?php echo $DEPID ?>" class="btn  btn-rounded btn-lg btn-warning buyButton  ">立即购买</a>
+
+    </div>
+
+</div>
+<script src="/ui/js/jquery.min.js"></script>
+<script src="/lyapp/js/main.js"></script>
+<script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+<script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+<script src="/ui/js/plugins/layer/layer.min.js"></script>
+<script>
+    $('img').each(function() {
+        var maxWidth = 300; // 图片最大宽度
+        var maxHeight = 300;    // 图片最大高度
+        var ratio = 0;  // 缩放比例
+        var width = $(this).width();    // 图片实际宽度
+        var height = $(this).height();  // 图片实际高度
+
+        // 检查图片是否超宽
+        if(width > maxWidth){
+            //ratio = maxWidth / width;   // 计算缩放比例
+            $(this).css("max-width", "100%"); // 设定实际显示宽度
+            $(this).css("height", "auto");  // 设定等比例缩放后的高度
+        }
+
+        // 检查图片是否超高
+        if(height > maxHeight){
+            $(this).css("max-width", "100%"); // 设定实际显示宽度
+            $(this).css("height", "auto");  // 设定等比例缩放后的高度
+        }
+    });
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $title?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+
+</head>
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $title?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+                <div class="ibox-content">
+                    <!--表格数据区------------开始-->
+                    <div class="btn-group" id="Toolbar">
+                        <a href="goodsOrder_add.php" class="btn btn-outline btn-default" data-toggle='tooltip' data-placement='top' title='添加新订单'><i class='glyphicon glyphicon-plus' aria-hidden='true'></i></a>
+                        <a href="goodsOrder.php" id="ClearLog" class="btn btn-outline btn-default" data-toggle='tooltip' data-placement='top' title='显示全部订单'><i class='glyphicon glyphicon-refresh' aria-hidden='true'></i></a>
+                    </div>
+
+                    <div class="btn-group" id="Toolbar2">
+                        <form name='form3' action='goodsOrder.php' method='get' role="form" class="form-inline">
+                            <div class="input-group">
+                                 <div class="pull-left" style="width: 130px">
+                                    <?php $nowtime = GetDateMk(time());?>
+                                    <input type="text" name="startdate" id='startdate' class="form-control  Wdate" size="14" placeholder="开始日期"   onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+                                </div>
+
+                                <div class="pull-left" style="width: 130px">
+                                    <?php $nowtime = GetDateMk(time());?>
+                                    <input type="text" name="enddate" id='enddate' class="form-control  Wdate" size="14" placeholder="结束日期"   onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+                                </div>
+
+                                <div class="pull-left">
+                                    <select class="form-control m-b" name='depid'>
+                                        <option value='0'>请选择公司...</option>
+                                        <?php
+                                    $depOptions = GetDepOnlyTopOptionList($depid);
+                                    echo $depOptions;
+                                    ?>
+                                    </select>                                </div>
+                           <div class="pull-left">
+                                    <input type='text' name='keyword' value='{dwt:global.keyword/}' class='form-control' data-toggle='tooltip' data-placement='top' title='订单编号、备注/客户名称、地址、联系方式' placeholder="关键词"/>
+                                </div>
+
+                                <div class="pull-left">
+                                    <div class="input-group-btn">
+                                        <button type="submit" name="imageField" class="btn btn-outline  btn-default">搜索</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <script language="JavaScript">
+                                // 计算两个日期的间隔天数
+                                //   document.all.dateChangDu.value = iDays;
+                                function pickedFunc() {
+                                    Date.prototype.dateDiff = function (interval, objDate) {
+                                        //若参数不足或 objDate 不是日期物件则回传 undefined
+                                        if (arguments.length < 2 || objDate.constructor != Date) return undefined;
+                                    }
+                                }
+                            </script>
+                        </form>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th data-halign="center" data-align="center">编号</th>
+                                <th data-halign="center" data-align="center">日期</th>
+                                <th data-halign="center" data-align="left">客户</th>
+                                <th data-halign="center" data-align="center">订单总价</th>
+                                <th data-halign="center" data-align="center">实收金额</th>
+                                <th data-halign="center" data-align="center">支付方式</th>
+                                <th data-halign="center" data-align="center">备注</th>
+                                <th data-halign="center" data-align="center">状态</th>
+                                <th data-halign="center" data-align="center">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {dwt:datalist}
+                            <?php
+								//获取此订单的所有收入付款记录(不包含减项,只有收入记录,用于统计用户是否结清款项))
+								$totalMoney=$fields['totalMoney'];
+								$totalMoney_all+=$totalMoney;//最后一行统计 
+								$payMoney=$fields['payMoney'];
+                                $payMoney_all+=$payMoney; //最后一行统计
+
+                            ?>
+                            <tr>
+                                <td>DD{dwt:field.goodsOrderCode/}</td>
+                                <td>{dwt:field.senddate function='GetDateMk(@me)'/}</td>
+                                <td>{dwt:field.dep_name/}<br>
+                                    {dwt:field.realname/}</td>
+                                <td>
+                                    {dwt:field.totalMoney/}
+                                </td>
+                                <td>
+                                    {dwt:field.payMoney/}
+                                </td>
+                                <td>
+                                    {dwt:field.payment/}
+                                </td>
+                                <td>
+                                    <?php
+											$desc=$fields['desc'];
+											if(strlen($desc)>40)$desc=cn_substr(desc,40)."...<a onclick=\"AlertMsg(event,'详细内容','goodsOrder.do.php?dopost=descriptionview&id=".$fields['id']."',330);\" href=\"javascript:;\">[详细]</a>";
+                                                                    echo $desc;
+                                                                    ?>
+                                </td>
+                                <td>{dwt:field.status/}</td>
+                                <td>
+
+                                   <?php  echo $roleCheck->RoleCheckToLink("sys/goodsOrder_del.php?id=".$fields['id']);?>
+                                    <a onclick="layer.open({type: 2,title: '订单详情', content: 'goodsOrder.detail.php?id={dwt:field.id/}'});" href='javascript:'>订单详情</a>
+                                </td>
+                            </tr>
+
+
+
+                            {/dwt:datalist}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <div class="pull-right">合计：</div>
+                                </td>
+                                <td colspan="1" class="text-center"><?php echo number_format($totalMoney_all,2);?></td>
+                                <td colspan="1" class="text-center"><?php echo number_format($payMoney_all,2);?></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                        {dwt:pagelist/}
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+</body>
+</html>

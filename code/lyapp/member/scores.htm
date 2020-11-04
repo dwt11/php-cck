@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1">
+    <title>成长值记录</title>
+    <link href="/ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/ui/css/animate.min.css" rel="stylesheet">
+    <link href="/ui/css/style.min.css" rel="stylesheet">
+    <link href="/lyapp/css/style.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div class="main">
+    <?php include("../index_heard.php"); ?>
+    <div class="widget1   text-center">
+        <div class="row">
+            <div class="col-xs-4 text-left lefttext">
+                成长值
+            </div>
+            <div class="col-xs-8 text-right">
+                <span> 当前 </span>
+                <h2 class="font-bold"><?php echo $scoresnum; ?></h2>
+            </div>
+        </div>
+        <div style="font-size: 36px;font-weight: bold"><?php echo $scoreName ?></div>
+    </div>
+
+
+    <div class="project-list">
+        <table class="table table-hover">
+            <tbody>
+            <ul class="list-group list-group-plus-nomargintop list-font-color-black">
+                {dwt:datalist}
+
+                <li class="list-group-item1 small list-group-item-border">
+                    {dwt:field.desc/}
+                    <?php
+                    if ($fields["info"] != "") echo "<br>备注：" . $fields["info"] . "</b>";
+                    ?>
+                    <br>
+                    <span class="text-muted">{dwt:field.createtime function="GetDateTimeMk(@me)" /}</span>
+                    <span class="pull-right  ">
+                <span class="text-danger">
+                <?php
+                if ($fields['scoresnum'] > 0) {
+                    echo '+' . $fields['scoresnum'];
+                } else {
+                    echo $fields['scoresnum'];
+                }
+                ?>
+                </span>
+            </span>
+
+                </li>
+
+
+                {/dwt:datalist}
+
+            </ul>
+
+
+            {dwt:pagelist listitem="infos,index,end,pre,next" listsize="5"/}
+
+            <?php include("../index_foot.php"); ?>
+
+    </div>
+</div>
+    <script src="/ui/js/jquery.min.js"></script>
+    <script src="/ui/js/bootstrap.min.js"></script>
+    <script src="/lyapp/js/main.js"></script>
+    <script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+    <script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+    <script src="/lyapp/js/quickButton.js"></script>
+    <script src="/ui/js/plugins/layer/layer.min.js"></script>
+
+</body>
+</html>

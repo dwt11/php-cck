@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php
+                        echo $nowyear." ";
+                        echo $sysFunTitle
+                        ?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+                <div class="ibox-content">
+                    <!--工具框   开始-->
+
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+
+
+                                <div class="pull-left ">
+                                    <a class="btn btn-white" href='jbCountTypeByMonth.php?nowyear=<?php echo ($nowyear-1) ?>'>上年</a>
+                                </div>
+                                <div class="pull-left ">
+                                    <a class="btn btn-white" href='jbCountTypeByMonth.php?nowyear=<?php echo ($nowyear+1) ?>'>下年</a>
+                                </div>
+
+                                <input type="hidden" value="<?php echo $nowyear; ?>" name="nowyear">
+
+
+
+                                <div class="pull-left ">
+                                    <input type='text' class="form-control Wdate" value="<?php echo $nowmonth; ?>" name='nowmonth' size='14' readonly='readonly'  onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM'})"/>
+                                </div>
+
+                                <div class="pull-left ">
+                                    <select  name='typename'  class="form-control">
+                                        <option value=''>选择分类</option>
+                                        <option value='增加-二级赠送' <?php if($typename=="增加-二级赠送") echo "selected";?>>增加-二级赠送</option>
+                                        <option value='增加-三级赠送' <?php if($typename=="增加-三级赠送") echo "selected";?>>增加-三级赠送</option>
+                                        <option value='增加-金币充值' <?php if($typename=="增加-金币充值") echo "selected";?>>增加-金币充值</option>
+                                        <option value='增加-提现删除或不通过恢复' <?php if($typename=="增加-提现删除或不通过恢复") echo "selected";?>>增加-提现删除或不通过恢复</option>
+                                        <option value='增加-购买多件赠送' <?php if($typename=="增加-购买多件赠送") echo "selected";?>>增加-购买多件赠送</option>
+                                        <option value='增加-操作错误金币增加' <?php if($typename=="增加-操作错误金币增加") echo "selected";?>>增加-操作错误金币增加</option>
+                                        <option value='增加-订单删除恢复本人金币' <?php if($typename=="增加-订单删除恢复本人金币") echo "selected";?>>增加-订单删除恢复本人金币</option>
+                                        <option value='增加-手工充值' <?php if($typename=="增加-手工充值") echo "selected";?>>增加-手工充值</option>
+
+                                        <option value='减少-转为合伙人金币减少' <?php if($typename=="减少-转为合伙人金币减少") echo " selected ";?>>减少-转为合伙人金币减少</option>
+                                        <option value='减少-订单删除扣除送给他人的金币' <?php if($typename=="减少-订单删除扣除送给他人的金币") echo " selected ";?>>减少-订单删除扣除送给他人的金币</option>
+                                        <option value='减少-手工扣除' <?php if($typename=="减少-手工扣除") echo " selected ";?>>减少-手工扣除</option>
+                                        <option value='减少-手工提现' <?php if($typename=="减少-手工提现") echo " selected ";?>>减少-手工提现</option>
+                                        <option value='减少-会员提现申请' <?php if($typename=="减少-会员提现申请") echo " selected ";?>>减少-会员提现申请</option>
+                                        <option value='减少-操作错误金币扣除' <?php if($typename=="减少-操作错误金币扣除") echo " selected ";?>>减少-操作错误金币扣除</option>
+
+
+
+
+
+                                    </select>
+                                </div>
+                                <div class="pull-left ">
+
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            查看
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--工具框   结束-->
+
+
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+
+
+                        <table id="datalist22" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th data-halign="center" data-align="center">月份</th>
+                                <th data-halign="center" data-align="left">说明</th>
+                                <th data-halign="center" data-align="center">笔数</th>
+                                <th data-halign="center" data-align="right">金额</th>
+                            </tr>
+                            </thead>
+
+                            {dwt:datalist}
+                            <tr>
+                                <td>{dwt:field.nowmonth /}</td>
+                                <td>{dwt:field.desc_t /}</td>
+                            <td>
+                                    <?php
+                                    $bs=$fields["bs"];
+                                    $total_bs+=$bs;
+
+                                    echo number_format($bs);
+                                    ?>
+                                </td>      <td>
+                                    <?php
+                                    $jbnum = $fields["jbnum"]/100;
+                                    $total_jbnum += $jbnum;
+
+                                    echo number_format($jbnum, 2);
+                                    ?>
+                                </td>
+
+                            </tr>
+                            {/dwt:datalist}
+
+
+                            <tr>
+                                <td></td>
+                                <td>
+                                    合计
+                                </td>
+                         <td>
+                                    <?php
+                                    echo number_format($total_bs);
+                                    ?>
+                                </td>         <td>
+                                    <?php
+                                    echo number_format($total_jbnum, 2);
+                                    ?>
+                                </td>
+
+
+                            </tr>
+
+                        </table>
+                        {dwt:pagelist/}
+
+
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-export.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/tableExport.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        $("img").lazyload({
+            event: "sporty"
+        });
+    });
+    $(window).bind("load", function () {
+        var timeout = setTimeout(function () {
+            $("img").trigger("sporty")
+        }, 5000);//页面加载完成后再加载. 页面加载完成 5 秒后, 指定区域内的图片会自动进行加载
+    });
+
+    !function (F, E, D) {
+        !function () {
+            D("#datalist22").bootstrapTable({
+                showExport: true,//显示导出按钮
+                exportDataType: "basic",//导出类型    striped: !0,
+                showToggle: 0,
+                showColumns: 0,
+                iconSize: "outline",
+                toolbar: "#Toolbar,#Toolbar2",
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                  //排序方式
+                icons: {refresh: "glyphicon-repeat", toggle: "glyphicon-list-alt", columns: "glyphicon-list"}
+            })
+        }()
+    }(document, window, jQuery);
+
+</script>
+
+</body>
+</html>

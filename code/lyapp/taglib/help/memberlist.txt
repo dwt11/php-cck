@@ -1,0 +1,9 @@
+会员信息调用标签
+>>dede>>
+{dwt:memberlist orderby='scores' row='20'}
+<a href="../member/index.php?uid={dwt:field.userid /}">{dwt:field.userid /}</a>
+<span>{dwt:field.scores /}</span>
+{/dwt:memberlist}
+>>dede>>
+orderby = 'scores' 按积分排序
+row = '6' 调用数目

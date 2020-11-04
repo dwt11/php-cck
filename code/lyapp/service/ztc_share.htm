@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,user-scalable=no,maximum-scale=1,initial-scale=1">
+    <title>一起游</title>
+    <link href="/ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/ui/css/style.min.css" rel="stylesheet">
+    <link href="/ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div class="main">
+    <?php include("../index_heard.php"); ?>
+    <div class="widget1   text-center">
+        <div class="row">
+            <div class="col-xs-6 text-left lefttext">
+                一起游
+            </div>
+
+        </div>
+        <a href="ztc_share_check.php" class="btn btn-white btn-rounded ">添加</a>
+    </div>
+
+    <ul class="sortable-list  agile-list-dwt">
+        {dwt:datalist}
+        <li id="li{dwt:field.id /}">
+
+            <div class="pull-right">
+                <?php
+                $createtime = $fields['createtime'];
+                $goodsid = $fields['goodsid'];
+                $orderisuse = GetZtcCardTimeIsBool($createtime,$goodsid);
+
+                echo '  有效期至：' . $orderisuse;
+
+
+                $putongPhoto = "";
+                $putongPhoto = $fields["idpic"];
+                if ($putongPhoto != "") $putongPhoto = " <img src='$putongPhoto' width='60' height='50'/>";
+                ?>
+            </div>
+
+            <?php echo "<B>" . GetZtcCardCode( $fields['orderlistid']) . "</B> "; ?>
+            <div class="clearfix"></div>
+            <div class="agile-detail">
+                <div class="text-warning pull-right" style="font-weight: bold">
+                    <?php echo $putongPhoto; ?>
+
+                </div>
+                姓名：<?php echo $fields['name']; ?><br>
+                电话：<?php if ($fields['tel'] != "") {
+                    echo GetPhoneCode($fields["tel"]);
+                } else {
+                    echo "无";
+                } ?>
+                <br>身份证：<?php if ($fields['idcard'] != "") {
+                    echo GetPhoneCode($fields["idcard"]);
+                } else {
+                    echo "无";
+                } ?>
+            </div>
+            <div class='hr-line-dashed' style="margin: 0; padding: 0;margin-top: 5px;margin-bottom:  5px"></div>
+            <div class="pull-right">
+                   <span onclick='del({dwt:field.id /})' class='btn btn-primary btn-xs'>
+                    删除</span>
+            </div>
+            <div class="clearfix"></div>
+
+        </li>
+
+
+        {/dwt:datalist}
+    </ul>
+    {dwt:pagelist listitem="infos,index,end,pre,next" listsize="5"/}
+    <br>
+    <div class="clearfix"></div>
+    <?php include("../index_foot.php"); ?>
+</div>
+<script src="/ui/js/jquery.min.js"></script>
+<script src="/ui/js/bootstrap.min.js"></script>
+<script src="/lyapp/js/main.js"></script>
+<script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+<script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+<script src="/lyapp/js/quickButton.js"></script>
+<script src="/ui/js/plugins/layer/layer.min.js"></script>
+
+<script>
+    function del(id) {
+        $.ajax({
+            type: "post",
+            url: "ztc_share_del.php?id=" + id,
+            data: {},
+            dataType: 'html',
+            success: function (result) {
+                layer.msg('删除成功', {
+                    time: 1000, //20s后自动关闭
+                });
+                $("#li" + id).hide();
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

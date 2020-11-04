@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $positionname; ?>添加</title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/chosen/chosen.css" rel="stylesheet">
+</head>
+
+<body  >
+
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $positionname; ?>添加</h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content">
+                    <!--表格数据区------------开始-->
+                    <form name="form1" id="form1" action="goods_add.php?typeid=<?php echo $typeid ?>" method="post" class="form-horizontal" >
+                        <input type="hidden" name="dopost" value="save"/>
+                        <input type="hidden" name="typeid" id="typeid" value="<?php echo $typeid ?>"/>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">商品编号:</label>
+                            <div class="col-xs-2">
+                                <input name="goodscode" type="text" id="goodscode" value="<?php echo $goodsCode; ?>" class="form-control">
+                <input name="typeid" type="hidden" id="typeid" value="<?php echo $typeid; ?>" class="form-control">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">名称:</label>
+                            <div class="col-xs-2">
+                                <input name="goodsname" type="text" id="goodsname" value="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">消费后会员类型：</label>
+                            <div class="col-xs-2">
+                                <input type='text' class="form-control" name='clientRank' id='clientRank' value='直通车'/>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">会员类型有效期(月)：</label>
+                            <div class="col-xs-2">
+                <input type='number' class="form-control" name='rankLenth' id='rankLenth' value='12'/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">列表图片:</label>
+                            <div class=" col-xs-2">
+                                <?php
+                                $oldpic = "";
+                                //if ($backpic != "") $oldpic = $backpic;
+                                $pater_input_name = "pic";//父页面input框名称,用于接受上传后的地址
+                                $fileSize = "3";//大小限制
+                                $fileType = "jpg";//大小限制
+                                $dirname_plus = "goods";//文件要保存的目录,在uploads目录下
+
+                                $cs_str = "?oldpic={$oldpic}&pater_input_name={$pater_input_name}&fileSize={$fileSize}&dirname_plus={$dirname_plus}&fileType={$fileType}";
+                                //if ($backpic) $photo = "<A href=\"javascript:;\" onclick=\"showpic('{$backpic}')\" ><img src=\"{$backpic}\" width=\"50\" height=\"50\"/></A>";
+                                //echo $photo;
+                                ?>
+                                <input type="hidden" id="pic" name="pic" value="<?php echo $oldpic; ?>">
+                                <iframe class="" name="1111" width="200" height="170" src="../ui/js/webupload/upload.php<?php echo $cs_str ?>" scrolling="no" frameborder="0"></iframe>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">商品价格:</label>
+                            <div class="col-xs-2   ">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="price" id="price" value="0">
+                                    <span class="input-group-addon"> 元 </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">详细描述:</label>
+                            <div class="col-xs-2">
+                                <?php echo GetEditor("desc", ''); ?>
+                            </div>
+                        </div>
+                        <input type='hidden' name='dwt_addonfields' value="desc,htmltext;clientRank,varchar;rankLenth,select">
+
+
+                        <div class="clearfix" style="margin-bottom: 50px"></div>
+                        <div class="bodyButtomTab">
+                            <div class="col-xs-4 col-xs-offset-2 ">
+                                <button class="btn btn-primary" type="submit">保存</button>
+
+                            </div>
+                        </div>
+                    </form>
+                    <!--表格数据区------------结束-->
+                </div>
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/toastr/toastr.min.js"></script>
+<link href="../ui/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--验证用-->
+<script src="../ui/js/plugins/validate/jquery.validate.min.js"></script>
+<!--验证用-->
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({
+            checkboxClass: "icheckbox_square-green",
+            radioClass: "iradio_square-green",
+        })
+
+        $("#form1").validate({
+            rules: {
+                goodsname: {required: !0},
+                goodscode: {required: !0,
+                    remote: {//校验
+                        type: "get",
+                        url: "goods.do.php?dopost=validateGoodscode",
+                        data: {
+                            goodscode: function () {
+                                return $("#goodscode").val();
+                            },
+                            goodsoldcode: function () {
+                                var goodsoldcode= $("#goodsoldcode").val();
+                                if(!goodsoldcode)goodsoldcode="";
+                                return goodsoldcode;
+                            }
+                        },
+                        dataType: "html",
+                        dataFilter: function (data, type) {
+                            if (data == "true")
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+                },
+                typeid: {
+                    required: !0,
+                    remote: {//校验旧密码是否正确
+                        type: "get",
+                        url: "goods.do.php?dopost=validateCheckIsPart",
+                        data: {
+                            typeid: function () {
+                                return $("#typeid").val();
+                            }
+                        },
+                        dataType: "html",
+                        dataFilter: function (data, type) {
+                            if (data == "true")
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+                },
+                clientRank: {required: !0,
+                    remote: {//校验
+                        type: "get",
+                        url: "goods.do.php?dopost=checkClientRank",
+                        data: {
+                            clientRank: function () {
+                                return $("#clientRank").val();
+                            }
+                        },
+                        dataType: "html",
+                        dataFilter: function (data, type) {
+                            if (data == "true")
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+                }
+            },
+            messages: {
+                goodsname: {required: "请填写名称"},
+                goodscode: {required: "请填写编号", remote: "编号重复"},
+                typeid: {required: "请选择分类", remote: "你所选择的分类不可以添加内容，请选择白色的选项"},
+
+                clientRank: {required: "请填写编号", remote: "类型重复"}
+            }
+        })
+    });
+
+</script>
+</body>
+</html>

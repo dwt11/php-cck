@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>选择挂失的订单</title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg" style="min-width: 800px">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+
+                    <!--工具框   开始-->
+                    <div class="btn-group" id="Toolbar2">
+                        <input type="submit" id="closepage" value="确定" class="btn  btn-primary">
+                    </div>
+                    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                        <form name="form2" method="get" action="">
+                            <div class="input-group">
+                                <div class="pull-left ">
+                                    <input name="keyword" type="text" placeholder="姓名\手机\身份证\订单号\卡号" class="form-control" value="<?php echo $keyword ?>">
+                                </div>
+                                <div class="pull-left ">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-white">
+                                            搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--工具框   结束-->
+
+
+                    <div style="margin-top:10px "></div>
+                    {dwt:datalist}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                     <label class="checkbox-inline i-checks">
+                                         <input name='orderid' id='orderid' type='radio' value="{dwt:field.id/}"/>
+                                     </label>
+                                    {dwt:field.createtime function='GetDateTimeMk(@me)' /}
+                                    订单号:ZTC<?php echo GetRedKeyWord($fields['ordernum'], $keyword); ?>
+
+                                    <?php
+                                    echo " 账户姓名:" .GetRedKeyWord($fields['realname'], $keyword);
+
+                                    echo " 操作员:" . GetEmpNameByUserId($fields['operatorid']);
+                                    ?>
+
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="panel-body " style="padding:0; margin: 0">
+                            <?php $listnumb = getOrderList($fields['id'], 0, "", 1); ?>
+
+                            <table class="table table-bordered   table-hover " style="min-width: 700px;margin: 0">
+                                <tr>
+                                    <td rowspan="<?php echo $listnumb ?>" style="width:200px">
+                                        <?php echo getOrderGoodsList($fields['id']);?>
+                                    </td>
+                                    <?php echo getOrderList($fields['id'], 0, $keyword); ?>
+
+
+
+                                    <td rowspan="<?php echo $listnumb ?>" style="width:300px">
+                                        <?php
+                                        $str = "";
+                                         if ($fields["sta"] == 1&&$fields["isdel"] == 2) {
+                                            $str = "未补卡";//"<br>支付时间：". GetDateTimeMk($fields['paytime']);//."<br>微信支付编号：".$fields["pay_transaction_id"];
+                                        } else if ($fields["sta"] == 1&&$fields["isdel"] == 3) {
+                                            $str = "<b>已补卡</b>";//"<br>支付时间：". GetDateTimeMk($fields['paytime']);//."<br>微信支付编号：".$fields["pay_transaction_id"];
+                                        } else {
+                                            $str = "<b>支付有问题</b>";
+                                        }
+
+                                        echo $str;
+
+                                        $jbnum = $fields['jbnum'] / 100;
+                                        $jfnum = $fields['jfnum'] / 100;
+                                        $paynum = $fields['paynum'] / 100;
+                                        $total = $fields['total'] / 100;
+
+
+
+                                        if ($fields['paytype'] != "") echo "<br>支付方式:" . $fields['paytype'];
+
+                                        //if($fields["sta"]==0)echo " 未支付现金:".$paynum;
+                                        if ($fields["sta"] == 1) echo "<br> RMB:" . $paynum;
+
+                                        if($fields["desc"]!="")echo "<br>备注:{$fields["desc"]}";
+
+                                        ?>
+                                    </td>
+                                </tr>
+                                <?php echo getOrderList($fields['id'], 1, $keyword); ?>
+                            </table>
+
+
+                        </div>
+
+
+                    </div>
+                    {/dwt:datalist}
+
+
+                    <div class="table-responsive">
+                        {dwt:pagelist/}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green"})
+    });
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.iframeAuto(index);
+</script>
+<!--表格-->
+<script type="text/javascript">
+    $('#closepage').click(function () {
+        var orderid = $('input:radio[name=orderid]:checked').val();
+
+        if (!orderid) {
+            alert("请选择订单");
+            return false;
+        }
+        parent.$("#orderid").val(orderid);
+        parent.layer.closeAll('iframe');
+    })
+</script>
+</body>
+</html>

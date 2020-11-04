@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $title ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+
+<body>
+<!--标题栏和 添加按钮            开始-->
+<div class="ibox-title">
+    <h5><?php echo $title ?></h5>
+</div>
+<!--标题栏和 添加按钮   结束-->
+
+
+<div class="ibox-content">
+    <!--表格数据区------------开始-->
+    <div class="btn-group" id="Toolbar" style="margin-right:5px;">
+        <?php
+        echo $roleCheck->RoleCheckToLink("goods/goods_add.php?typeid=" . $typeid, "", "btn btn-white", "", "glyphicon glyphicon-plus");
+        /* echo " <a href=\"goods_add.php?typeid=$typeid\" data-toggle='tooltip' data-placement='top'  title='添加'   class= \"btn btn-white\" >
+                      <i class='glyphicon glyphicon-plus' aria-hidden='true'></i>
+                      </a>            ";*/
+
+        ?>
+    </div>
+
+
+    <div class="btn-group" id="Toolbar2">
+        <form name='form3' action='' method='get'>
+            <div class="input-group">
+
+
+
+                <div class="pull-left">
+                    <input type='text' name='keyword' value='{dwt:global.keyword/}' class='form-control' placeholder="编号/商品名称"/>
+                    <input type='hidden' name='typeid' value='<?php echo $typeid;?>'  />
+
+                </div>
+
+                <div class="pull-left"><select name='orderby' class='form-control'>
+                        <option value='id'>排序...</option>
+                        <option value='price' <?php if ($orderby == "price") echo "selected=\"selected\""; ?>>价格从高到低</option>
+                        <option value='weight' <?php if ($orderby == "weight") echo "selected=\"selected\""; ?>>权重小到大</option>
+                    </select></div>
+
+                <div class="pull-left">
+                    <div class="input-group-btn">
+                        <button type="submit" name="imageField" class="btn btn-outline  btn-default">搜索</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+    <div class="table-responsive">
+        <table id="datalist">
+            <thead>
+            <tr>
+                <th class="text-left">商品名称</th>
+                <th class="text-center">有效的发车数量</th>
+                <th class="text-center">金币</th>
+                <th class="text-center">积分</th>
+                <th class="text-center">总销量</th>
+                <th class="text-center">添加时间</th>
+                <th class="text-left">出发地</th>
+                <th class="text-center">排名权重</th>
+                <th class="text-center">当前状态</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {dwt:datalist}
+            <tr>
+                <td>
+                    <?php $photo = $fields["litpic"];
+                    if ($photo == "") $photo = "/images/arcNoPic.jpg";
+                    ?>
+                    <img data-original="<?php echo $photo; ?>" width="80" height="80" style='float:left; margin-right: 5px'/>
+                    {dwt:field.goodscode/}
+
+                    <a href="?typeid={dwt:field.typeid '/}">{dwt:field.typeid function='GetGoodsTypeName(@me)'/}</a>
+
+                    <br>
+                    <?php
+                    echo "<b>" . GetRedKeyWord($fields['goodsname'], $keyword) . "</b>";
+                    ?>
+                    {dwt:field.flag function='IsCommend(@me)'/}
+                </td>
+                <?php
+                $price = $fields["price"] / 100;
+                $jfnum = $fields["jfnum"] / 100;
+                $jbnum = $price - $jfnum;
+                if ($jfnum <= 0) $jfnum = 0;
+                if ($jbnum <= 0) $jbnum = 0;
+                ?>
+                <td>    <?php echo getLineNumb($fields["id"]); ?>                                </td>
+                <td>    <?php echo $jbnum; ?>                                </td>
+                <td>    <?php echo $jfnum; ?>                                </td>
+                <td><?php echo GetOrderNumb($fields["id"], $addtable); ?></td>
+                <td>{dwt:field.senddate function="GetDateMk(@me)"/}</td>
+                <td>{dwt:field.gosite/}</td>
+                <td>{dwt:field.weight/}</td>
+                <td><?php echo GetDisplayStatus($fields["id"],$channeltypeid); ?></td>
+
+                <td>
+                    <div style="min-width: 80px"></div>
+                    <?php
+                    if ($fields["isOnlyAdminDisplay"] == "1") {
+                        echo "<a onclick=\"layer.confirm('前后台都显示?', {icon: 3, title: '提示'}, function (index) {location.href = 'goods.do.php?&dopost=UpGoodsOnlyAdmin&id={$fields['id']}';layer.close(index);});\"  href='javascript:' data-toggle='tooltip' data-placement='top' title='前后台显示' > 前后台显示 </a>";
+                    } else {
+                        echo "<a onclick=\"layer.confirm('只后台显示?', {icon: 3, title: '提示'}, function (index) {location.href = 'goods.do.php?&dopost=UpGoodsOnlyAdmin&id={$fields['id']}&isOnlyAdminDisplay=1';layer.close(index);});\"  href='javascript:' data-toggle='tooltip' data-placement='top' title='只后台显示' > 只后台显示 </a>";
+                    }
+
+
+                    echo $roleCheck->RoleCheckToLink("goods/goods_edit.php?id=" . $fields['id']);
+                    echo $roleCheck->RoleCheckToLink("goods/goods_del.php?id=" . $fields['id']);
+
+                    echo "<br>";
+                    if ($fields["isOnlyAdminDisplay"] != "1"&&$fields["status"] == "0") echo "<a onclick=\"layer.open({type: 2,title: '二维码', content: 'goods.qr.php?goodsname={$fields['goodsname']}&id={$fields['id']}'});\"  href='javascript:' data-toggle='tooltip' data-placement='top' title='二维码' > 二维码 </a>";
+                    echo "<a href='/lyapp/goods/goods_view.php?id={$fields['id']}' target='_blank'>预览</a> ";
+                    if ($fields["flag"] == "h") {
+                        echo $roleCheck->RoleCheckToLink("goods/goods_tt.php?id=" . $fields['id'], "取消头条");
+                    } else {
+                        echo $roleCheck->RoleCheckToLink("goods/goods_tt.php?id=" . $fields['id'] . "&flag=h", "头条");
+                    }
+
+
+                    $benefit_num = 0;
+                    $questr = "SELECT COUNT(id) AS dd        FROM #@__goods_benefit        WHERE goodsid='{$fields['id']}' AND isdel=0";
+                    // dump($questr);
+                    $rowbenefit = $dsql->GetOne($questr);
+                    if ($rowbenefit) $benefit_num = $rowbenefit["dd"];
+                    echo "<br>";
+                    echo $roleCheck->RoleCheckToLink("goods/goods_benefitadd.php?id=" . $fields['id'] . "&goodsid=" . $fields['id'], "优惠添加", "", true);
+                    echo $roleCheck->RoleCheckToLink("goods/goods_benefit.php?id=" . $fields['id'] . "&goodsid=" . $fields['id'], "优惠管理", "", true);
+                    if ($benefit_num > 0) echo "({$benefit_num}条)";
+
+                    echo "<br><a onclick=\"layer.open({type: 2,title: '重复购买次数', content: 'goods.onlynumb.php?id=" . $fields['id'] . "'});\"  href='javascript:' data-toggle='tooltip' data-placement='top' title='重复购买次数' > 重复购买次数</a>  ";
+
+                    //读取归档信息
+                    $arcQuery = "SELECT onlynumb  FROM #@__goods  WHERE id='" . $fields['id'] . "' ";
+                    $arcRow = $dsql->GetOne($arcQuery);
+                    if (isset($arcRow['onlynumb']) && $arcRow['onlynumb'] > 0) {
+                        echo "(" . $arcRow['onlynumb'] . "次)";
+                    } else {
+                        echo "(不限制)";
+                    }
+
+                    ?>
+                </td>
+            </tr>
+            {/dwt:datalist}
+            </tbody>
+        </table>
+        {dwt:pagelist/}
+    </div>
+    <!--表格数据区------------结束-->
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table-2.js"></script>
+<!--表格-->
+<SCRIPT src="../ui/js/jquery.lazyload.js" type=text/javascript></SCRIPT>
+<SCRIPT src="../ui/js/jquery.lazyload.plus.js" type=text/javascript></SCRIPT>
+</body>
+</html>
+
+<?php
+
+function getLineNumb($goodsid)
+{
+    global $dsql;
+    $query = "SELECT count(id) as dd FROM `#@__line` 
+              
+               WHERE #@__line.islock=1 
+                  AND (
+                            (
+                                    #@__line.tmp='临时'
+                                    and UNIX_TIMESTAMP(now())< (#@__line.gotime-#@__line.beforHours*3600)
+                            )   /*临时线路，只获取 截止时间前的*/
+                           OR ( #@__line.tmp='每日'  )/*固定线路*/
+                      )
+                      AND  goodsid=$goodsid
+                    
+                ";
+
+    $row = $dsql->GetOne($query);
+    if (is_array($row)) {
+
+        return $row["dd"];
+    } else {
+        return "";
+    }
+}

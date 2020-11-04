@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $title?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+
+</head>
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $title?></h5>
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+                <div class="ibox-content">
+                    <!--表格数据区------------开始-->
+                    <div class="btn-group" id="Toolbar">
+                        <a href="goodsOrder_add.php" class="btn btn-outline btn-default" data-toggle='tooltip' data-placement='top' title='添加新订单'><i class='glyphicon glyphicon-plus' aria-hidden='true'></i></a>
+                        <a href="goodsOrder.php" id="ClearLog" class="btn btn-outline btn-default" data-toggle='tooltip' data-placement='top' title='显示全部订单'><i class='glyphicon glyphicon-refresh' aria-hidden='true'></i></a>
+                    </div>
+
+                    <div class="btn-group" id="Toolbar2">
+                        <form name='form3' action='' method='get' role="form" class="form-inline">
+                            <div class="input-group">
+
+                                <div class="pull-left" style="width: 130px">
+                                    <?php $nowtime = GetDateMk(time());?>
+                                    <input type="text" name="startdate" id='startdate' class="form-control  Wdate" size="14" placeholder="开始日期"   onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+                                </div>
+
+                                <div class="pull-left" style="width: 130px">
+                                    <?php $nowtime = GetDateMk(time());?>
+                                    <input type="text" name="enddate" id='enddate' class="form-control  Wdate" size="14" placeholder="结束日期"   onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+                                </div>
+
+                                <div class="pull-left">
+                                    <select class="form-control m-b" name='depid'>
+                                        <option value='0'>请选择公司...</option>
+                                        <?php
+                                    $depOptions = GetDepOnlyTopOptionList($depid);
+                                    echo $depOptions;
+                                    ?>
+                                    </select>
+                                </div>
+
+                                <div class="pull-left">
+                                    <div class="input-group-btn">
+                                        <button type="submit" name="imageField" class="btn btn-outline  btn-default">搜索</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <script language="JavaScript">
+                                // 计算两个日期的间隔天数
+                                //   document.all.dateChangDu.value = iDays;
+                                function pickedFunc() {
+                                    Date.prototype.dateDiff = function (interval, objDate) {
+                                        //若参数不足或 objDate 不是日期物件则回传 undefined
+                                        if (arguments.length < 2 || objDate.constructor != Date) return undefined;
+                                    }
+                                }
+                            </script>
+                        </form>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="datalist" data-toggle="table" data-classes="table table-hover table-condensed" data-striped="true" data-sort-order="desc" data-mobile-responsive="true">
+                            <thead>
+                            <tr>
+                                <th data-halign="center" data-align="center">编号</th>
+                                <th data-halign="center" data-align="left">客户</th>
+                                <th>功能地址</th>
+                                <th>开始日期</th>
+                                <th>结束日期</th>
+                                <th>剩余日期</th>
+                                <th data-halign="center" data-align="center">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {dwt:datalist}
+
+                            <?php
+                            
+                            $starDate = GetDateMk($fields['startDate']);
+                            $endDate = GetDateMk($fields['endDate']);
+
+                            $now = strtotime("now"); //当前时间
+                            $endtime = $fields['endDate']; //结束时间
+
+                            $surplusDay = "";//剩余天数
+                            if ($endtime > 0) {
+                            $second = $endtime - $now; //获取毕业时间到现在时间的时间戳（秒数）
+                            $year = floor($second / 3600 / 24 / 365); //从这个时间戳中换算出年头数
+                            if ($year < 0) $year = 0;
+
+                            $temp = $second - $year * 365 * 24 * 3600; //从这个时间戳中去掉整年的秒数，就剩下月份的秒数
+                            $month = floor($temp / 3600 / 24 / 30); //从这个时间戳中共换算出月数
+                            //dump($temp);
+                            //dump($month);
+                            //if($month<0)$month=0;
+
+                            $temp = $temp - $month * 30 * 3600 * 24; //从时间戳中去掉整月的秒数，就剩下天的描述
+                            $day = floor($temp / 24 / 3600); //从这个时间戳中换算出剩余的天数
+                            //if($day<0)$day=0;
+
+                            // $temp=$temp-$day*3600*24; //从这个时间戳中去掉整天的秒数，就剩下小时的秒数
+                            // $hour = floor($temp/3600); //从这个时间戳中换算出剩余的小时数
+
+                            //$temp=$temp- $hour*3600; //从时间戳中去掉小时的秒数，就剩下分的秒数
+                            //$minute=floor($temp/60); //从这个时间戳中换算出剩余的分数
+
+                            //$second1=$temp-$minute*60; //最后只有剩余的秒数了
+
+                            $surplusDay = "";
+                            if ($year > 0) $surplusDay .= " $year 年 ";
+                            if ($month > 0) $surplusDay .= " $month 月 ";
+                            if ($day > 0) $surplusDay .= " $day 天 ";
+                            if ($surplusDay != "") $surplusDay = "还剩下 " . $surplusDay;
+                            }
+                            ?>
+
+                            <tr>
+                                <td>{dwt:field.autoindex/}</td>
+                                <td>{dwt:field.dep_name/} </td>
+                                <td>{dwt:field.urladd/}</td>
+                                <td><?php echo $starDate;?></td>
+                                <td><?php echo $endDate;?></td>
+                                <td><?php echo $surplusDay;?></td>
+
+                            </tr>
+
+
+                            {/dwt:datalist}
+
+                            </tbody>
+                        </table>
+                        {dwt:pagelist/}
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+</body>
+</html>

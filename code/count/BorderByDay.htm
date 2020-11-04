@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table-fixed-columns.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+    <style>
+        .ibox-content-plus {
+            background-color: #fff;
+            padding-left: 5px;
+            padding-right: 5px;
+            color: inherit;
+            border-color: #e7eaec;
+            -webkit-border-image: none;
+            -o-border-image: none;
+            border-image: none;
+            border-style: solid solid none;
+            border-width: 1px 0;
+        }
+
+    </style>
+</head>
+<body class="">
+<div class="">
+    <div class="  ">
+        <!--标题栏和 添加按钮            开始-->
+        <div class="ibox-title" id="title">
+            <h5><?php
+                // echo $nowday." ";
+                echo $sysFunTitle
+                ?></h5>
+        </div>
+        <!--标题栏和 添加按钮   结束-->
+        <div class="ibox-content-plus">
+            <!--工具框   开始-->
+
+            <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+                <form name="form2" method="get" action="">
+                    <div class="input-group">
+
+
+                        <div class="pull-left ">
+                            <input type='text' class="form-control  Wdate" value="<?php echo $day_s; ?>" name='day_s' id='day_s' size='14' readonly='readonly'
+                                   onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'day_d\')}'})"
+                            />
+                        </div>
+                        <div class="pull-left ">
+                            到
+                        </div>
+                        <div class="pull-left ">
+                            <input type='text' class="form-control  Wdate" value="<?php echo $day_d; ?>" name='day_d' id='day_d' size='14' readonly='readonly'
+                                   onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'day_s\')}'})"
+                            />
+                        </div>
+
+                        <div class="pull-left ">
+
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-white">
+                                    查看
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--工具框   结束-->
+
+
+            <!--表格数据区------------开始-->
+            <div class="table-responsive ">
+
+
+                <table
+                        id="datalist22"
+                        data-toggle="table"
+                        data-classes="table table-hover table-condensed"
+                        data-striped="true"
+                        data-sort-order="desc"
+                        data-mobile-responsive="true"
+                        data-show-columns="true"
+                >
+                    <thead>
+                    <tr>
+                        <th data-halign="center" data-align="right">日期</th>
+                        <?php
+                        foreach ($report_array as $key => $value) {
+
+                            $return = strtoupper(str_replace("order", "", $key));
+                            if ($return == "ZTC") $return = "直通车会员卡";
+                            if ($return == "CAR") $return = "车辆租赁";
+                            if ($return == "HYK") $return = "合伙人会员卡";
+                            if ($return == "LYCP") $return = "旅游线路";
+                            if ($return == "CZK") $return = "充值卡";
+                            echo "<th data-halign=\"center\" data-align=\"right\">
+                                    <a href='BgoodsByDay.do.php?ordertype={$key}&day_s=$day_s&day_d=$day_d'>
+                                    {$return}(订单笔数/总金额)
+                                    </a>
+                                    </th>";
+                        }
+                        ?>
+                    </tr>
+                    </thead>
+
+                    <?php
+                    $day_s_int = strtotime($day_s);
+                    $day_d_int = strtotime($day_d);
+
+
+                    for ($nowdateint = $day_s_int; $nowdateint <= $day_d_int; $nowdateint += 86400) {
+                        $nowdate = GetDateMk($nowdateint);
+                        echo "<tr> 
+                        <td ><div  > $nowdate</div></td>";
+                        foreach ($report_array as $key => $value) {
+                            $bs = 0;
+                            $money = 0;
+                            $total_ename_bs = $key . "_total_bs";
+                            $total_ename_money = $key . "_total_money";
+                            if (!isset($$total_ename_bs)) $$total_ename_bs = 0;
+                            if (!isset($$total_ename_money)) $$total_ename_money = 0;
+                            if (isset($report_array[$key][$nowdate]["bs"])) {
+                                $bs = $report_array[$key][$nowdate]["bs"];
+                                $$total_ename_bs += $bs;
+                            }
+                            if (isset($report_array[$key][$nowdate]["money"])) {
+                                $money = $report_array[$key][$nowdate]["money"];
+                                $$total_ename_money += $money;
+                            }
+                            echo "  <td >$bs/$money</td> ";
+                        }
+                        echo "  </tr>  ";
+
+                    }
+
+
+                    echo " <tr>
+                                        <td>合计</td>
+                          ";
+                    foreach ($report_array as $key => $value) {
+                        $total_ename_bs = $key . "_total_bs";
+                        $total_ename_money = $key . "_total_money";
+                        $total_money = number_format($$total_ename_money, 2);
+                        echo "  <td >{$$total_ename_bs}/{$total_money}</td> ";
+                    }
+                    echo " </tr> ";
+
+
+                    ?>
+
+                </table>
+            </div>
+            <!--表格数据区------------结束-->
+        </div>
+    </div>
+</div>
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-export.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/tableExport.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-fixed-columns.js"></script>
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" charset="utf-8">
+
+    !function (F, E, D) {
+        !function () {
+            D("#datalist22").bootstrapTable({
+                showExport: true,//显示导出按钮
+                exportDataType: "basic",//导出类型    striped: !0,
+                showToggle: 0,
+                showColumns: 0,
+                iconSize: "outline",
+                toolbar: "#Toolbar,#Toolbar2",
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                  //排序方式
+                height: getHeight(),//高度自适应
+                fixedColumns: true,//列头固定
+                fixedNumber: 1,
+                icons: {refresh: "glyphicon-repeat", toggle: "glyphicon-list-alt", columns: "glyphicon-list"}
+            });
+            setTimeout(function () {
+                D("#datalist22").bootstrapTable('resetView');
+            }, 200);
+            /*自适应高度*/
+            $(window).resize(function () {
+                D("#datalist22").bootstrapTable('resetView', {
+                    height: getHeight()
+                });
+            });
+        }()
+    }(document, window, jQuery);
+
+
+    /*170305用于表格高度自适应 */
+    function getHeight() {
+        return $(window).height() - $('#title').outerHeight(true) * 1.1;
+    }
+
+</script>
+
+</body>
+</html>

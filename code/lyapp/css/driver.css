@@ -1,0 +1,168 @@
+/*乘车检票的界面*/
+
+/*
+//座位号的园
+*/
+.seatNumberDiv {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    margin-top: 10px;
+    box-shadow: 0px 4px 15px #bbb;
+    /*2px :  表示水平阴影的位置
+
+4px : 表示垂直阴影的位置
+
+5px : 表示模糊距离
+
+#000 ： 表示阴影的颜色（#000  黑色）*/
+
+}
+
+
+
+/*座位号数字 */
+.seatNumber {
+    height: 50px;
+    line-height: 50px;
+    display: block;
+    color: #FFF;
+    text-align: center;
+    font-size: 3rem;
+}
+
+.search-list .page-container {
+    display: block;
+    padding: 0;
+    min-height: 0;
+    border-top: none;
+}
+
+.larger-view .page-container {
+    display: none
+}
+
+.search-list {
+    background: #fff
+}
+
+.search-list .price-icon {
+    font-family: arial;
+    padding-right: 2px
+}
+
+.search-list .font-num {
+    font-size: 16px
+}
+
+.search-list .h {
+    color: #f50
+}
+
+.search-list .page-container > li {
+    min-height: 60px;
+    padding: 12px 6px;
+    border-bottom: 1px solid #dbdbdb;
+    position: relative
+}
+
+.search-list .page-container > li .pic {
+    display: inline-block;
+    text-align: center;
+    overflow: hidden
+}
+
+
+.search-list .page-container > li .d-title {
+    line-height: 22px;
+    margin-bottom: 3px;
+    position: relative;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /*标题显示行数，超过自动加点*/
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    color: #4b566a;
+    font-weight: bold;
+    font-size: 1.17em;
+}
+
+.list-view .d-title {
+    font-size: 14px;
+}
+
+.search-list .page-container > li .d pic {
+    line-height: 24px;
+    color: #999
+}
+
+.search-list .page-container > li .d pic img {
+    vertical-align: middle;
+    margin-top: -4px
+}
+
+.search-list .page-container > li .d .d-price .h {
+    font-size: 16px
+}
+
+.search-list .page-container > li .d .d-price del {
+    font-size: 10px;
+    margin-left: 5px
+}
+
+.search-list .page-container > li .d .d-main {
+    display: -webkit-box;
+    margin-top: -1px;
+    height: 20px;
+    overflow: hidden
+}
+
+
+.search-list .page-container > li .d .d-main .d-num {
+    -webkit-box-flex: 1;
+    text-align: center
+}
+
+.search-list .page-container > li .d .d-main .d-area {
+    text-align: right
+}
+
+.search-list .icons-group {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: white;
+    line-height: 16px;
+    height: 16px
+}
+
+.search-list .icons-group > div {
+    float: right;
+    font-size: 12px;
+    padding: 0px 3px
+}
+
+.page-container {
+    overflow: hidden
+}
+ .list-view .pic {
+    width: 100px;
+    height: 40px;
+    margin-right: 10px;
+    margin-left: 8px
+}
+
+.list-view .d {
+    margin: 4px 15px 6px 0;
+    -webkit-box-flex: 1
+}
+
+.list-view .d-price .h {
+    font-size: 14px
+}
+
+.list-view .list-item {
+    display: -webkit-box
+}
+
+/*以上是搜索和列表 --------------------------------------------------------------*/

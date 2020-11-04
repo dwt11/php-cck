@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo "提现申请"//$sysFunTitle?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body>
+<!--标题栏和 添加按钮            开始-->
+<div class="ibox-title">
+    <h5><?php echo "提现申请"//$sysFunTitle?></h5>
+</div>
+<!--标题栏和 添加按钮   结束-->
+
+<div class="ibox-content">
+
+    <!--工具框   开始-->
+    <div class="btn-group" id="Toolbar">
+        <?php
+        echo $roleCheck->RoleCheckToLink("clientdata/extraction_add.php", "会员提现", "btn btn-white", "", "glyphicon glyphicon-plus");
+        echo $roleCheck->RoleCheckToLink("clientdata/extraction_config.php", "提现规则配置", "btn btn-white", true, "glyphicon glyphicon-cog");
+        ?>
+    </div>
+    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+        <form name="form2" method="get" action="">
+            <div class="pull-left btn-group" style="margin-right:5px">
+                <a href="?sta=0" class="btn btn-white<?php if ($sta == '0') echo " active" ?>"> 全部 </a>
+                <a href="?sta=1" class="btn btn-white<?php if ($sta == '1') echo " active" ?>"> 已支付 </a>
+                <a href="?sta=2" class="btn btn-white<?php if ($sta == '2') echo " active" ?>"> 未支付 </a>
+                <input type="hidden" value="<?php echo $sta; ?>" name="sta">
+            </div>
+            <div class="input-group">
+                <div class="pull-left ">
+                    <select class='form-control' name='paytype' id='paytype'>
+                        <option value="" selected>支付方式</option>
+                        <option value="微信"
+                            <?php if ($paytype == '微信') echo "selected" ?>>微信
+                        </option>
+                        <option value="现金"
+                            <?php if ($paytype == '现金') echo "selected" ?>>现金
+                        </option>
+
+                    </select>
+                </div>
+                <div class="pull-left ">
+                    <select class='form-control' name='daybefore' id='day'>
+                        <option value="0" selected>申请时间范围</option>
+                        <option value="-1" <?php if ($daybefore == '-1') echo "selected" ?>>1天前</option>
+                        <option value="-2" <?php if ($daybefore == '-2') echo "selected" ?>>2天前</option>
+                        <option value="-3" <?php if ($daybefore == '-3') echo "selected" ?>>3天前</option>
+                        <option value="-4" <?php if ($daybefore == '-4') echo "selected" ?>>4天前</option>
+                        <option value="-5" <?php if ($daybefore == '-5') echo "selected" ?>>5天前</option>
+                        <option value="-6" <?php if ($daybefore == '-6') echo "selected" ?>>更多天前
+                        </option>
+                    </select>
+                </div>
+                <div class="pull-left" style="width: 130px">
+                    <?php $nowtime = GetDateMk(time()); ?>
+                    <input type="text" name="startdate" id='startdate' class="form-control  Wdate " size="14"
+                           placeholder="开始日期"
+                           onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+                </div>
+
+                <div class="pull-left" style="width: 130px">
+                    <?php $nowtime = GetDateMk(time()); ?>
+                    <input type="text" name="enddate" id='enddate' class="form-control Wdate  " size="14"
+                           placeholder="结束日期"
+                           onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+                </div>
+                <div class="pull-left ">
+                    <input name="keyword" type="text" placeholder="用户手机/姓名" class="form-control"
+                           value="<?php echo $keyword ?>">
+                </div>
+                <div class="pull-left ">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-white">
+                            搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--工具框   结束-->
+
+
+    <!--表格数据区------------开始-->
+    <div class="table-responsive">
+        <table id="datalist">
+            <thead>
+            <tr>
+                <th data-halign="center" data-align="center">序号</th>
+                <th data-halign="center" data-align="center">用户名称</th>
+                <th data-halign="center" data-align="center">用户手机</th>
+                <th data-halign="center" data-align="center">提现金额</th>
+                <th data-halign="center" data-align="left">状态</th>
+                <th data-halign="center" data-align="center">已申请天数</th>
+                <th data-halign="center" data-align="center">操作</th>
+            </tr>
+            </thead>
+            <?php $totalMoney = 0; ?>
+            {dwt:datalist}
+            <?php
+            $jbnum = $fields["jbnum"] / 100;
+
+            $totalMoney += $jbnum;
+            ?>
+            <tr>
+                <td>{dwt:field.id /}</td>
+                <td>{dwt:field.realname /}</td>
+                <td>{dwt:field.mobilephone /}</td>
+                <td>
+                    <?php
+                    echo $jbnum;
+                    ?>
+                </td>
+
+                <td>
+                    申请时间:{dwt:field.createtime function="GetDateTimeMk(@me)" /}
+                    <br>
+                    <?php
+                    if ($fields['status'] == 0) {
+                        echo '未审核';
+                    } elseif ($fields['status'] == 1) {
+                        echo '审核时间:' . GetDateTimeMk($fields['passtime']) . ' <b>审核通过</b> 操作员:' . GetEmpNameByUserId($fields['operatorid']);
+                    } elseif ($fields['status'] == 2) {
+                        echo '审核时间:' . GetDateTimeMk($fields['passtime']) . ' <b>审核未通过</b>  操作员:' . GetEmpNameByUserId($fields['operatorid']) . ' 原因: ' . $fields['no'];
+                    } elseif ($fields['status'] == 3) {
+                        echo '审核时间:' . GetDateTimeMk($fields['passtime']) . ' <b>审核通过</b> 操作员:' . GetEmpNameByUserId($fields['operatorid']);
+                        echo '<br>付款时间:' . GetDateTimeMk($fields['payment_time']) . ' <b>付款成功</b> 操作员:' . GetEmpNameByUserId($fields['payoperatorid']);
+                        echo '<br>付款订单号:' . $fields['payment_no'];
+                        echo '<br>付款备注:' . $fields['paydesc'];
+                        echo '<br>付款类型:微信付款';
+                    } elseif ($fields['status'] == 4) {
+                        echo '审核时间:' . GetDateTimeMk($fields['passtime']) . ' <b>审核通过</b> 操作员:' . GetEmpNameByUserId($fields['operatorid']);
+                        echo '<br>付款时间:' . GetDateTimeMk($fields['payment_time']) . ' <b>付款未成功</b> 操作员:' . GetEmpNameByUserId($fields['payoperatorid']) . " 失败原因：" . $fields['payment_no'];
+                        echo '<br>付款备注:' . $fields['paydesc'];
+                        echo '<br>付款类型:微信付款';
+                    } elseif ($fields['status'] == 5) {
+                        echo '审核时间:' . GetDateTimeMk($fields['passtime']) . ' <b>审核通过</b> 操作员:' . GetEmpNameByUserId($fields['operatorid']);
+                        echo '<br>付款时间:' . GetDateTimeMk($fields['payment_time']) . ' 操作员:' . GetEmpNameByUserId($fields['payoperatorid']);
+                        echo '<br>付款备注:' . $fields['paydesc'];
+                        echo '<br>付款类型:现金线下付款';
+                    }
+
+
+                    ?>
+                </td>
+
+                <td>
+                    <?php
+                    $d1 = time();
+                    $d2 = $fields['createtime'];
+                    if ($d1 < $d2) {
+                        $tmp = $d2;
+                        $d2 = $d1;
+                        $d1 = $tmp;
+                    }
+                    //状态不是微信支付成功和现金支付成功 就显示已经申请的天数
+                    if ($fields['status'] != 3 && $fields['status'] != 5) echo ceil(($d1 - $d2) / 86400);
+                    ?>
+                </td>
+
+
+                <td>
+                    <?php
+                    if ($fields['status'] == 0) {
+
+                        echo $roleCheck->RoleCheckToLink("clientdata/extraction_ok.php?id=" . $fields['id'], "通过", "", "", "", true);
+                        echo "<br>";
+                        echo $roleCheck->RoleCheckToLink("clientdata/extraction_no.php?id=" . $fields['id'], "不通过", "", true);
+                    } elseif ($fields['status'] == 1 || $fields['status'] == 4) {
+                        // echo $roleCheck->RoleCheckToLink("clientdata/extraction_weixin.php?id=".$fields['id'],"","",true);
+                        if ($fields['openid'] == "") {
+                            echo $roleCheck->RoleCheckToLink("clientdata/extraction_xianjin.php?id=" . $fields['id'], "", "", true);
+                            echo "<span style='color: #666666;text-decoration:line-through;'>微信付款</span>";
+                        } else {
+                            echo $roleCheck->RoleCheckToLink("clientdata/extraction_xianjin.php?id=" . $fields['id'], "", "", true);
+                            echo "<br>";
+                            echo $roleCheck->RoleCheckToLink("clientdata/extraction_weixin.php?id=" . $fields['id'], "", "", true);
+                        }
+                        echo "<br>";
+                        echo $roleCheck->RoleCheckToLink("clientdata/extraction_no.php?id=" . $fields['id'], "退回", "", true);
+                    }
+
+                    //echo $roleCheck->RoleCheckToLink("clientdata/extraction_del.php?id=".$fields['id']."&clientid=".$fields['clientid']."&dopost=del");
+                    //echo '<a href="extraction_del.php?jbnum='.$fields['jbnum'].'&id='.$fields['id'].'&clientid='.$fields['clientid'].'&dopost=del">删除</a>';
+                    ?>
+
+                </td>
+            </tr>
+            {/dwt:datalist}
+
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    合计
+                </td>
+
+                <td><?php echo $totalMoney ?></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+        </table>
+        {dwt:pagelist/}
+
+
+    </div>
+    <!--表格数据区------------结束-->
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table-2.js"></script>
+<!--表格-->
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body>
+<!--标题栏和 添加按钮            开始-->
+<div class="ibox-title">
+    <h5><?php echo $sysFunTitle ?></h5>
+    <div class="ibox-tools">中文和全角标点按两个字符计算数量</div>
+</div>
+<!--标题栏和 添加按钮   结束-->
+
+
+<div class="ibox-content">
+
+
+    <!--表格数据区------------开始-->
+
+
+    <form action="" method="post" name="form1" id="form1" class="form-horizontal">
+        <input type="hidden" name="dopost" value="save">
+
+
+        <?php
+        $query = "SELECT * FROM `#@__tg_config`";
+        //dump($query);
+        $row = $dsql->GetOne($query);
+        $t1 = $row["t1"];
+        $t2 = $row["t2"];
+        $t3 = $row["t3"];
+        $t4 = $row["t4"];
+        $t5 = $row["t5"];
+        $backpic = $row["backpic"];
+
+        ?>
+        <div class="form-group">
+            <label class="col-xs-2 control-label">姓名下第一行：</label>
+            <div class="col-xs-5">
+                <input type='text' name='t1' id='t1' value='<?php echo $t1; ?>' class="form-control">
+            </div>
+            <div class="col-xs-4 form-control-static">
+                30个字符以内
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label">蓝色商品名称行：</label>
+            <div class="col-xs-5">
+                <input type='text' name='t2' id='t2' value='<?php echo $t2; ?>' class="form-control">
+            </div>
+            <div class="col-xs-4 form-control-static">
+                26个字符以内
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label">内容介绍：</label>
+            <div class="col-xs-5">
+                <textarea rows="4" name='t3' id='t3' class="form-control"><?php echo $t3; ?>
+                </textarea>
+            </div>
+            <div class="col-xs-4 form-control-static">
+                192个字符以内,每行显示48个字符;换行请以空格补充
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label">底部倒数第二行：</label>
+            <div class="col-xs-5">
+                <input type='text' name='t4' id='t4' value='<?php echo $t4; ?>' class="form-control">
+            </div>
+            <div class="col-xs-4 form-control-static">
+                28个字符以内
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label">底部倒数第一行：</label>
+            <div class="col-xs-5">
+                <input type='text' name='t5' id='t5' value='<?php echo $t5; ?>' class="form-control">
+            </div>
+            <div class="col-xs-4 form-control-static">
+                20个字符以内
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-2 control-label">背景图片:</label>
+            <div class=" col-xs-2">
+
+                <?php
+                $oldpic = "";
+                if ($backpic != "") $oldpic = $backpic;
+                $pater_input_name = "pic";//父页面input框名称,用于接受上传后的地址
+                $fileSize = "3";//大小限制
+                $fileType = "jpg";//大小限制
+                $dirname_plus = "goods";//文件要保存的目录,在uploads目录下
+
+                $cs_str = "?oldpic={$oldpic}&pater_input_name={$pater_input_name}&fileSize={$fileSize}&dirname_plus={$dirname_plus}&fileType={$fileType}";
+                //if ($backpic) $photo = "<A href=\"javascript:;\" onclick=\"showpic('{$backpic}')\" ><img src=\"{$backpic}\" width=\"50\" height=\"50\"/></A>";
+                //echo $photo;
+                ?>
+                <input type="hidden" id="pic" name="pic" value="<?php echo $oldpic; ?>">
+                <iframe class="" name="1111" width="200" height="170" src="../ui/js/webupload/upload.php<?php echo $cs_str ?>" scrolling="no" frameborder="0"></iframe>
+            </div>
+            <div class="col-xs-4 form-control-static">
+                图片尺寸必须为宽400像素,高330像素
+            </div>
+        </div>
+
+        <div class="clearfix" style="margin-bottom: 50px"></div>
+        <div class="bodyButtomTab">
+            <div class="col-xs-4 col-xs-offset-2 ">
+                <button class="btn btn-primary" type="submit">保存</button>
+                <a class="btn btn-primary" href="/lyapp/goods/gd_weixin.php" target="_blank">预览</a>
+            </div>
+        </div>
+
+
+    </form>
+
+
+    <!--表格数据区------------结束-->
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--验证用-->
+<script src="../ui/js/plugins/validate/jquery.validate.min.js"></script>
+<script>
+    /*  $(document).ready(function () {
+          $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",})
+      });*/
+
+
+    $(document).ready(function () {
+
+        $("#form1").validate({
+            rules: {
+                t1: {maxlength: 30},
+                t2: {maxlength: 26},
+                t3: {maxlength: 192},
+                t4: {maxlength: 28},
+                t5: {maxlength: 20},
+                pic: {required: !0}
+                /* clientid: {required: true},
+                 jb: {number: true, required: true,min:0},*/
+            },
+            messages: {
+                t1: {maxlength: "字符数不能超过30个"},
+                t2: {maxlength: "字符数不能超过26个"},
+                t3: {maxlength: "字符数不能超过192个"},
+                t4: {maxlength: "字符数不能超过28个"},
+                t5: {maxlength: "字符数不能超过20个"},
+                pic: {required: "图片未上传成功"},
+                /* clientid: {required: "选择会员"},
+                 jb: {number: "请输入数字", required: "必填", min: "必须大于0"},*/
+
+            },
+            submitHandler: function (form) {
+                $.ajax({
+                    type: "post",
+                    url: "tgConfigInfo.php",
+                    data: {
+                        dopost: "save",
+                        t1: "@" + $("#t1").val() + "@", /*@用于保存内容中的空格 ,保存为替换掉*/
+                        t2: "@" + $("#t2").val() + "@",
+                        t3: "@" + $("#t3").val() + "@",
+                        t4: "@" + $("#t4").val() + "@",
+                        t5: "@" + $("#t5").val() + "@",
+                        pic: $("#pic").val()
+                    },
+                    dataType: 'html',
+                    success: function (result) {
+
+                        layer.msg('操作成功', {
+                            shade: 0.5, //开启遮罩
+                            time: 2000 //20s后自动关闭
+                        }, function () {
+                            window.location.href = "tgConfigInfo.php";
+                        });
+
+                    }
+                });
+            }
+        });
+    });
+
+
+</script>
+
+</body>
+</html>

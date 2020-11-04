@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <!--标题栏和 添加按钮            开始-->
+                <div class="ibox-title">
+                    <h5><?php echo $sysFunTitle ?></h5>
+
+
+                </div>
+                <!--标题栏和 添加按钮   结束-->
+
+
+                <div class="ibox-content">
+
+                    <!--工具框   开始-->
+                    <form name="form2" method="get" action="" class="form-horizontal">
+                        <div class="form-group">
+
+
+                            <div class="col-sm-5">
+                                <label class="col-sm-4 control-label">车牌号:</label>
+                                <div class="col-sm-5">
+                                    <input style="width: 150px" name="k_device_name" type="text" placeholder="车牌号"
+                                           class="form-control" value="<?php echo $k_device_name ?>">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-sm-4 control-label">线路名称:</label>
+                                <div class="col-sm-5">
+                                    <input style="width: 150px" name="k_goods_name" type="text" placeholder="线路名称"
+                                           class="form-control" value="<?php echo $k_goods_name ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <label class="col-sm-4 control-label">出行日期:</label>
+                                <div class="col-sm-8">
+                                    <?php
+                                    $startdate_1 = "";
+                                    if ($startdate != "") {
+                                        $startdate_1 = $startdate;
+                                    }
+                                    $enddate_1 = "";
+                                    if ($enddate != "") {
+                                        $enddate_1 = $enddate;
+                                    }
+                                    ?>
+                                    <div class="pull-left" style="width: 110px">
+                                        <input type="text"
+                                               name="startdate"
+                                               id='startdate'
+                                               class="form-control Wdate "
+                                               value="<?php echo $startdate_1 ?>"
+                                               size="12"
+                                               placeholder="开始日期"
+                                               onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"
+                                        />
+                                    </div>
+                                    <div class="pull-left" style="width: 110px">
+                                        <input type="text" name="enddate" id='enddate' class="form-control  Wdate "
+                                               value="<?php echo $enddate_1 ?>" size="12" placeholder="结束日期"
+                                               onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-sm-4 control-label">乘车人:</label>
+                                <div class="col-sm-7">
+                                    <input style="width: 150px" name="k_client_realname_tel" type="text" placeholder="姓名/电话/身份证"
+                                           class="form-control" value="<?php echo $k_client_realname_tel ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <label class="col-sm-4 control-label">检票人:</label>
+                                <div class="col-sm-5">
+                                    <input style="width: 150px" name="k_driver_realanme" type="text" placeholder="姓名"
+                                           class="form-control" value="<?php echo $k_driver_realanme ?>">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <label class="col-sm-4 control-label"></label>
+                                <button type="submit" class="btn btn-primary ">
+                                    搜索
+                                </button>
+                                <a href="#" class="btn  btn-white " onClick="window.location.href ='apptTempMoney.php'">
+                                    重置
+                                </a>
+                            </div>
+                            <div class="col-sm-3">
+
+                            </div>
+                        </div>
+
+
+                    </form>
+
+                    <!--工具框   结束-->
+
+
+                    <!--表格数据区------------开始-->
+                    <div class="table-responsive">
+                        <table id="datalist" data-striped="true">
+                            <thead>
+                            <tr>
+                                <th data-halign="center" data-align="left">车辆信息</th>
+                                <th data-halign="center" data-align="left">联系方式</th>
+                                <th data-halign="center" data-align="left">预约线路/出发日期</th>
+                                <th data-halign="center" data-align="left">金额</th>
+                                <th data-halign="center" data-align="left">备注</th>
+                                <th data-halign="center" data-align="center">创建时间</th>
+                                <th data-halign="center" data-align="center">操作</th>
+                            </tr>
+                            </thead>
+                            {dwt:datalist}
+                            <?php
+                            $name = $fields["realname"];
+                            $tel = $fields["tel"];
+                            $idcard = $fields["idcard"];
+
+
+                            ?>
+
+
+                            <tr>
+
+                                <td>
+
+                                    <?php
+                                    if ($fields["deviceid"] > 0) {
+                                        echo $fields["devicename"];
+
+
+                                        if ($fields["driver_realanme"] != "") echo "<br>检票人:{$fields["driver_realanme"]}";
+                                    } else {
+                                        echo "无车辆信息";
+                                    }
+                                    ?>
+                                </td>
+
+
+                                <td>
+                                    <?php
+                                    echo "{$name} 
+                                            
+                                            <br>{$tel}<br>{$idcard}  
+                                            "
+                                    ?>
+                                </td>
+
+
+                                <td>
+                                    <?php
+
+                                    $gotime = date('Y-m-d H:i', $fields['appttime']);
+
+
+                                    $goodscode = $fields["goodscode"];
+                                    echo "[$goodscode] <b>" . $fields["goodsname"] . "</b>";
+                                    echo "<br>" . $gotime;
+                                    echo "</td>";
+
+
+                                    $money = $fields["money"] / 100;
+                                    echo "<td>$money</td>";
+
+
+                                    ?>
+                                <td> {dwt:field.info/}
+                                </td>
+
+                                <td>
+                                    <?php
+                                    echo GetDateTimeMk($fields['createtime']);
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    $id = $fields['id'];
+                                    echo $roleCheck->RoleCheckToLink("service/apptTempMoney_del.php?id={$id}"); ?>
+                                </td>
+
+                            </tr>
+                            {/dwt:datalist}
+
+                        </table>
+                        {dwt:pagelist/}
+
+
+                    </div>
+                    <!--表格数据区------------结束-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+<script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+<script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+<script src="../ui/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green"})
+
+    });
+</script>
+</body>
+</html>

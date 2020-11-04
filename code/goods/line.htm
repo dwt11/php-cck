@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title><?php echo $sysFunTitle ?></title>
+    <link href="../ui/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../ui/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../ui/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../ui/css/animate.min.css" rel="stylesheet">
+    <link href="../ui/css/style.min.css" rel="stylesheet">
+</head>
+<body>
+
+<!--标题栏和 添加按钮            开始-->
+<div class="ibox-title">
+    <h5><?php echo "线路管理"//$sysFunTitle?></h5>
+</div>
+<!--标题栏和 添加按钮   结束-->
+
+
+<div class="ibox-content">
+
+    <!--工具框   开始-->
+    <div class="btn-group" id="Toolbar">
+        <?php echo $roleCheck->RoleCheckToLink("goods/line_add.php", "添加线路", "btn btn-white", "", "glyphicon glyphicon-plus"); ?>
+    </div>
+    <div class="btn-group" id="Toolbar2" style="margin-left: 5px">
+        <form name="form2" method="get" action="line.php">
+            <div class="pull-left btn-group" style="margin-right:5px">
+                <a href="?sta=0" class="btn btn-white<?php if ($sta == '0') echo " active" ?>"> 全部 </a>
+                <a href="?sta=1" class="btn btn-white<?php if ($sta == '1') echo " active" ?>">未出行</a>
+                <a href="?sta=2" class="btn btn-white<?php if ($sta == '2') echo " active" ?>">已出行</a>
+                <a href="?sta=3" class="btn btn-white<?php if ($sta == '3') echo " active" ?>">停用</a>
+                <input type="hidden" value="<?php echo $sta; ?>" name="sta">
+            </div>
+            <div class="pull-left" style="width: 130px">
+                <?php
+                $startdate_1 = "";
+                if ($startdate != "") {
+                    $startdate_1 = $startdate;
+                }
+
+                ?>
+                <input type="text" name="startdate" id='startdate' class="form-control Wdate" value="<?php echo $startdate_1 ?>" size="12" placeholder="日期" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})"/>
+            </div>
+            <div class="pull-left">
+                <select name='typeid' class='form-control'>
+                    {dwt:global.optionarr /}
+                </select>
+            </div>
+            <div class="pull-left">
+                <?php
+
+                echo "<select  class='form-control' name='goodsid' id='goodsid' style='max-width: 150px' >\r\n";
+                echo "<option value='0'>请选择商品...</option>\r\n";
+                echo $goodsOptions;
+                echo "</select>";
+                ?>
+            </div>
+            <div class="input-group">
+                <div class="pull-left ">
+                    <input name="keyword" type="text" placeholder="目的地/出发地/途经点/返回点" class="form-control"
+                           value="<?php echo $keyword ?>">
+                </div>
+                <div class="pull-left ">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-white">
+                            搜索
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--工具框   结束-->
+
+
+    <!--表格数据区------------开始-->
+    <div class="table-responsive">
+        <table id="datalist">
+            <thead>
+            <tr>
+                <th data-halign="center" data-align="center">序号</th>
+                <th data-halign="center" data-align="left">旅游商品信息</th>
+                <th data-halign="center" data-align="left">线路车辆信息</th>
+                <th data-halign="center" data-align="center">状态</th>
+                <th data-halign="center" data-align="left">发车时间(单个操作)
+                    <br>单个修改后,会与当前信息分开显示
+                </th>
+                <th data-halign="center" data-align="center">批量操作</th>
+            </tr>
+            </thead>
+            {dwt:datalist}
+            <tr>
+                <td>{dwt:field.autoindex /}</td>
+                <td>
+                    <div style="min-width: 300px">
+
+                        <?php
+                        $photo = $fields["litpic"];
+                        if ($photo == "") $photo = "/images/arcNoPic.jpg";
+                        echo " <img data-original=\"$photo\" width=\"60\" height=\"60\" style='float:left;margin-right: 5px'/>";
+                        $goodscode = $fields["goodscode"];
+                        echo "[$goodscode] <b>" . $fields["goodsname"] . "</b>";
+                        echo "<br>出发乘车点: " . $fields['gosite'];
+                        echo "<br>返回乘车点: " . $fields['downsite'];
+                        echo "<br>中途停靠点:" . $fields['tjsite'];
+                        ?>
+                </td>
+
+
+                <td>
+
+                    <div style="min-width: 300px">
+                        <?php
+                        echo "行程天数: " . $fields['linedaynumb'];
+                        echo "<br>返回时间: " . date('H时i分', $fields['backtime']);
+                        echo "<br>预约截止: ";
+
+                        if ($fields['beforHours'] > 0) {
+
+
+                            echo date('Y年m月d日 H时i分', ($fields['gotime'] - $fields['beforHours'] * 3600));
+
+                            echo "  [";
+                            echo "前:" . $fields['beforHours'] . "小时";
+                            echo "]";
+                        } else {
+                            echo "未设置";
+                        }
+
+                        ?>
+
+
+                        <br> 车辆信息: {dwt:field.carinfo_desc /}
+
+                        <?php
+                        if ($fields['carinfo_desc'] != "") {
+                            echo "车辆信息：" . $fields['carinfo_desc'];
+                        }
+                        echo "<br>座位数量: ";
+                        if ($fields['seats'] > 0) {
+                            echo $fields['seats'];
+                        } else {
+                            echo "不限制数量";
+                        }
+
+                        if ($fields['diaodudianhua'] != "") {
+                            echo "<br>调度电话：" . $fields['diaodudianhua'];
+                        }
+
+
+                        ?>
+                </td>
+
+
+                <td>
+                    <div style="min-width: 60px"></div>
+                    <?php
+                    if (0 == $fields['islock']) {
+                        echo '停运';
+                    } elseif (1 == $fields['islock']) {
+
+                        if ($fields['gotime'] < time()) {
+                            echo "<b>[已过期]</b>";
+                        } else {
+                            echo '正常';
+                        }
+                    }
+
+                    ?></td>
+                <td>
+                    <div style="min-width: 200px">
+                        <?php
+
+                        $iseditdel = true;//批量管理时的编辑和删除是否可以使用,默认可以,如果下面单条里,有一个不符合,就不可以使用
+
+                        $lineids = $fields['lineids'];
+                        $lineid_array = explode(",", $lineids);
+                        //$lineid=$lineid_array[0];//默认取第一个,这个用于批量里面的复制使用,(复制)
+                        $gotime_str_array = explode(",", $fields['gotime_str']);
+                        $gotime_array = explode(",", $fields['gotime']);
+                        foreach ($gotime_str_array as $key => $gotime_str) {
+
+
+                            //获取已经预约的数量
+                            $lineid = $lineid_array[$key];
+                            $s_seats = GetLineSeatsNumb_yjyy($lineid);
+                            /*if ($s_seats > 0) {
+                                echo $s_seats;
+                            }*/
+
+
+                            $week = GetWeekFormDateStr(GetDateMk($gotime_array[$key]));
+                            echo "
+                                            <span class=\"badge badge-success\">$gotime_str {$week}</span>
+                                                已预约[$s_seats] ";
+                            echo $roleCheck->RoleCheckToLink("goods/line_copy.php?id=$lineid");
+
+
+                            echo $roleCheck->RoleCheckToLink("goods/line_beforHors.php?id={$lineid}", "截止", "", TRUE);
+                            echo "<a onclick=\"layer.open({type: 2,title: '座位', content: 'line.seats.edit.php?id={$lineid}'});\"  href='javascript:' data-toggle='tooltip' data-placement='top' title='座位数量调整' > 座位</a>  ";
+
+                                            // 不能编辑,这里CONFIG中要做一个开关,是否可以编辑
+						 if ($s_seats > 0) {
+                                //有预约的人后，不能编辑和删除
+                                echo " <span style='color: #666666;text-decoration:line-through;'>编辑</span> ";
+                                $iseditdel = false;
+                            } else {
+                                echo $roleCheck->RoleCheckToLink("goods/line_edit.php?id={$lineid}");
+                            }
+
+                            if ($s_seats > 0) {
+                                //有预约的人后，不能编辑和删除
+                                echo " <span style='color: #666666;text-decoration:line-through;'>删除</span> ";
+                                $iseditdel = false;
+
+                            } else {
+
+                                echo $roleCheck->RoleCheckToLink("goods/line_del.php?id={$lineid}");
+                            }
+
+
+                            if ($fields["islock"] == "1") {
+                                echo $roleCheck->RoleCheckToLink("goods/line_stop.php?id={$lineid}", "停用", "", "", "", true, "确认停用此线路?");
+                            } else {
+                                echo $roleCheck->RoleCheckToLink("goods/line_stop.php?id={$lineid}&islock=1", "启用", "", "", "", true, "确认启用此线路?");
+                            }
+
+
+                            echo "<br>";
+                        }
+
+
+                        ?>
+
+                </td>
+
+                <td>
+
+
+                    <?php
+                    if ($fields['gotime'] > time()) {
+                        //不过期 才可以编辑
+
+                        ?>
+
+                        <div style="min-width: 80px"></div>
+                        <a href='../lyapp/goods/goods_view.php?id={dwt:field.goodsid /}' target="_blank">预览</a>
+
+                        <?php
+
+                        echo "<br>";
+                        echo $roleCheck->RoleCheckToLink("goods/line_beforHors.php?id={$lineids}", "截止时间调整", "", TRUE);
+                        echo "<br>";
+                        echo $roleCheck->RoleCheckToLink("goods/line_seatsedit.php?id={$lineids}", "座位数量调整", "", TRUE);
+
+                        // echo "<a onclick=\"layer.open({type: 2,title: '座位数量调整', content: 'line.seats.edit.php?id={$lineids}'});\"  href='javascript:' data-toggle='tooltip' data-placement='top' title='座位数量调整' > 座位数量调整 </a>  ";
+                        echo "<br>";
+
+                        if (!$iseditdel) {
+                            //有预约的人后，不能编辑和删除
+                            echo " <span style='color: #666666;text-decoration:line-through;'>编辑</span> ";
+
+                        } else {
+                            echo $roleCheck->RoleCheckToLink("goods/line_edit.php?id={$lineids}");
+                        }
+
+                        if (!$iseditdel) {
+                            //有预约的人后，不能编辑和删除
+                            echo " <span style='color: #666666;text-decoration:line-through;'>删除</span> ";
+
+                        } else {
+
+                            echo $roleCheck->RoleCheckToLink("goods/line_del.php?id={$lineids}");
+                        }
+
+
+                        echo "<br>";
+
+                        if ($fields["islock"] == "1") {
+                            echo $roleCheck->RoleCheckToLink("goods/line_stop.php?id={$lineids}", "停用", "", "", "", true, "确认停用此线路?");
+                        } else {
+                            echo $roleCheck->RoleCheckToLink("goods/line_stop.php?id={$lineids}&islock=1", "启用", "", "", "", true, "确认启用此线路?");
+                        }
+                    }
+                    ?>
+                </td>
+            </tr>
+            {/dwt:datalist}
+
+        </table>
+        {dwt:pagelist/}
+
+
+    </div>
+    <!--表格数据区------------结束-->
+</div>
+
+
+<script src="../ui/js/jquery.min.js"></script>
+<script src="../ui/js/bootstrap.min.js"></script>
+<script src="../ui/js/content.min.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../ui/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../ui/js/bootstrap-table-2.js"></script>
+<!--表格-->
+<script src="../ui/js/plugins/layer/layer.min.js"></script>
+<script src="/ui/js/jquery.lazyload.js" type=text/javascript></script>
+<script src="/ui/js/jquery.lazyload.plus.js" type=text/javascript></script>
+<!--日期控件-->
+<script type="text/javascript" src="../include/My97DatePicker/WdatePicker.js"></script>
+
+</body>
+</html>

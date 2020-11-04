@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_soft_lang; ?>">
+    <title><?php echo $sysFunTitle?></title>
+    <link href="../css/base.css" rel="stylesheet" type="text/css">
+    <script src="../js/jquery.min.js"></script>
+    
+    <script src="../js/main.js"></script>
+    <script language='javascript'>
+        function delFeedback() {
+            var qstr = getCheckboxItem('fid');
+            if (qstr == "") alert("你没选中任何内容！");
+            else if (window.confirm('你确定要删除这些评论吗?')) location.href = "feedback.php?job=del&fid=" + qstr;
+        }
+        function delFeedbackIP() {
+            var qstr = getCheckboxItem('fid');
+            if (qstr == "") alert("你没选中任何内容！");
+            else if (window.confirm('你确定要删除这些评论吗?')) location.href = "feedback.php?job=delall&fid=" + qstr;
+        }
+        function checkFeedback() {
+            var qstr = getCheckboxItem('fid');
+            if (qstr == "") alert("您没选中任何内容！");
+            else location.href = "feedback.php?job=check&fid=" + qstr;
+        }
+        function editFeedback() {
+            var qstr = getCheckboxItem('fid');
+            if (qstr == "") alert("您没选中任何内容！");
+            else location.href = "feedback_edit.php?job=edit&fid=" + qstr;
+        }
+    </script>
+</head>
+<body background='../images/allbg.gif' leftmargin='8' topmargin='8'>
+
+<table width="98%" border="0" cellpadding="0" cellspacing="1" bgcolor="#ccd9b9" align="center" style="margin-bottom:5px">
+    <tr>
+        <td height="35" background="../images/tbg.gif" align="center"><strong><?php echo $sysFunTitle?></strong></td>
+    </tr>
+</table>
+<table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" bgcolor="#cfcfcf" style="margin-bottom:6px">
+    <form name='formsearch'>
+        <tr>
+            <td height="28" background="../images/tbg.gif">
+                <label><span>日志内容 </span>
+                <input type='text' size='15' name='keyword' style='width:150'>
+                    </label>
+                <select name="typeid" style="width:180">
+                    <option value="0">--请选择--</option>
+                    {dwt:global.openarray /}
+                </select>
+                <input type='submit' name='sb' value=' 搜索 ' class='coolbt'/>
+
+            </td>
+
+        </tr>
+    </form>
+</table>
+
+
+<form name="form2">
+    <table width="98%" border="0" cellpadding="2" cellspacing="1" bgcolor="#CFCFCF" align="center" style="margin-top:8px">
+        <tr>
+            <td height="28" colspan="8" background='../images/tbg.gif' align="center"> {dwt:pagelist/}</td>
+        </tr>
+        <tr align="center" bgcolor="#FBFCE2" height="25">
+            <td nowrap>选择</td>
+            <td nowrap>文档标题</td>
+            <td nowrap>IP</td>
+            <td nowrap>更新时间</td>
+            <td nowrap>状态</td>
+            <td nowrap>内容</td>
+            <td nowrap>发布人</td>
+            <td nowrap>操作</td>
+        </tr>
+        {dwt:datalist}
+        <tr align='center' bgcolor="#FFFFFF" height="26" onMouseMove="javascript:this.bgColor='#FCFDEE';" onMouseOut="javascript:this.bgColor='#FFFFFF';">
+            <td nowrap>
+                <input name="fid" type="checkbox" class="np" id="fid" value="{dwt:field.id/}">
+            </td>
+            <td nowrap align="left">
+                <a href='feedback.php?archivesid={dwt:field.archivesid/}'><u>{dwt:field.arctitle function="RemoveXSS(@me)"/}</u></a> (<a href="/lyapp/archives_view.php?archivesid={dwt:field.archivesid/}" target="_blank"><u>浏览</u></a>)
+            </td>
+            <td align="center">
+                <a href='feedback_main.php?ip={dwt:field.ip/}'><u>{dwt:field.ip/}</u></a>
+            </td>
+            <td >
+                {dwt:field.dtime function="GetDateTimeMK(@me)" /}
+            </td>
+
+            <td nowrap>{dwt:field.ischeck function="IsCheck(@me)" /}</td>
+            <td nowrap align="left"> {dwt:field.msg function='cn_substr(Text2Html(@me), 50)'/}</td>
+            <td nowrap>{dwt:field.username/}</td>
+
+            <td nowrap>
+
+            </td>
+        </tr>
+        {/dwt:datalist}
+        <!--    <tr bgcolor="#ffffff">
+          <td height="36" colspan="10">&nbsp; <a href="javascript:selAll('arcID')" id="selAllBut" class="coolbg">全选</a> <a href="javascript:delArc(0)"   onclick="return confirm('你真的确定要删除吗？');" class="coolbg">删除</a></td>
+        </tr>
+    -->
+        <tr>
+            <td height="28" colspan="8" bgcolor="#F9FCEF" align="center" background='../images/tbg.gif'> {dwt:pagelist/}</td>
+        </tr>
+        <tr>
+            <td height="30" colspan="8" bgcolor="#FCFDF7">
+                &nbsp;
+                <a href="javascript:selAll('fid')" id="selAllBut" class="coolbg np">全选</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                <input type='button' name='db' value=' 删除相同IP的所有评论 ' onClick="delFeedbackIP()" class="coolbg np"/>
+                <input type='button' name='db' value=' 删除评论 ' onClick="delFeedback()" class="coolbg np"/>
+                <input type='button' name='db2' value=' 审核评论 ' onClick="checkFeedback()" class="coolbg np"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>
